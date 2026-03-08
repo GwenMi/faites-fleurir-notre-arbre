@@ -168,6 +168,14 @@ export default function AdminDashboard() {
                 <Newspaper className="w-3 h-3 mr-1" /> Actus
               </TabsTrigger>
             </>}
+            <TabsTrigger value="comments" className="flex-1 rounded-xl text-xs">
+              <MessageSquare className="w-3 h-3 mr-1" /> Comm.
+              {(comments.length + reactions.length) > 0 && (
+                <span className="ml-1 bg-blue-400 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {comments.length}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="qr" className="flex-1 rounded-xl text-xs">
               QR Code
             </TabsTrigger>
