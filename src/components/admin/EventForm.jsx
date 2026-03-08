@@ -5,12 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TEMPLATES } from "@/components/public/TemplateConfig";
+import { TEMPLATES, getTemplatesForEventType, EVENT_TYPE_LABELS } from "@/components/public/TemplateConfig";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
-
-const FREE_TEMPLATES = Object.entries(TEMPLATES).filter(([, v]) => v.plan === "basic");
-const PREMIUM_TEMPLATES = Object.entries(TEMPLATES).filter(([, v]) => v.plan === "premium");
 
 function generateSlug(coupleNames) {
   return coupleNames
