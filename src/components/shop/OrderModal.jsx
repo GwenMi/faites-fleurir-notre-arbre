@@ -15,16 +15,21 @@ export default function OrderModal({ product, onClose }) {
   const [customText, setCustomText] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [eventDate, setEventDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showLateWarning, setShowLateWarning] = useState(false);
 
   const isPremium = product.name.toLowerCase().includes("premium");
   const hasCompose = product.name.toLowerCase().includes("composer");
   const total = (product.price * quantity).toFixed(2);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+  const daysUntilEvent = eventDate
+    ? Math.floor((new Date(eventDate) - new Date()) / (1000 * 60 * 60 * 24))
+    : null;
+  const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
+
+  const doSubmit = async () => {
     setLoading(true);
     await base44.entities.Order.create({
       customer_name: name.trim(),
@@ -37,12 +42,32 @@ export default function OrderModal({ product, onClose }) {
         ribbon_color: ribbon,
         seed_type: seeds,
         ...(isPremium && customText && { custom_text: customText }),
+        event_date: eventDate,
       },
       total_price: parseFloat(total),
       status: "pending",
     });
+    // Send confirmation email
+    const lateNote = isLate
+      ? "\n\n⚠️ Rappel délais : Votre événement est dans moins de 14 jours. Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie."
+      : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
+    await base44.integrations.Core.SendEmail({
+      to: email.trim(),
+      subject: `🌸 Confirmation de commande — ${product.name}`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\nNous vous contacterons pour confirmer les détails de livraison.\n\nMerci pour votre confiance,\nL'équipe Fleurs de fête 🌸`,
+    });
     setLoading(false);
     setSuccess(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !eventDate) return;
+    if (isLate && !showLateWarning) {
+      setShowLateWarning(true);
+      return;
+    }
+    await doSubmit();
   };
 
   return (
