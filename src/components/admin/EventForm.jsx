@@ -89,8 +89,24 @@ export default function EventForm({ event, onSave, onCancel }) {
     <div className="space-y-5 p-1">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1">
-          <Label>Prénoms des mariés *</Label>
-          <Input placeholder="Emma & Lucas" value={form.couple_names} onChange={(e) => set("couple_names", e.target.value)} className="rounded-xl h-11" />
+          <Label>{
+            form.event_type === "mariage" || form.event_type === "fiançailles" ? "Prénoms des mariés *" :
+            form.event_type === "anniversaire" ? "Prénom du/de la fêté(e) *" :
+            form.event_type === "bapteme" ? "Prénom de l'enfant *" :
+            form.event_type === "fete_entreprise" ? "Nom de l'entreprise *" :
+            form.event_type === "maison_hote" ? "Nom de la maison d'hôte *" :
+            "Nom de l'événement *"
+          }</Label>
+          <Input
+            placeholder={
+              form.event_type === "mariage" || form.event_type === "fiançailles" ? "Emma & Lucas" :
+              form.event_type === "anniversaire" ? "Sophie - 30 ans" :
+              form.event_type === "bapteme" ? "Chloé" :
+              form.event_type === "fete_entreprise" ? "Acme & Co." :
+              form.event_type === "maison_hote" ? "Le Mas des Roses" :
+              "Mon événement"
+            }
+            value={form.couple_names} onChange={(e) => set("couple_names", e.target.value)} className="rounded-xl h-11" />
         </div>
         <div className="space-y-1">
           <Label>Nom de l'événement</Label>
