@@ -47,16 +47,16 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Home from './pages/Home';
-import EventPublic from './pages/EventPublic';
 import AdminDashboard from './pages/AdminDashboard';
+import EventPublic from './pages/EventPublic';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "EventPublic": EventPublic,
     "AdminDashboard": AdminDashboard,
+    "EventPublic": EventPublic,
+    "Home": Home,
 }
 
 export const pagesConfig = {

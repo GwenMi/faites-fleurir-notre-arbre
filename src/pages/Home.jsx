@@ -118,7 +118,7 @@ export default function Home() {
           <div className="bg-white rounded-3xl border-2 border-gray-100 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">🌱</span>
-              <h3 className="text-xl font-bold text-gray-800">Basic</h3>
+              <h3 className="text-xl font-bold text-gray-800">Essentiel</h3>
             </div>
             <p className="text-3xl font-bold text-green-500 mb-1">Gratuit</p>
             <p className="text-sm text-gray-400 mb-5">Pour commencer</p>
