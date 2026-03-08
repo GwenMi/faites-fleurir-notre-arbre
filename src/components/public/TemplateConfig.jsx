@@ -1,0 +1,81 @@
+export const TEMPLATES = {
+  classique: {
+    name: "Classique",
+    plan: "basic",
+    fontTitle: "'Playfair Display', Georgia, serif",
+    fontBody: "'Lato', sans-serif",
+    headerStyle: "elegant-center",
+    decoration: "rings",
+    cardStyle: "rounded-xl shadow-md",
+    bgPattern: "bg-white",
+  },
+  champetre: {
+    name: "Champêtre",
+    plan: "basic",
+    fontTitle: "'Merriweather', Georgia, serif",
+    fontBody: "'Open Sans', sans-serif",
+    headerStyle: "nature-left",
+    decoration: "leaves",
+    cardStyle: "rounded-2xl shadow-lg border border-green-100",
+    bgPattern: "bg-green-50/30",
+  },
+  minimal: {
+    name: "Minimal",
+    plan: "basic",
+    fontTitle: "'Montserrat', sans-serif",
+    fontBody: "'Inter', sans-serif",
+    headerStyle: "minimal-center",
+    decoration: "none",
+    cardStyle: "rounded-lg shadow-sm border border-gray-100",
+    bgPattern: "bg-gray-50",
+  },
+  elegant: {
+    name: "Élégant",
+    plan: "premium",
+    fontTitle: "'Cormorant Garamond', Georgia, serif",
+    fontBody: "'Raleway', sans-serif",
+    headerStyle: "elegant-full",
+    decoration: "gold",
+    cardStyle: "rounded-none shadow-xl border border-amber-100",
+    bgPattern: "bg-amber-50/20",
+  },
+  boheme: {
+    name: "Bohème",
+    plan: "premium",
+    fontTitle: "'Dancing Script', cursive",
+    fontBody: "'Nunito', sans-serif",
+    headerStyle: "boho-left",
+    decoration: "feathers",
+    cardStyle: "rounded-3xl shadow-md border border-rose-100",
+    bgPattern: "bg-rose-50/30",
+  },
+  floral: {
+    name: "Floral",
+    plan: "premium",
+    fontTitle: "'Great Vibes', cursive",
+    fontBody: "'Josefin Sans', sans-serif",
+    headerStyle: "floral-center",
+    decoration: "flowers",
+    cardStyle: "rounded-2xl shadow-lg border border-pink-100",
+    bgPattern: "bg-pink-50/20",
+  },
+  moderne: {
+    name: "Moderne",
+    plan: "premium",
+    fontTitle: "'Bebas Neue', sans-serif",
+    fontBody: "'DM Sans', sans-serif",
+    headerStyle: "modern-split",
+    decoration: "geometric",
+    cardStyle: "rounded-xl shadow-xl",
+    bgPattern: "bg-slate-50",
+  },
+};
+
+export function getTemplateVars(event) {
+  const t = TEMPLATES[event.template] || TEMPLATES.classique;
+  return {
+    ...t,
+    primary: event.primary_color || "#c084fc",
+    secondary: event.secondary_color || "#86efac",
+  };
+}
