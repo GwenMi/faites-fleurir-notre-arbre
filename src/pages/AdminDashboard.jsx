@@ -177,6 +177,9 @@ export default function AdminDashboard() {
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger value="challenge" className="flex-1 rounded-xl text-xs">
+              <Flower2 className="w-3 h-3 mr-1" /> Défi
+            </TabsTrigger>
             <TabsTrigger value="qr" className="flex-1 rounded-xl text-xs">
               QR Code
             </TabsTrigger>
