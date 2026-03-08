@@ -20,6 +20,8 @@ export default function AdminDashboard() {
   const [polls, setPolls] = useState([]);
   const [responses, setResponses] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [reactions, setReactions] = useState([]);
   const [view, setView] = useState("list"); // list | create | edit | detail
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState(null);
