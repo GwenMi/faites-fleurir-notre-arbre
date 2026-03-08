@@ -27,6 +27,24 @@ export default function EventForm({ event, onSave, onCancel }) {
     primary_color: "#c084fc", secondary_color: "#86efac", plan: "basic",
     cover_image: "", status: "active",
   });
+
+  const availableTemplates = getTemplatesForEventType(form.event_type);
+  const freeTemplates = availableTemplates.filter(([, v]) => v.plan === "basic");
+  const premiumTemplates = availableTemplates.filter(([, v]) => v.plan === "premium");
+
+  const handleEventTypeChange = (v) => {
+    const newTemplates = getTemplatesForEventType(v);
+    const firstFree = newTemplates.find(([, t]) => t.plan === "basic");
+    const defaultTpl = firstFree ? firstFree[0] : newTemplates[0]?.[0] || "classique";
+    const tplData = TEMPLATES[defaultTpl];
+    setForm(f => ({
+      ...f,
+      event_type: v,
+      template: defaultTpl,
+      primary_color: tplData?.primaryColor || f.primary_color,
+      secondary_color: tplData?.secondaryColor || f.secondary_color,
+    }));
+  };
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(event?.cover_image || null);
   const [saving, setSaving] = useState(false);
