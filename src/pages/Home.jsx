@@ -138,7 +138,7 @@ export default function Home() {
           {/* Premium */}
           <div className="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 shadow-xl text-white overflow-hidden">
             <div className="absolute top-4 right-4">
-              <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">Populaire</span>
+              <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">Le plus choisi</span>
             </div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">⭐</span>
