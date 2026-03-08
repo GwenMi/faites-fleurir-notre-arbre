@@ -215,6 +215,12 @@ export default function AdminDashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="challenge">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <ChallengeManager event={selectedEvent} onRefresh={() => loadEventData(selectedEvent.id)} />
+            </div>
+          </TabsContent>
+
           <TabsContent value="qr">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <QRCodeDisplay event={selectedEvent} />
