@@ -22,14 +22,7 @@ const DEFAULT_PRODUCTS = [
     options: ["couleur du ruban", "type de graines"],
     active: true,
   },
-  {
-    id: "__kit-premium",
-    name: "Kit premium personnalisé",
-    price: 6.90,
-    description: "Version personnalisée avec étiquette aux prénoms et à la date de l'événement. Le cadeau souvenir parfait.",
-    options: ["couleur du ruban", "type de graines", "texte personnalisé"],
-    active: true,
-  },
+
 ];
 
 export default function Boutique() {
