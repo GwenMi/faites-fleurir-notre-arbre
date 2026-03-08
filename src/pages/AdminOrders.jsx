@@ -185,6 +185,69 @@ export default function AdminOrders() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Tracking section */}
+                  <div className="mt-3 pt-3 border-t border-gray-50">
+                    {order.tracking_number ? (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <div>
+                            <p className="text-xs font-semibold text-gray-700">{order.tracking_carrier}</p>
+                            <p className="text-xs text-gray-400 font-mono">{order.tracking_number}</p>
+                          </div>
+                          {order.tracking_email_sent && (
+                            <span className="text-xs bg-green-50 text-green-600 rounded-full px-2 py-0.5">Email envoyé</span>
+                          )}
+                        </div>
+                        <button onClick={() => openTracking(order)}
+                          className="text-xs text-purple-500 hover:text-purple-700 underline">
+                          Modifier
+                        </button>
+                      </div>
+                    ) : (
+                      <button onClick={() => openTracking(order)}
+                        className="flex items-center gap-2 text-xs text-purple-600 hover:text-purple-800 font-semibold transition">
+                        <Truck className="w-4 h-4" /> Ajouter un numéro de suivi
+                      </button>
+                    )}
+
+                    {/* Tracking form */}
+                    {trackingOpen === order.id && (
+                      <div className="mt-3 bg-purple-50 rounded-xl p-4 space-y-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-xs font-semibold text-purple-700 flex items-center gap-1">
+                            <Truck className="w-3 h-3" /> Suivi transporteur
+                          </p>
+                          <button onClick={() => setTrackingOpen(null)} className="text-gray-400 hover:text-gray-600">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <select
+                          value={trackingForm.carrier}
+                          onChange={e => setTrackingForm(f => ({ ...f, carrier: e.target.value }))}
+                          className="w-full text-sm border border-purple-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-purple-300"
+                        >
+                          {CARRIERS.map(c => <option key={c.label} value={c.label}>{c.label}</option>)}
+                        </select>
+                        <Input
+                          placeholder="Numéro de suivi"
+                          value={trackingForm.number}
+                          onChange={e => setTrackingForm(f => ({ ...f, number: e.target.value }))}
+                          className="rounded-xl border-purple-200 focus:ring-purple-300"
+                        />
+                        <Button
+                          onClick={() => handleSendTracking(order)}
+                          disabled={sendingTracking}
+                          className="w-full rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-sm h-10"
+                        >
+                          {sendingTracking
+                            ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi...</>
+                            : <><Send className="w-4 h-4 mr-2" /> Enregistrer & envoyer l'email au client</>}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
