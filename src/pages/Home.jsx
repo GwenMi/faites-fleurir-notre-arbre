@@ -155,7 +155,7 @@ export default function Home() {
       </div>
 
       <footer className="text-center py-8 px-4 text-xs text-gray-400">
-        <p className="text-pink-400 font-semibold text-sm mb-1">Faites Fleurir Notre Arbre 🌸</p>
+        <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="w-24 mx-auto mb-2 opacity-70" />
         <p>"Merci d'avoir partagé ce moment avec nous"</p>
       </footer>
     </div>
