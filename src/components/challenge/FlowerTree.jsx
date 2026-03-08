@@ -36,6 +36,17 @@ const TREES = [
       { x: 248, y: 258 }, { x: 200, y: 292 },
     ],
   },
+  {
+    id: "olivier",
+    label: "Olivier",
+    emoji: "🫒",
+    desc: "Méditerranéen & rustique",
+    spots: [
+      { x: 200, y: 95 }, { x: 135, y: 145 }, { x: 268, y: 138 },
+      { x: 95, y: 210 }, { x: 305, y: 205 }, { x: 155, y: 268 },
+      { x: 248, y: 265 }, { x: 200, y: 300 },
+    ],
+  },
 ];
 
 function TreeSVG({ treeId }) {
