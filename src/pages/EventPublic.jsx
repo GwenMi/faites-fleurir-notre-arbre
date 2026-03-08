@@ -6,7 +6,12 @@ import FlowerGallery from "@/components/public/FlowerGallery";
 import WeddingAlbum from "@/components/public/WeddingAlbum";
 import NewsFeed from "@/components/public/NewsFeed";
 import PollsSection from "@/components/public/PollsSection";
-import { Loader2, Flower } from "lucide-react";
+import GuestSessionModal from "@/components/public/GuestSessionModal";
+import GuestBar from "@/components/public/GuestBar";
+import GuestPhotoFeed from "@/components/public/GuestPhotoFeed";
+import { Loader2, Flower, Images, TreeDeciduous } from "lucide-react";
+
+const GUEST_KEY = (slug) => `guest_session_${slug}`;
 
 export default function EventPublic() {
   const params = new URLSearchParams(window.location.search);
@@ -15,12 +20,14 @@ export default function EventPublic() {
   const [event, setEvent] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [comments, setComments] = useState([]);
-  const [likes, setLikes] = useState([]);
+  const [reactions, setReactions] = useState([]);
   const [posts, setPosts] = useState([]);
   const [polls, setPolls] = useState([]);
   const [pollResponses, setPollResponses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [guest, setGuest] = useState(null);
+  const [activeTab, setActiveTab] = useState("arbre");
 
   useEffect(() => {
     if (slug) loadEvent();
@@ -36,6 +43,9 @@ export default function EventPublic() {
     }
     const ev = events[0];
     setEvent(ev);
+    // Restore guest session
+    const saved = localStorage.getItem(GUEST_KEY(slug));
+    if (saved) setGuest(JSON.parse(saved));
     await loadData(ev.id);
     setLoading(false);
   };
@@ -52,18 +62,26 @@ export default function EventPublic() {
     setPolls(pl || []);
     setPollResponses(prArr || []);
 
-    const photoIds = (ph || []).map((p) => p.id);
-    if (photoIds.length > 0) {
-      const [cm, lk] = await Promise.all([
-        base44.entities.Comment.list(),
-        base44.entities.Like.list(),
-      ]);
-      setComments((cm || []).filter((c) => photoIds.includes(c.photo_id)));
-      setLikes((lk || []).filter((l) => photoIds.includes(l.photo_id)));
-    }
+    const photoIds = (ph || []).map(p => p.id);
+    const [cm, rx] = await Promise.all([
+      base44.entities.Comment.list(),
+      base44.entities.Reaction.filter({ event_id: eventId }),
+    ]);
+    setComments((cm || []).filter(c => photoIds.includes(c.photo_id)));
+    setReactions(rx || []);
   };
 
   const refresh = () => event && loadData(event.id);
+
+  const handleGuestConfirm = (guestData) => {
+    localStorage.setItem(GUEST_KEY(slug), JSON.stringify(guestData));
+    setGuest(guestData);
+  };
+
+  const handleGuestUpdate = (newGuest) => {
+    localStorage.setItem(GUEST_KEY(slug), JSON.stringify(newGuest));
+    setGuest(newGuest);
+  };
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-rose-50">
@@ -86,18 +104,38 @@ export default function EventPublic() {
 
   const tpl = getTemplateVars(event);
   const isPremium = event.plan === "premium";
-  const flowerCount = photos.filter((p) => p.type === "flower" && p.approved).length;
+  const flowerCount = photos.filter(p => p.type === "flower" && p.approved).length;
+
+  const tabs = [
+    { id: "arbre", label: "🌻 Notre Arbre", show: true },
+    { id: "galerie", label: "📸 Galerie", show: true },
+    { id: "album", label: "💒 Album", show: isPremium },
+    { id: "actus", label: "📢 Actus", show: isPremium && posts.length > 0 },
+    { id: "sondages", label: "🗳 Sondages", show: isPremium && polls.length > 0 },
+  ].filter(t => t.show);
 
   return (
-    <div className="min-h-screen" style={{ background: tpl.bgPattern.includes("bg-") ? undefined : tpl.bgPattern, fontFamily: tpl.fontBody }}>
+    <div className="min-h-screen pb-10" style={{ fontFamily: tpl.fontBody }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Cormorant+Garamond:wght@400;600&family=Lato&family=Raleway&family=Nunito&family=Josefin+Sans&display=swap');
         body { background: ${tpl.primary}08; }
       `}</style>
 
+      {/* Guest session modal */}
+      {!guest && (
+        <GuestSessionModal
+          eventName={event.couple_names}
+          tpl={tpl}
+          onConfirm={handleGuestConfirm}
+        />
+      )}
+
+      {/* Guest bar */}
+      {guest && <GuestBar guest={guest} onUpdate={handleGuestUpdate} tpl={tpl} />}
+
       <EventHeader event={event} tpl={tpl} />
 
-      {/* Flower counter banner */}
+      {/* Flower counter */}
       <div className="mx-4 mt-4 rounded-2xl py-4 px-6 text-center text-white font-semibold shadow-lg"
         style={{ background: `linear-gradient(135deg, ${tpl.primary}, ${tpl.secondary})` }}>
         <Flower className="w-5 h-5 inline mr-2 mb-0.5" />
@@ -107,43 +145,55 @@ export default function EventPublic() {
       </div>
 
       {/* Navigation tabs */}
-      <div className="flex overflow-x-auto gap-2 px-4 py-4 no-scrollbar">
-        {[
-          { label: "🌻 Notre Arbre", show: true },
-          { label: "📸 Album", show: isPremium },
-          { label: "📢 Actualités", show: isPremium && posts.length > 0 },
-          { label: "🗳 Sondages", show: isPremium && polls.length > 0 },
-        ].filter(t => t.show).map((tab) => (
-          <a key={tab.label} href={`#${tab.label}`}
+      <div className="flex overflow-x-auto gap-2 px-4 py-4 no-scrollbar sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
             className="flex-shrink-0 text-xs font-semibold px-4 py-2 rounded-full border transition"
-            style={{ borderColor: tpl.primary + "66", color: tpl.primary, background: tpl.primary + "11" }}>
+            style={
+              activeTab === tab.id
+                ? { borderColor: tpl.primary, color: "#fff", background: tpl.primary }
+                : { borderColor: tpl.primary + "66", color: tpl.primary, background: tpl.primary + "11" }
+            }
+          >
             {tab.label}
-          </a>
+          </button>
         ))}
       </div>
 
-      <FlowerGallery event={event} photos={photos} onPhotoAdded={refresh} tpl={tpl} />
+      {/* Content */}
+      <div className="mt-2">
+        {activeTab === "arbre" && (
+          <FlowerGallery event={event} photos={photos} onPhotoAdded={refresh} tpl={tpl} guestName={guest?.name} />
+        )}
 
-      {isPremium && (
-        <>
-          <div className="h-2 mx-4 rounded-full opacity-20" style={{ background: tpl.secondary }} />
-          <WeddingAlbum event={event} photos={photos} comments={comments} likes={likes} onRefresh={refresh} tpl={tpl} />
-          {posts.length > 0 && (
-            <>
-              <div className="h-2 mx-4 rounded-full opacity-20" style={{ background: tpl.secondary }} />
-              <NewsFeed posts={posts} tpl={tpl} />
-            </>
-          )}
-          {polls.length > 0 && (
-            <>
-              <div className="h-2 mx-4 rounded-full opacity-20" style={{ background: tpl.secondary }} />
-              <PollsSection polls={polls} responses={pollResponses} onRefresh={refresh} tpl={tpl} />
-            </>
-          )}
-        </>
-      )}
+        {activeTab === "galerie" && (
+          <GuestPhotoFeed
+            event={event}
+            photos={photos}
+            comments={comments}
+            reactions={reactions}
+            guestName={guest?.name || "Invité"}
+            onRefresh={refresh}
+            tpl={tpl}
+          />
+        )}
 
-      <footer className="text-center py-8 px-4 text-xs text-gray-400">
+        {activeTab === "album" && isPremium && (
+          <WeddingAlbum event={event} photos={photos} comments={comments} likes={[]} onRefresh={refresh} tpl={tpl} />
+        )}
+
+        {activeTab === "actus" && isPremium && (
+          <NewsFeed posts={posts} tpl={tpl} />
+        )}
+
+        {activeTab === "sondages" && isPremium && (
+          <PollsSection polls={polls} responses={pollResponses} onRefresh={refresh} tpl={tpl} />
+        )}
+      </div>
+
+      <footer className="text-center py-8 px-4 text-xs text-gray-400 mt-4">
         <p className="italic">"Merci d'avoir partagé ce moment avec nous"</p>
         <p className="mt-1">Faites Fleurir Notre Arbre 🌸</p>
       </footer>
