@@ -200,6 +200,17 @@ export default function AdminDashboard() {
             </TabsContent>
           </>}
 
+          <TabsContent value="comments">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <CommentModeration
+                comments={comments}
+                reactions={reactions}
+                photos={photos}
+                onRefresh={() => loadEventData(selectedEvent.id)}
+              />
+            </div>
+          </TabsContent>
+
           <TabsContent value="qr">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <QRCodeDisplay event={selectedEvent} />
