@@ -155,7 +155,7 @@ export default function Home() {
             </ul>
             <a href={createPageUrl("AdminDashboard")}
               className="block text-center py-3 rounded-2xl font-semibold bg-white text-purple-600 hover:bg-white/90 transition">
-              Choisir Premium
+              Choisir la formule Complète
             </a>
           </div>
         </div>
