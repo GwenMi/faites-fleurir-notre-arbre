@@ -8,10 +8,11 @@ import PhotoModeration from "@/components/admin/PhotoModeration";
 import PollManager from "@/components/admin/PollManager";
 import PostManager from "@/components/admin/PostManager";
 import QRCodeDisplay from "@/components/admin/QRCodeDisplay";
-import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package } from "lucide-react";
+import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2 } from "lucide-react";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import CommentModeration from "@/components/admin/CommentModeration";
+import ChallengeManager from "@/components/admin/ChallengeManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
