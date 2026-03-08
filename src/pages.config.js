@@ -49,12 +49,16 @@
  */
 import AdminDashboard from './pages/AdminDashboard';
 import Home from './pages/Home';
+import Boutique from './pages/Boutique';
+import AdminOrders from './pages/AdminOrders';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "Home": Home,
+    "Boutique": Boutique,
+    "AdminOrders": AdminOrders,
 }
 
 export const pagesConfig = {
