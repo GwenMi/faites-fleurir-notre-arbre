@@ -1,9 +1,20 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { ChevronLeft, Loader2, Package, RefreshCw } from "lucide-react";
+import { ChevronLeft, Loader2, Package, RefreshCw, Truck, Send, CheckCircle2, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
+const CARRIERS = [
+  { label: "La Poste / Colissimo", url: "https://www.laposte.fr/outils/suivre-vos-envois?code=" },
+  { label: "Chronopost", url: "https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=" },
+  { label: "DHL", url: "https://www.dhl.com/fr-fr/home/tracking.html?tracking-id=" },
+  { label: "UPS", url: "https://www.ups.com/track?loc=fr_FR&tracknum=" },
+  { label: "DPD", url: "https://www.dpd.fr/trace/" },
+  { label: "Mondial Relay", url: "https://www.mondialrelay.fr/suivi-de-colis/?numeroExpedition=" },
+];
 
 const STATUS_CONFIG = {
   pending:   { label: "En attente",  className: "bg-amber-100 text-amber-700" },

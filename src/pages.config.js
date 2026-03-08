@@ -50,8 +50,8 @@
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import Boutique from './pages/Boutique';
-import Home from './pages/Home';
 import EventPublic from './pages/EventPublic';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -59,8 +59,8 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminOrders": AdminOrders,
     "Boutique": Boutique,
-    "Home": Home,
     "EventPublic": EventPublic,
+    "Home": Home,
 }
 
 export const pagesConfig = {
