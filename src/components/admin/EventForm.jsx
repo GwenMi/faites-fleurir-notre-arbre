@@ -98,13 +98,12 @@ export default function EventForm({ event, onSave, onCancel }) {
         </div>
         <div className="space-y-1">
           <Label>Type d'événement</Label>
-          <Select value={form.event_type} onValueChange={(v) => set("event_type", v)}>
+          <Select value={form.event_type} onValueChange={handleEventTypeChange}>
             <SelectTrigger className="rounded-xl h-11"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="mariage">Mariage</SelectItem>
-              <SelectItem value="fiançailles">Fiançailles</SelectItem>
-              <SelectItem value="anniversaire">Anniversaire</SelectItem>
-              <SelectItem value="autre">Autre</SelectItem>
+              {Object.entries(EVENT_TYPE_LABELS).map(([key, { label, emoji }]) => (
+                <SelectItem key={key} value={key}>{emoji} {label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
