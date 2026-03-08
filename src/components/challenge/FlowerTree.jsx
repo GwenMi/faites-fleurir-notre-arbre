@@ -123,6 +123,41 @@ function TreeSVG({ treeId }) {
     </svg>
   );
 
+  if (treeId === "olivier") return (
+    <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style={base}>
+      <ellipse cx="200" cy="493" rx="65" ry="8" fill="rgba(0,0,0,0.07)" />
+      {/* Tronc noueux */}
+      <path d="M192,490 Q188,440 182,395 Q176,350 180,320 Q185,295 200,278 Q215,295 218,322 Q222,352 216,398 Q210,442 208,490 Z" fill="#8D6E63" />
+      <path d="M186,420 Q170,408 158,420" stroke="#795548" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M213,400 Q228,388 240,400" stroke="#795548" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M184,360 Q162,345 148,330" stroke="#795548" strokeWidth="10" fill="none" strokeLinecap="round" />
+      <path d="M216,345 Q238,328 255,312" stroke="#795548" strokeWidth="10" fill="none" strokeLinecap="round" />
+      {/* Feuillage touffu et irrégulier */}
+      <ellipse cx="200" cy="188" rx="128" ry="110" fill="#7a9e5e" />
+      <ellipse cx="155" cy="158" rx="88" ry="78" fill="#5a7a40" opacity="0.7" />
+      <ellipse cx="252" cy="165" rx="85" ry="75" fill="#8aae60" opacity="0.65" />
+      <ellipse cx="118" cy="215" rx="72" ry="62" fill="#6b9448" opacity="0.6" />
+      <ellipse cx="285" cy="220" rx="68" ry="60" fill="#7aac55" opacity="0.6" />
+      <ellipse cx="200" cy="118" rx="65" ry="58" fill="#9ec46e" opacity="0.55" />
+      <ellipse cx="165" cy="248" rx="60" ry="50" fill="#8ab85a" opacity="0.55" />
+      <ellipse cx="240" cy="252" rx="55" ry="48" fill="#6a9244" opacity="0.55" />
+      {/* Petites feuilles allongées caractéristiques */}
+      <ellipse cx="130" cy="142" rx="14" ry="6" fill="#b5cf88" opacity="0.7" transform="rotate(-30,130,142)" />
+      <ellipse cx="268" cy="135" rx="14" ry="6" fill="#b5cf88" opacity="0.7" transform="rotate(30,268,135)" />
+      <ellipse cx="105" cy="198" rx="12" ry="5" fill="#b5cf88" opacity="0.65" transform="rotate(-45,105,198)" />
+      <ellipse cx="295" cy="192" rx="12" ry="5" fill="#b5cf88" opacity="0.65" transform="rotate(45,295,192)" />
+      <ellipse cx="200" cy="98" rx="13" ry="5" fill="#c8dc98" opacity="0.6" />
+      <ellipse cx="162" cy="272" rx="11" ry="5" fill="#b5cf88" opacity="0.6" transform="rotate(-20,162,272)" />
+      <ellipse cx="238" cy="275" rx="11" ry="5" fill="#b5cf88" opacity="0.6" transform="rotate(20,238,275)" />
+      {/* Petites olives */}
+      <ellipse cx="148" cy="228" rx="5" ry="7" fill="#556B2F" opacity="0.8" />
+      <ellipse cx="258" cy="235" rx="5" ry="7" fill="#556B2F" opacity="0.8" />
+      <ellipse cx="200" cy="245" rx="5" ry="7" fill="#4a5f28" opacity="0.75" />
+      <ellipse cx="175" cy="175" rx="4" ry="6" fill="#6B8E23" opacity="0.7" />
+      <ellipse cx="228" cy="180" rx="4" ry="6" fill="#6B8E23" opacity="0.7" />
+    </svg>
+  );
+
   return null;
 }
 
