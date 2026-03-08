@@ -47,10 +47,16 @@ export default function Home() {
           alt="Fleurs de fête"
           className="h-12"
         />
-        <a href={createPageUrl("AdminDashboard")}
-          className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
-          Créer mon événement
-        </a>
+        <div className="flex items-center gap-3">
+          <a href={createPageUrl("Boutique")}
+            className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition hidden sm:block">
+            Boutique 🌸
+          </a>
+          <a href={createPageUrl("AdminDashboard")}
+            className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
+            Créer mon événement
+          </a>
+        </div>
       </nav>
 
       {/* Hero */}

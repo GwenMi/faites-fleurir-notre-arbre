@@ -230,9 +230,15 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="h-9" />
           </div>
-          <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
-            <Plus className="w-4 h-4 mr-1" /> Nouvel événement
-          </Button>
+          <div className="flex items-center gap-2">
+            <a href={createPageUrl("AdminOrders")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition text-sm font-semibold">
+              <Package className="w-4 h-4" /> Commandes
+            </a>
+            <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
+              <Plus className="w-4 h-4 mr-1" /> Nouvel événement
+            </Button>
+          </div>
         </div>
       </div>
 
