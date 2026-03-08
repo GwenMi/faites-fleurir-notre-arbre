@@ -62,7 +62,7 @@ export default function Home() {
       {/* Hero */}
       <div className="hero-bg px-6 md:px-12 py-20 md:py-28 text-center">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">
-          Mariages · Fiançailles · Anniversaires · Événements
+          Mariages · Anniversaires · Baptêmes · Fêtes d'entreprise · Maisons d'hôte
         </p>
         <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
           Faites fleurir<br />
