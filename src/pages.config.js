@@ -50,6 +50,7 @@
 import Home from './pages/Home';
 import EventPublic from './pages/EventPublic';
 import AdminDashboard from './pages/AdminDashboard';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -61,4 +62,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
+    Layout: __Layout,
 };
