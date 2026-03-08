@@ -142,7 +142,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">⭐</span>
-              <h3 className="text-xl font-bold">Premium</h3>
+              <h3 className="text-xl font-bold">Complet</h3>
             </div>
             <p className="text-3xl font-bold mb-1">19 €</p>
             <p className="text-sm text-white/70 mb-5">Par événement</p>
