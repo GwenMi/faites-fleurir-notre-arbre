@@ -1,81 +1,127 @@
+// Templates organisés par type d'événement
+// plan: "basic" = gratuit, "premium" = payant
+
 export const TEMPLATES = {
+  // ── MARIAGE & FIANÇAILLES ──────────────────────────────
   classique: {
     name: "Classique",
     plan: "basic",
-    fontTitle: "'Playfair Display', Georgia, serif",
-    fontBody: "'Lato', sans-serif",
-    headerStyle: "elegant-center",
-    decoration: "rings",
-    cardStyle: "rounded-xl shadow-md",
-    bgPattern: "bg-white",
+    eventTypes: ["mariage", "fiançailles"],
+    primaryColor: "#c084fc",
+    secondaryColor: "#86efac",
+    emoji: "💍",
   },
   champetre: {
     name: "Champêtre",
     plan: "basic",
-    fontTitle: "'Merriweather', Georgia, serif",
-    fontBody: "'Open Sans', sans-serif",
-    headerStyle: "nature-left",
-    decoration: "leaves",
-    cardStyle: "rounded-2xl shadow-lg border border-green-100",
-    bgPattern: "bg-green-50/30",
+    eventTypes: ["mariage", "fiançailles"],
+    primaryColor: "#86efac",
+    secondaryColor: "#fde68a",
+    emoji: "🌿",
   },
-  minimal: {
-    name: "Minimal",
+  floral: {
+    name: "Floral",
     plan: "basic",
-    fontTitle: "'Montserrat', sans-serif",
-    fontBody: "'Inter', sans-serif",
-    headerStyle: "minimal-center",
-    decoration: "none",
-    cardStyle: "rounded-lg shadow-sm border border-gray-100",
-    bgPattern: "bg-gray-50",
+    eventTypes: ["mariage", "fiançailles"],
+    primaryColor: "#f9a8d4",
+    secondaryColor: "#bbf7d0",
+    emoji: "🌸",
   },
   elegant: {
     name: "Élégant",
     plan: "premium",
-    fontTitle: "'Cormorant Garamond', Georgia, serif",
-    fontBody: "'Raleway', sans-serif",
-    headerStyle: "elegant-full",
-    decoration: "gold",
-    cardStyle: "rounded-none shadow-xl border border-amber-100",
-    bgPattern: "bg-amber-50/20",
+    eventTypes: ["mariage", "fiançailles"],
+    primaryColor: "#c9a96e",
+    secondaryColor: "#e5e7eb",
+    emoji: "✨",
   },
   boheme: {
     name: "Bohème",
     plan: "premium",
-    fontTitle: "'Dancing Script', cursive",
-    fontBody: "'Nunito', sans-serif",
-    headerStyle: "boho-left",
-    decoration: "feathers",
-    cardStyle: "rounded-3xl shadow-md border border-rose-100",
-    bgPattern: "bg-rose-50/30",
+    eventTypes: ["mariage", "fiançailles"],
+    primaryColor: "#d97706",
+    secondaryColor: "#fde68a",
+    emoji: "🪶",
   },
-  floral: {
-    name: "Floral",
-    plan: "premium",
-    fontTitle: "'Great Vibes', cursive",
-    fontBody: "'Josefin Sans', sans-serif",
-    headerStyle: "floral-center",
-    decoration: "flowers",
-    cardStyle: "rounded-2xl shadow-lg border border-pink-100",
-    bgPattern: "bg-pink-50/20",
+
+  // ── ANNIVERSAIRE ──────────────────────────────────────
+  joyeux: {
+    name: "Joyeux",
+    plan: "basic",
+    eventTypes: ["anniversaire"],
+    primaryColor: "#f472b6",
+    secondaryColor: "#fbbf24",
+    emoji: "🎂",
+  },
+  festif: {
+    name: "Festif",
+    plan: "basic",
+    eventTypes: ["anniversaire"],
+    primaryColor: "#a78bfa",
+    secondaryColor: "#34d399",
+    emoji: "🎉",
   },
   moderne: {
     name: "Moderne",
     plan: "premium",
-    fontTitle: "'Bebas Neue', sans-serif",
-    fontBody: "'DM Sans', sans-serif",
-    headerStyle: "modern-split",
-    decoration: "geometric",
-    cardStyle: "rounded-xl shadow-xl",
-    bgPattern: "bg-slate-50",
+    eventTypes: ["anniversaire"],
+    primaryColor: "#1e293b",
+    secondaryColor: "#f43f5e",
+    emoji: "🎈",
+  },
+
+  // ── BAPTÊME ──────────────────────────────────────────
+  douceur: {
+    name: "Douceur",
+    plan: "basic",
+    eventTypes: ["bapteme"],
+    primaryColor: "#93c5fd",
+    secondaryColor: "#d9f99d",
+    emoji: "👶",
+  },
+  nature: {
+    name: "Nature",
+    plan: "basic",
+    eventTypes: ["bapteme"],
+    primaryColor: "#6ee7b7",
+    secondaryColor: "#fde68a",
+    emoji: "🌱",
+  },
+
+  // ── FÊTE D'ENTREPRISE ────────────────────────────────
+  corporate: {
+    name: "Corporate",
+    plan: "basic",
+    eventTypes: ["fete_entreprise"],
+    primaryColor: "#3b82f6",
+    secondaryColor: "#e2e8f0",
+    emoji: "🏢",
+  },
+
+  // ── MAISON D'HÔTE / AUTRE ───────────────────────────
+  minimal: {
+    name: "Minimal",
+    plan: "basic",
+    eventTypes: ["maison_hote", "autre", "mariage", "anniversaire", "bapteme", "fete_entreprise", "fiançailles"],
+    primaryColor: "#64748b",
+    secondaryColor: "#f1f5f9",
+    emoji: "🍃",
   },
 };
 
-export function getTemplateVars(event) {
-  const t = TEMPLATES[event.template] || TEMPLATES.classique;
-  return {
-    ...t,
-    primary: event.primary_color || "#c084fc",
-    secondary: event.secondary_color || "#86efac",
-  };
+// Retourne les templates adaptés à un type d'événement
+export function getTemplatesForEventType(eventType) {
+  return Object.entries(TEMPLATES).filter(
+    ([, tpl]) => tpl.eventTypes.includes(eventType)
+  );
 }
+
+export const EVENT_TYPE_LABELS = {
+  mariage: { label: "Mariage", emoji: "💍" },
+  "fiançailles": { label: "Fiançailles", emoji: "💎" },
+  anniversaire: { label: "Anniversaire", emoji: "🎂" },
+  bapteme: { label: "Baptême", emoji: "👶" },
+  fete_entreprise: { label: "Fête d'entreprise", emoji: "🏢" },
+  maison_hote: { label: "Maison d'hôte", emoji: "🏡" },
+  autre: { label: "Autre", emoji: "🎊" },
+};
