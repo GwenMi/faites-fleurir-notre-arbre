@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, ShoppingBag } from "lucide-react";
+import { Loader2, ShoppingBag, Truck } from "lucide-react";
 import ProductCard from "@/components/shop/ProductCard";
 import OrderModal from "@/components/shop/OrderModal";
 
