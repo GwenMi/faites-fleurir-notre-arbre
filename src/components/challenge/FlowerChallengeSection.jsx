@@ -6,6 +6,7 @@ import { Flower2, Camera, Trophy, Clock, Users, Lock, LogOut, Upload } from "luc
 import GuestAuth, { getGuestSession, setGuestSession, clearGuestSession } from "./GuestAuth";
 import FlowerGallery from "./FlowerGallery";
 import PostUploadModal from "./PostUploadModal";
+import FlowerTree from "./FlowerTree";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
