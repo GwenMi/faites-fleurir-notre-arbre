@@ -28,6 +28,9 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+  const [trackingOpen, setTrackingOpen] = useState(null); // order.id
+  const [trackingForm, setTrackingForm] = useState({ number: "", carrier: CARRIERS[0].label });
+  const [sendingTracking, setSendingTracking] = useState(false);
 
   useEffect(() => { loadOrders(); }, []);
 
@@ -43,6 +46,44 @@ export default function AdminOrders() {
     await base44.entities.Order.update(order.id, { status: newStatus });
     await loadOrders();
     setUpdatingId(null);
+  };
+
+  const openTracking = (order) => {
+    setTrackingForm({
+      number: order.tracking_number || "",
+      carrier: order.tracking_carrier || CARRIERS[0].label,
+    });
+    setTrackingOpen(order.id);
+  };
+
+  const handleSendTracking = async (order) => {
+    if (!trackingForm.number.trim()) {
+      toast.error("Veuillez saisir un numéro de suivi");
+      return;
+    }
+    setSendingTracking(true);
+    const carrier = CARRIERS.find(c => c.label === trackingForm.carrier) || CARRIERS[0];
+    const trackingUrl = carrier.url + trackingForm.number.trim();
+
+    // Save tracking info
+    await base44.entities.Order.update(order.id, {
+      tracking_number: trackingForm.number.trim(),
+      tracking_carrier: trackingForm.carrier,
+      tracking_email_sent: true,
+      status: order.status === "pending" || order.status === "confirmed" ? "shipped" : order.status,
+    });
+
+    // Send email to customer
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `📦 Votre commande est en route — ${order.product_name}`,
+      body: `Bonjour ${order.customer_name},\n\nVotre commande "${order.product_name}" a été expédiée ! 🌸\n\nNuméro de suivi : ${trackingForm.number.trim()}\nTransporteur : ${trackingForm.carrier}\n\nSuivez votre colis en cliquant sur le lien ci-dessous :\n${trackingUrl}\n\nMerci pour votre confiance,\nL'équipe Fleurs de fête`,
+    });
+
+    toast.success("Email de suivi envoyé au client !");
+    setSendingTracking(false);
+    setTrackingOpen(null);
+    await loadOrders();
   };
 
   const STATUSES = Object.keys(STATUS_CONFIG);
