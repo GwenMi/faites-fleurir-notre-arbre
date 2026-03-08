@@ -98,7 +98,7 @@ export default function AdminDashboard() {
             <div>
               <h1 className="font-bold text-gray-800 text-sm md:text-base">{selectedEvent.couple_names}</h1>
               <Badge className={selectedEvent.plan === "premium" ? "bg-amber-100 text-amber-700 text-xs" : "bg-green-100 text-green-700 text-xs"}>
-                {selectedEvent.plan === "premium" ? "⭐ Premium" : "Basic"}
+                {selectedEvent.plan === "premium" ? "⭐ Complet" : "Essentiel"}
               </Badge>
             </div>
           </div>
