@@ -227,7 +227,18 @@ export default function AdminDashboard() {
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-500 mt-0.5">{ev.event_date}</p>
-                    <p className="text-xs text-purple-400 font-mono truncate mt-1">/e/{ev.slug}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <p className="text-xs text-purple-400 font-mono truncate">?slug={ev.slug}</p>
+                      <button onClick={(e) => copyLink(e, ev)}
+                        className="flex-shrink-0 p-1 rounded-md hover:bg-purple-50 transition text-purple-400 hover:text-purple-600">
+                        {copiedId === ev.id ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                      </button>
+                      <a href={ev.public_url} target="_blank" rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-shrink-0 p-1 rounded-md hover:bg-purple-50 transition text-purple-400 hover:text-purple-600">
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   </div>
                   <ChevronLeft className="w-5 h-5 text-gray-300 rotate-180 flex-shrink-0" />
                 </div>
