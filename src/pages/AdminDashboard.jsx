@@ -45,16 +45,21 @@ export default function AdminDashboard() {
   };
 
   const loadEventData = async (eventId) => {
-    const [ph, po, pl, rs] = await Promise.all([
+    const [ph, po, pl, rs, cm, rx] = await Promise.all([
       base44.entities.Photo.filter({ event_id: eventId }),
       base44.entities.Post.filter({ event_id: eventId }),
       base44.entities.Poll.filter({ event_id: eventId }),
       base44.entities.PollResponse.list(),
+      base44.entities.Comment.list(),
+      base44.entities.Reaction.filter({ event_id: eventId }),
     ]);
+    const photoIds = (ph || []).map(p => p.id);
     setPhotos(ph || []);
     setPosts(po || []);
     setPolls(pl || []);
     setResponses((rs || []).filter(r => (pl || []).some(p => p.id === r.poll_id)));
+    setComments((cm || []).filter(c => photoIds.includes(c.photo_id)));
+    setReactions(rx || []);
   };
 
   const handleSelectEvent = (ev) => {
