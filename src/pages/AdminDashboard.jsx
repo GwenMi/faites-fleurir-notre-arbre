@@ -125,6 +125,23 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-3xl mx-auto p-4">
+        {/* Lien public */}
+        <div className="bg-white rounded-2xl border border-purple-100 shadow-sm p-4 mb-4 flex items-center gap-3">
+          <Link className="w-5 h-5 text-purple-400 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-gray-400 mb-0.5">Lien de votre page événement</p>
+            <p className="text-sm font-mono text-purple-600 truncate">{selectedEvent.public_url}</p>
+          </div>
+          <button onClick={(e) => copyLink(e, selectedEvent)}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-600 hover:bg-purple-100 transition text-xs font-semibold">
+            {copiedId === selectedEvent.id ? <><Check className="w-3.5 h-3.5 text-green-500" /> Copié</> : <><Copy className="w-3.5 h-3.5" /> Copier</>}
+          </button>
+          <a href={selectedEvent.public_url} target="_blank" rel="noopener noreferrer"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500 text-white hover:bg-purple-600 transition text-xs font-semibold">
+            <ExternalLink className="w-3.5 h-3.5" /> Ouvrir
+          </a>
+        </div>
+
         <Tabs defaultValue="photos" className="w-full">
           <TabsList className="w-full mb-4 rounded-2xl bg-white shadow-sm border border-gray-100 p-1">
             <TabsTrigger value="photos" className="flex-1 rounded-xl text-xs">
