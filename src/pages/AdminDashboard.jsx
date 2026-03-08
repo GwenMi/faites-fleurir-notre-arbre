@@ -21,6 +21,15 @@ export default function AdminDashboard() {
   const [posts, setPosts] = useState([]);
   const [view, setView] = useState("list"); // list | create | edit | detail
   const [loading, setLoading] = useState(true);
+  const [copiedId, setCopiedId] = useState(null);
+
+  const copyLink = (e, ev) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(ev.public_url);
+    setCopiedId(ev.id);
+    toast.success("Lien copié !");
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   useEffect(() => { loadEvents(); }, []);
   useEffect(() => { if (selectedEvent) loadEventData(selectedEvent.id); }, [selectedEvent]);
