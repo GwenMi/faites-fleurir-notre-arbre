@@ -214,7 +214,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-bold text-gray-800">{ev.couple_names}</p>
                       <Badge className={ev.plan === "premium" ? "bg-amber-100 text-amber-700 text-xs" : "bg-green-100 text-green-700 text-xs"}>
-                        {ev.plan === "premium" ? "⭐ Premium" : "Basic"}
+                        {ev.plan === "premium" ? "⭐ Complet" : "Essentiel"}
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-500 mt-0.5">{ev.event_date}</p>
