@@ -113,13 +113,25 @@ export default function Boutique() {
               ))}
             </div>
 
-            {/* Info band */}
-            <div className="mt-12 bg-gradient-to-r from-rose-50 to-pink-50 rounded-3xl p-8 text-center border border-rose-100">
-              <p className="font-serif-elegant text-2xl font-bold text-gray-800 mb-3">🚚 Livraison incluse</p>
-              <p className="font-sans-clean text-sm text-gray-500 max-w-sm mx-auto leading-relaxed">
-                Chaque commande est préparée avec soin et expédiée dans les 5 jours ouvrés.
-                Nous vous contactons par email pour confirmer les détails.
-              </p>
+            {/* Livraison section */}
+            <div className="mt-12 bg-white rounded-3xl border-2 border-rose-100 shadow-sm p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0">
+                  <Truck className="w-5 h-5 text-rose-400" />
+                </div>
+                <h2 className="font-serif-elegant text-2xl font-bold text-gray-800">Livraison</h2>
+              </div>
+              <div className="font-sans-clean text-sm text-gray-600 leading-relaxed space-y-3">
+                <p>Chaque commande est préparée avec soin avant expédition.</p>
+                <p>
+                  Afin de garantir la préparation et la livraison dans les délais, nous vous recommandons de passer commande
+                  <span className="font-semibold text-gray-800"> jusqu'à 21 jours avant votre événement</span>.
+                </p>
+                <p className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-amber-800">
+                  <span className="mt-0.5">⚠️</span>
+                  <span>Les commandes passées <span className="font-semibold">moins de 14 jours</span> avant la date de l'événement peuvent être acceptées, mais la livraison dans les délais ne peut pas être garantie.</span>
+                </p>
+              </div>
             </div>
           </>
         )}
