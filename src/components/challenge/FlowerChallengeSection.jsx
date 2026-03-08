@@ -244,6 +244,7 @@ export default function FlowerChallengeSection({ event }) {
             <span className="text-base font-normal text-gray-400 font-sans-clean">({flowerPosts.length})</span>
           </h3>
           <FlowerGallery posts={flowerPosts} />
+          <FlowerTree posts={posts} />
         </div>
       )}
 
