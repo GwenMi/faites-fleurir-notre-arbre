@@ -174,8 +174,7 @@ export default function AdminDashboard() {
       <div className="bg-white border-b border-gray-100 px-4 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Flower className="w-6 h-6 text-purple-400" />
-            <h1 className="text-xl font-bold text-gray-800">Faites Fleurir</h1>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="h-9" />
           </div>
           <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
             <Plus className="w-4 h-4 mr-1" /> Nouvel événement
