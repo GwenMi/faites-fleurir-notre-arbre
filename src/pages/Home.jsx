@@ -48,16 +48,9 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 text-center px-6 pt-16 pb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Flower className="w-7 h-7 text-pink-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-pink-400">Mariages & Événements</span>
-            <Flower className="w-7 h-7 text-pink-400" />
+          <div className="flex items-center justify-center mb-4">
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="w-48 md:w-64" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-3 leading-tight"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Faites Fleurir<br />
-            <span className="text-pink-500">Notre Arbre</span>
-          </h1>
           <p className="text-gray-500 text-lg max-w-md mx-auto mb-8 leading-relaxed">
             Offrez à vos invités un petit pot de graines. Quand leur fleur pousse, ils partagent leur photo — et votre amour fleurit à l'infini.
           </p>
