@@ -284,10 +284,9 @@ export default function OrderTracking() {
                 </div>
               );
             })}
-          </div>
-          </div>
-        )}
-      </div>
+            </div>
+            )}
+            </div>
 
       {/* Footer */}
       <footer className="mt-12 py-10 px-6 border-t border-gray-200 text-center bg-white">
