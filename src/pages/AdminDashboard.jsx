@@ -179,6 +179,9 @@ export default function AdminDashboard() {
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger value="rsvp" className="flex-1 rounded-xl text-xs">
+              <ClipboardList className="w-3 h-3 mr-1" /> RSVP
+            </TabsTrigger>
             <TabsTrigger value="seating" className="flex-1 rounded-xl text-xs">
               <LayoutGrid className="w-3 h-3 mr-1" /> Tables
             </TabsTrigger>
