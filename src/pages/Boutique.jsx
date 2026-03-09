@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { ShoppingBag, Sparkles, Gift, TrendingUp, ChevronRight, AlertCircle } from "lucide-react";
+import { ShoppingBag, Sparkles, Gift, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "../components/shop/ProductCard";
 import OrderModal from "../components/shop/OrderModal";
@@ -153,7 +153,6 @@ export default function Boutique() {
                   <button
                     onClick={() => {
                       setSelectedProduct(PRODUCTS[0]);
-                      // Hack: modifier quantity via state dans le modal
                       setShowModal(true);
                     }}
                     className="w-full py-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 text-sm font-semibold transition"
