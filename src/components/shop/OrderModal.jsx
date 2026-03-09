@@ -129,7 +129,7 @@ export default function OrderModal({ product, onClose }) {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm px-4 pb-4 sm:pb-0">
       <Elements stripe={stripePromise}>
         <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
+          {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
             <h2 className="font-serif-elegant text-xl font-bold text-gray-800">{product.name}</h2>
