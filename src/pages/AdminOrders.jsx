@@ -549,6 +549,18 @@ contact@fleursenfete.com`,
                         Relancer le client
                       </button>
                     )}
+                    {(order.status === "confirmed" || order.status === "shipped") && order.payment_status !== "paid" && (
+                      <button
+                        onClick={() => sendPaymentReminder(order)}
+                        disabled={sendingPaymentReminder === order.id}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-indigo-200 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition font-medium disabled:opacity-50"
+                      >
+                        {sendingPaymentReminder === order.id
+                          ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          : <AlertCircle className="w-3.5 h-3.5" />}
+                        Rappel paiement
+                      </button>
+                    )}
                     {order.status === "delivered" && (
                       <button
                         onClick={() => sendReviewRequest(order)}
