@@ -197,8 +197,24 @@ Fleurs en fête`;
         subject: `Votre facture - Commande #${orderData.id.slice(-8).toUpperCase()}`,
         body: emailBody
       });
+
+      // Marquer la facture comme envoyée
+      await base44.entities.Order.update(orderData.id, {
+        invoice_email_sent: true,
+        invoice_sent_date: new Date().toISOString()
+      });
+
+      // Rafraîchir l'order
+      const updated = await base44.entities.Order.filter({ id: orderData.id }, "-created_date", 1);
+      if (updated?.length) {
+        setOrder(updated[0]);
+        buildTimeline(updated[0]);
+      }
+
+      toast.success("Facture envoyée ✓");
     } catch (e) {
       console.error("Erreur envoi facture:", e);
+      toast.error("Erreur envoi facture");
     }
   };
 
