@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Flower2, Trophy, Lock, Users, Calendar, Eye, Trash2, RefreshCw } from "lucide-react";
+import { Flower2, Trophy, Lock, Users, Calendar, Eye, Trash2, RefreshCw, Mail } from "lucide-react";
 
 const GAGE_SUGGESTIONS = [
   "Photo grimace 😜",
