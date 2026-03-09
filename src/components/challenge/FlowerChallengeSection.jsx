@@ -259,6 +259,9 @@ export default function FlowerChallengeSection({ event }) {
         </div>
       )}
 
+      {/* Guestbook */}
+      <GuestbookSection event={event} guest={guest} />
+
       {/* Gage secret hidden during flower phase */}
       {isFlowerPhase && (
         <div className="text-center mt-4">
