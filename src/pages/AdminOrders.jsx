@@ -149,6 +149,63 @@ contact@fleursenfete.com`,
     setSendingReviewLink(null);
   };
 
+  const PAYMENT_STATUS_CONFIG = {
+    unpaid:  { label: "Non réglée",   className: "bg-red-100 text-red-600" },
+    partial: { label: "Acompte reçu", className: "bg-amber-100 text-amber-700" },
+    paid:    { label: "Réglée",       className: "bg-green-100 text-green-700" },
+  };
+
+  const openPaymentForm = (order) => {
+    setPaymentForm({
+      deposit_amount: order.deposit_amount ?? "",
+      payment_status: order.payment_status || "unpaid",
+      payment_notes: order.payment_notes || "",
+    });
+    setPaymentOpen(order.id);
+  };
+
+  const savePayment = async (order) => {
+    setSavingPayment(true);
+    await base44.entities.Order.update(order.id, {
+      deposit_amount: paymentForm.deposit_amount !== "" ? Number(paymentForm.deposit_amount) : 0,
+      payment_status: paymentForm.payment_status,
+      payment_notes: paymentForm.payment_notes,
+    });
+    toast.success("Encaissement mis à jour ✓");
+    setSavingPayment(false);
+    setPaymentOpen(null);
+    await loadOrders();
+  };
+
+  const sendPaymentReminder = async (order) => {
+    setSendingPaymentReminder(order.id);
+    const total = order.total_price?.toFixed(2) ?? "—";
+    const deposit = order.deposit_amount ?? 0;
+    const balance = ((order.total_price ?? 0) - deposit).toFixed(2);
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `💳 Rappel de paiement — Commande ${order.product_name} — Fleurs en fête`,
+      body: `Bonjour ${order.customer_name},
+
+Nous espérons que tout se passe bien pour la préparation de votre événement 🌸
+
+Nous vous contactons pour un rappel concernant le règlement de votre commande :
+
+🌸 Produit : ${order.product_name} × ${order.quantity}
+💰 Total commande : ${total} €${deposit > 0 ? `\n✅ Acompte reçu : ${deposit.toFixed(2)} €\n⏳ Solde restant dû : ${balance} €` : `\n⏳ Montant total restant dû : ${total} €`}
+
+Pour procéder au règlement ou si vous avez la moindre question, n'hésitez pas à nous contacter directement par email.
+
+Merci pour votre confiance,
+Gwenaëlle — Fleurs en fête 🌸
+contact@fleursenfete.com`,
+    });
+    await base44.entities.Order.update(order.id, { payment_reminder_sent: true });
+    toast.success(`Rappel de paiement envoyé à ${order.customer_email} 💳`);
+    setSendingPaymentReminder(null);
+    await loadOrders();
+  };
+
   const STATUSES = Object.keys(STATUS_CONFIG);
 
   const filteredOrders = orders.filter(order => {
