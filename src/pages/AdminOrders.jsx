@@ -369,9 +369,11 @@ contact@fleursenfete.com`,
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <p className="font-bold text-gray-800">{order.customer_name}</p>
-                        <Badge className={statusCfg.className + " text-xs"}>{statusCfg.label}</Badge>
-                      </div>
+                         <a href={`${createPageUrl("AdminOrdersDetail")}?id=${order.id}`} className="font-bold text-gray-800 hover:text-indigo-600 transition cursor-pointer">
+                           {order.customer_name}
+                         </a>
+                         <Badge className={statusCfg.className + " text-xs"}>{statusCfg.label}</Badge>
+                       </div>
                       <p className="text-xs text-gray-400 mb-2">{order.customer_email}</p>
 
                       {opts.delivery_address && (
