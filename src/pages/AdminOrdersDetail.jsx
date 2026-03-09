@@ -87,6 +87,18 @@ export default function AdminOrdersDetail() {
       });
     }
 
+    // Facture envoyée
+    if (order.invoice_email_sent && order.invoice_sent_date) {
+      events.push({
+        type: "invoice_sent",
+        label: "Facture envoyée",
+        date: order.invoice_sent_date,
+        icon: "📧",
+        details: `Envoyée à ${order.customer_email}`,
+        status: "done"
+      });
+    }
+
     // Tracking
     if (order.tracking_number) {
       events.push({
