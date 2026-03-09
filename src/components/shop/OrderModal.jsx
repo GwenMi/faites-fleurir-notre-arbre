@@ -108,6 +108,10 @@ export default function OrderModal({ product, guestPack, onClose }) {
 
     setSiteUrl(publicUrl);
     setOrderCreated(order);
+    
+    // Notifier l'admin
+    notifyAdminNewOrder(order, publicUrl);
+    
     setPaymentStep(true);
   };
 
