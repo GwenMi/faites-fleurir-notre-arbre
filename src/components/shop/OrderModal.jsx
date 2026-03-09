@@ -193,22 +193,43 @@ export default function OrderModal({ product, guestPack, onClose }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-            {/* Quantity */}
-            <div>
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Quantité</label>
-              <div className="flex items-center gap-4">
-                <button type="button" onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 transition">
-                  <Minus className="w-4 h-4 text-gray-500" />
-                </button>
-                <span className="text-2xl font-bold text-gray-800 w-12 text-center">{quantity}</span>
-                <button type="button" onClick={() => setQuantity(q => q + 1)}
-                  className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 transition">
-                  <Plus className="w-4 h-4 text-gray-500" />
-                </button>
-                <span className="text-sm text-gray-400 ml-2">= <span className="font-bold text-rose-500">{total} €</span></span>
+            {/* Pack summary or quantity */}
+            {isGuestPack ? (
+              <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 space-y-2">
+                <div>
+                  <p className="text-xs text-gray-500 font-semibold">Nombre de pots</p>
+                  <p className="text-lg font-bold text-gray-800">{guestPack.guests} pots</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-semibold">Type de kit</p>
+                  <p className="text-sm text-gray-700">{guestPack.kitName}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-semibold">Type de pot</p>
+                  <p className="text-sm text-gray-700">{guestPack.potName}</p>
+                </div>
+                <div className="border-t border-rose-200 pt-2">
+                  <p className="text-xs text-gray-500 font-semibold">Prix total</p>
+                  <p className="text-2xl font-bold text-rose-500">{total} €</p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Quantité</label>
+                <div className="flex items-center gap-4">
+                  <button type="button" onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 transition">
+                    <Minus className="w-4 h-4 text-gray-500" />
+                  </button>
+                  <span className="text-2xl font-bold text-gray-800 w-12 text-center">{quantity}</span>
+                  <button type="button" onClick={() => setQuantity(q => q + 1)}
+                    className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 transition">
+                    <Plus className="w-4 h-4 text-gray-500" />
+                  </button>
+                  <span className="text-sm text-gray-400 ml-2">= <span className="font-bold text-rose-500">{total} €</span></span>
+                </div>
+              </div>
+            )}
 
             {/* Pot type (compose only) */}
             {hasCompose && (
