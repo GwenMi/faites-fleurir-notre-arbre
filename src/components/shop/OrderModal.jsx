@@ -2,7 +2,11 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle, CreditCard } from "lucide-react";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const RIBBON_COLORS = ["Blanc", "Ivoire", "Rose poudré", "Bordeaux", "Vert sauge", "Bleu ardoise", "Doré", "Noir"];
 const SEED_TYPES = ["Lavande", "Tournesol", "Marguerite", "Coquelicot", "Bleuet", "Forget-me-not"];
@@ -32,10 +36,13 @@ export default function OrderModal({ product, onClose }) {
   const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
 
   const [siteUrl, setSiteUrl] = useState("");
+  const [orderCreated, setOrderCreated] = useState(null);
+  const [paymentStep, setPaymentStep] = useState(false);
+  const [paymentOption, setPaymentOption] = useState("full"); // "full" ou "deposit"
 
-  const doSubmit = async () => {
-    setLoading(true);
+  const depositAmount = Math.round(parseFloat(total) * 0.5 * 100) / 100; // 50%
 
+  const createOrder = async () => {
     // 1. Créer automatiquement le site événement gratuit
     const baseSlug = name.trim().toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -57,8 +64,8 @@ export default function OrderModal({ product, onClose }) {
       welcome_message: `Bienvenue sur notre espace événement 🌸`,
     });
 
-    // 2. Créer la commande avec le lien vers le site
-    await base44.entities.Order.create({
+    // 2. Créer la commande
+    const order = await base44.entities.Order.create({
       customer_name: name.trim(),
       customer_email: email.trim(),
       product_id: product.id,
@@ -77,11 +84,17 @@ export default function OrderModal({ product, onClose }) {
       total_price: parseFloat(total),
       status: "pending",
       event_id: eventRecord.id,
+      payment_status: "unpaid",
     });
 
     setSiteUrl(publicUrl);
+    setOrderCreated(order);
+    setPaymentStep(true);
+  };
 
-    // 3. Email de confirmation avec le lien du site
+  const doSubmit = async () => {
+    setLoading(true);
+
     const lateNote = isLate
       ? "\n\n⚠️ Rappel délais : Votre événement est dans moins de 14 jours. Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie."
       : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
@@ -89,7 +102,7 @@ export default function OrderModal({ product, onClose }) {
     await base44.integrations.Core.SendEmail({
       to: email.trim(),
       subject: `🌸 Confirmation de commande — ${product.name}`,
-      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${publicUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${siteUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
     });
 
     setLoading(false);
@@ -104,7 +117,9 @@ export default function OrderModal({ product, onClose }) {
       setShowLateWarning(true);
       return;
     }
-    await doSubmit();
+    setLoading(true);
+    await createOrder();
+    setLoading(false);
   };
 
   return (
