@@ -117,6 +117,9 @@ export default function Boutique() {
               ))}
             </div>
 
+            {/* Guest Packs Section */}
+            <GuestPacksSection onSelectPack={setSelectedPack} />
+
             {/* Livraison section */}
             <div className="mt-12 bg-white rounded-3xl border-2 border-rose-100 shadow-sm p-8">
               <div className="flex items-center gap-3 mb-4">
