@@ -89,6 +89,35 @@ export default function AdminOrders() {
     await loadOrders();
   };
 
+  const downloadInvoice = (order) => {
+    const doc = generateInvoicePDF(order);
+    const invoiceNumber = `FEF-${(order.id || "").slice(-8).toUpperCase()}`;
+    doc.save(`Facture-${invoiceNumber}.pdf`);
+  };
+
+  const sendInvoiceByEmail = async (order) => {
+    setSendingInvoice(order.id);
+    const invoiceNumber = `FEF-${(order.id || "").slice(-8).toUpperCase()}`;
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `🌸 Votre facture Fleurs en fête — ${invoiceNumber}`,
+      body: getInvoiceEmailBody(order),
+    });
+    toast.success(`Facture envoyée à ${order.customer_email}`);
+    setSendingInvoice(null);
+  };
+
+  const sendReminder = async (order) => {
+    setSendingReminder(order.id);
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `🌱 Vos pousses d'amour vous attendent… — Fleurs en fête`,
+      body: getReminderEmailBody(order),
+    });
+    toast.success(`Relance envoyée à ${order.customer_email} 🌸`);
+    setSendingReminder(null);
+  };
+
   const STATUSES = Object.keys(STATUS_CONFIG);
 
   return (
