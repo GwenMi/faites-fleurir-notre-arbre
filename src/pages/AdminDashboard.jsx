@@ -270,6 +270,12 @@ export default function AdminDashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="bestof">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <BestOfManager event={selectedEvent} />
+            </div>
+          </TabsContent>
+
           <TabsContent value="challenge">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <ChallengeManager event={selectedEvent} onRefresh={() => loadEventData(selectedEvent.id)} />

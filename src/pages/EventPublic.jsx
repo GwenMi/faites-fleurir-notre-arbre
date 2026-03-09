@@ -110,6 +110,11 @@ export default function EventPublic() {
         <RSVPSection event={event} primaryColor={primaryColor} />
       </div>
 
+      {/* Best of Section */}
+      <div className="max-w-2xl mx-auto">
+        <BestOfSection event={event} primaryColor={primaryColor} />
+      </div>
+
       {/* Flower Challenge Section */}
       <div className="max-w-2xl mx-auto px-4 pb-16">
         <FlowerChallengeSection event={event} />
