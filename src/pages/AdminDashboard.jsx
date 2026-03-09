@@ -325,6 +325,10 @@ export default function AdminDashboard() {
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="h-9" />
           </div>
           <div className="flex items-center gap-2">
+            <a href={createPageUrl("Quotes")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-violet-50 text-violet-600 hover:bg-violet-100 transition text-sm font-semibold">
+              <FileText className="w-4 h-4" /> Devis
+            </a>
             <a href={createPageUrl("CalendarView")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-500 hover:bg-purple-100 transition text-sm font-semibold">
               <Calendar className="w-4 h-4" /> Calendrier
