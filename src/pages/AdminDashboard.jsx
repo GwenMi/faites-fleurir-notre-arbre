@@ -1,415 +1,467 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EventForm from "@/components/admin/EventForm";
-import PhotoModeration from "@/components/admin/PhotoModeration";
-import PollManager from "@/components/admin/PollManager";
-import PostManager from "@/components/admin/PostManager";
-import QRCodeDisplay from "@/components/admin/QRCodeDisplay";
-import VisualPackGenerator from "@/components/admin/VisualPackGenerator";
-import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2, LayoutGrid, ClipboardList, CalendarClock, Bell, Truck, Star, PiggyBank, Calendar, Users, TrendingUp, FileText } from "lucide-react";
-import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
-import CommentModeration from "@/components/admin/CommentModeration";
-import ChallengeManager from "@/components/admin/ChallengeManager";
-import SeatingManager from "@/components/admin/SeatingManager";
-import RSVPManager from "@/components/admin/rsvp/RSVPManager";
-import ScheduleManager from "@/components/admin/ScheduleManager";
-import NotificationsManager from "@/components/admin/NotificationsManager";
-import OrderTracking from "@/components/admin/OrderTracking";
-import BestOfManager from "@/components/admin/BestOfManager";
-import ThankyouEmailManager from "@/components/admin/ThankyouEmailManager";
-import BudgetManager from "@/components/admin/BudgetManager";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
+
+const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
 export default function AdminDashboard() {
-  const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [photos, setPhotos] = useState([]);
-  const [polls, setPolls] = useState([]);
-  const [responses, setResponses] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [reactions, setReactions] = useState([]);
-  const [view, setView] = useState("list"); // list | create | edit | detail
+  const [orders, setOrders] = useState([]);
+  const [promos, setPromos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [copiedId, setCopiedId] = useState(null);
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    avgOrderValue: 0,
+    monthlyData: [],
+    conversionRate: 0
+  });
+  
+  const [showPromoForm, setShowPromoForm] = useState(false);
+  const [editingPromo, setEditingPromo] = useState(null);
+  const [promoForm, setPromoForm] = useState({
+    code: "",
+    discount_percent: 0,
+    discount_amount: 0,
+    active: true,
+    valid_from: "",
+    valid_until: "",
+    max_uses: null,
+    min_order_amount: null,
+    applies_to: "all",
+    description: ""
+  });
+  const [copiedCode, setCopiedCode] = useState(null);
+  const [savingPromo, setSavingPromo] = useState(false);
 
-  const copyLink = (e, ev) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(ev.public_url);
-    setCopiedId(ev.id);
-    toast.success("Lien copié !");
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  useEffect(() => { loadEvents(); }, []);
-  useEffect(() => { if (selectedEvent) loadEventData(selectedEvent.id); }, [selectedEvent]);
-
-  const loadEvents = async () => {
-    setLoading(true);
-    const ev = await base44.entities.Event.list("-created_date");
-    setEvents(ev || []);
+  const loadData = async () => {
+    try {
+      const allOrders = await base44.entities.Order.list("-created_date", 1000);
+      setOrders(allOrders);
+      
+      const allPromos = await base44.entities.Promo.list("-created_date", 100);
+      setPromos(allPromos);
+      
+      calculateStats(allOrders);
+    } catch (e) {
+      console.error("Erreur chargement:", e);
+    }
     setLoading(false);
   };
 
-  const loadEventData = async (eventId) => {
-    const [ph, po, pl, rs, cm, rx] = await Promise.all([
-      base44.entities.Photo.filter({ event_id: eventId }),
-      base44.entities.Post.filter({ event_id: eventId }),
-      base44.entities.Poll.filter({ event_id: eventId }),
-      base44.entities.PollResponse.list(),
-      base44.entities.Comment.list(),
-      base44.entities.Reaction.filter({ event_id: eventId }),
-    ]);
-    const photoIds = (ph || []).map(p => p.id);
-    setPhotos(ph || []);
-    setPosts(po || []);
-    setPolls(pl || []);
-    setResponses((rs || []).filter(r => (pl || []).some(p => p.id === r.poll_id)));
-    setComments((cm || []).filter(c => photoIds.includes(c.photo_id)));
-    setReactions(rx || []);
+  const calculateStats = (ordersList) => {
+    const totalRevenue = ordersList
+      .filter(o => o.payment_status === "paid")
+      .reduce((sum, o) => sum + (o.total_price || 0), 0);
+
+    const totalOrders = ordersList.length;
+    const paidOrders = ordersList.filter(o => o.payment_status === "paid");
+    const avgOrderValue = paidOrders.length > 0 ? totalRevenue / paidOrders.length : 0;
+
+    // Monthly breakdown
+    const monthlyMap = {};
+    ordersList.forEach(order => {
+      const date = new Date(order.created_date);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      if (!monthlyMap[monthKey]) {
+        monthlyMap[monthKey] = { month: monthKey, orders: 0, revenue: 0 };
+      }
+      monthlyMap[monthKey].orders += 1;
+      if (order.payment_status === "paid") {
+        monthlyMap[monthKey].revenue += order.total_price || 0;
+      }
+    });
+
+    const monthlyData = Object.values(monthlyMap)
+      .sort((a, b) => a.month.localeCompare(b.month))
+      .slice(-12); // Last 12 months
+
+    // Conversion rate (commandes payées / commandes totales)
+    const conversionRate = totalOrders > 0 ? (paidOrders.length / totalOrders * 100).toFixed(1) : 0;
+
+    setStats({
+      totalRevenue: totalRevenue.toFixed(2),
+      totalOrders,
+      avgOrderValue: avgOrderValue.toFixed(2),
+      monthlyData,
+      conversionRate
+    });
   };
 
-  const handleSelectEvent = (ev) => {
-    setSelectedEvent(ev);
-    setView("detail");
+  const savePromo = async () => {
+    if (!promoForm.code.trim()) {
+      toast.error("Code requis");
+      return;
+    }
+
+    setSavingPromo(true);
+    try {
+      if (editingPromo) {
+        await base44.entities.Promo.update(editingPromo.id, promoForm);
+        toast.success("Code promo mis à jour ✓");
+      } else {
+        await base44.entities.Promo.create(promoForm);
+        toast.success("Code promo créé ✓");
+      }
+      
+      setShowPromoForm(false);
+      setEditingPromo(null);
+      setPromoForm({
+        code: "",
+        discount_percent: 0,
+        discount_amount: 0,
+        active: true,
+        valid_from: "",
+        valid_until: "",
+        max_uses: null,
+        min_order_amount: null,
+        applies_to: "all",
+        description: ""
+      });
+      
+      await loadData();
+    } catch (e) {
+      toast.error("Erreur sauvegarde");
+    }
+    setSavingPromo(false);
   };
 
-  const handleSave = () => {
-    loadEvents();
-    setView("list");
+  const deletePromo = async (id) => {
+    if (!window.confirm("Supprimer ce code ?")) return;
+    try {
+      await base44.entities.Promo.delete(id);
+      toast.success("Code promo supprimé ✓");
+      loadData();
+    } catch (e) {
+      toast.error("Erreur suppression");
+    }
   };
 
-  if (view === "create") return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => setView("list")} className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition">
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <h1 className="text-xl font-bold text-gray-800">Créer un événement</h1>
-        </div>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <EventForm onSave={handleSave} onCancel={() => setView("list")} />
-        </div>
+  const editPromo = (promo) => {
+    setEditingPromo(promo);
+    setPromoForm(promo);
+    setShowPromoForm(true);
+  };
+
+  const copyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2000);
+    toast.success("Code copié ✓");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
       </div>
-    </div>
-  );
+    );
+  }
 
-  if (view === "edit" && selectedEvent) return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => setView("detail")} className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition">
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <h1 className="text-xl font-bold text-gray-800">Modifier l'événement</h1>
-        </div>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <EventForm event={selectedEvent} onSave={() => { loadEvents(); setView("detail"); }} onCancel={() => setView("detail")} />
-        </div>
-      </div>
-    </div>
-  );
-
-  if (view === "detail" && selectedEvent) return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-10 px-4 py-3">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setView("list")} className="p-2 rounded-xl hover:bg-gray-50 transition">
-              <ChevronLeft className="w-5 h-5 text-gray-600" />
-            </button>
-            <div>
-              <h1 className="font-bold text-gray-800 text-sm md:text-base">{selectedEvent.couple_names}</h1>
-              <Badge className={selectedEvent.plan === "premium" ? "bg-amber-100 text-amber-700 text-xs" : "bg-green-100 text-green-700 text-xs"}>
-                {selectedEvent.plan === "premium" ? "⭐ Complet" : "Essentiel"}
-              </Badge>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <a href={selectedEvent.public_url} target="_blank" rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-purple-50 text-purple-500 hover:bg-purple-100 transition">
-              <ExternalLink className="w-4 h-4" />
-            </a>
-            <Button size="sm" onClick={() => setView("edit")} variant="outline" className="rounded-xl text-xs">
-              <Settings className="w-3 h-3 mr-1" /> Modifier
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-3xl mx-auto p-4">
-        {/* Lien public */}
-        <div className="bg-white rounded-2xl border border-purple-100 shadow-sm p-4 mb-4 flex items-center gap-3">
-          <Link className="w-5 h-5 text-purple-400 flex-shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-gray-400 mb-0.5">Lien de votre page événement</p>
-            <p className="text-sm font-mono text-purple-600 truncate">{selectedEvent.public_url}</p>
-          </div>
-          <button onClick={(e) => copyLink(e, selectedEvent)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-600 hover:bg-purple-100 transition text-xs font-semibold">
-            {copiedId === selectedEvent.id ? <><Check className="w-3.5 h-3.5 text-green-500" /> Copié</> : <><Copy className="w-3.5 h-3.5" /> Copier</>}
-          </button>
-          <a href={selectedEvent.public_url} target="_blank" rel="noopener noreferrer"
-            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500 text-white hover:bg-purple-600 transition text-xs font-semibold">
-            <ExternalLink className="w-3.5 h-3.5" /> Ouvrir
-          </a>
-        </div>
-
-        <Tabs defaultValue="photos" className="w-full">
-          <TabsList className="w-full mb-4 rounded-2xl bg-white shadow-sm border border-gray-100 p-1">
-            <TabsTrigger value="photos" className="flex-1 rounded-xl text-xs">
-              <Image className="w-3 h-3 mr-1" /> Photos
-              {photos.filter(p => !p.approved).length > 0 && (
-                <span className="ml-1 bg-amber-400 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {photos.filter(p => !p.approved).length}
-                </span>
-              )}
-            </TabsTrigger>
-            {selectedEvent.plan === "premium" && <>
-              <TabsTrigger value="polls" className="flex-1 rounded-xl text-xs">
-                <BarChart2 className="w-3 h-3 mr-1" /> Sondages
-              </TabsTrigger>
-              <TabsTrigger value="posts" className="flex-1 rounded-xl text-xs">
-                <Newspaper className="w-3 h-3 mr-1" /> Actus
-              </TabsTrigger>
-            </>}
-            <TabsTrigger value="comments" className="flex-1 rounded-xl text-xs">
-              <MessageSquare className="w-3 h-3 mr-1" /> Comm.
-              {(comments.length + reactions.length) > 0 && (
-                <span className="ml-1 bg-blue-400 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {comments.length}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="schedule" className="flex-1 rounded-xl text-xs">
-              <CalendarClock className="w-3 h-3 mr-1" /> Journée
-            </TabsTrigger>
-            <TabsTrigger value="rsvp" className="flex-1 rounded-xl text-xs">
-              <ClipboardList className="w-3 h-3 mr-1" /> RSVP
-            </TabsTrigger>
-            <TabsTrigger value="seating" className="flex-1 rounded-xl text-xs">
-              <LayoutGrid className="w-3 h-3 mr-1" /> Tables
-            </TabsTrigger>
-            <TabsTrigger value="orders" className="flex-1 rounded-xl text-xs">
-              <Truck className="w-3 h-3 mr-1" /> Livraison
-            </TabsTrigger>
-            <TabsTrigger value="thankyou" className="flex-1 rounded-xl text-xs">
-              💌 Merci
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex-1 rounded-xl text-xs">
-              <Bell className="w-3 h-3 mr-1" /> Emails
-            </TabsTrigger>
-            <TabsTrigger value="budget" className="flex-1 rounded-xl text-xs">
-              <PiggyBank className="w-3 h-3 mr-1" /> Budget
-            </TabsTrigger>
-            <TabsTrigger value="bestof" className="flex-1 rounded-xl text-xs">
-              <Star className="w-3 h-3 mr-1" /> Best of
-            </TabsTrigger>
-            <TabsTrigger value="challenge" className="flex-1 rounded-xl text-xs">
-              <Flower2 className="w-3 h-3 mr-1" /> Défi
-            </TabsTrigger>
-            <TabsTrigger value="qr" className="flex-1 rounded-xl text-xs">
-              QR Code
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="photos">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <PhotoModeration photos={photos} onRefresh={() => loadEventData(selectedEvent.id)} />
-            </div>
-          </TabsContent>
-
-          {selectedEvent.plan === "premium" && <>
-            <TabsContent value="polls">
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                <PollManager eventId={selectedEvent.id} polls={polls} responses={responses} onRefresh={() => loadEventData(selectedEvent.id)} />
-              </div>
-            </TabsContent>
-            <TabsContent value="posts">
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                <PostManager eventId={selectedEvent.id} posts={posts} onRefresh={() => loadEventData(selectedEvent.id)} />
-              </div>
-            </TabsContent>
-          </>}
-
-          <TabsContent value="comments">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <CommentModeration
-                comments={comments}
-                reactions={reactions}
-                photos={photos}
-                onRefresh={() => loadEventData(selectedEvent.id)}
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="schedule">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <ScheduleManager eventId={selectedEvent.id} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="rsvp">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <RSVPManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="seating">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <SeatingManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="orders">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <OrderTracking event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="thankyou">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <ThankyouEmailManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="notifications">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <NotificationsManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="budget">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <BudgetManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="bestof">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <BestOfManager event={selectedEvent} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="challenge">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-              <ChallengeManager event={selectedEvent} onRefresh={() => loadEventData(selectedEvent.id)} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="qr">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-6">
-              <QRCodeDisplay event={selectedEvent} />
-              <div className="border-t border-gray-100 pt-5">
-                <VisualPackGenerator event={selectedEvent} />
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-
-  // EVENT LIST
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="h-9" />
-          </div>
-          <div className="flex items-center gap-2">
-            <a href={createPageUrl("Quotes")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-violet-50 text-violet-600 hover:bg-violet-100 transition text-sm font-semibold">
-              <FileText className="w-4 h-4" /> Devis
-            </a>
-            <a href={createPageUrl("CalendarView")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-500 hover:bg-purple-100 transition text-sm font-semibold">
-              <Calendar className="w-4 h-4" /> Calendrier
-            </a>
-            <a href={createPageUrl("CRM")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition text-sm font-semibold">
-              <Users className="w-4 h-4" /> CRM
-            </a>
-            <a href={createPageUrl("Stats")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition text-sm font-semibold">
-              <TrendingUp className="w-4 h-4" /> Stats
-            </a>
-            <a href={createPageUrl("AdminOrders")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition text-sm font-semibold">
-              <Package className="w-4 h-4" /> Commandes
-            </a>
-            <a href={createPageUrl("SupplierOrders")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition text-sm font-semibold">
-              <Package className="w-4 h-4" /> Achats
-            </a>
-            <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
-              <Plus className="w-4 h-4 mr-1" /> Nouvel événement
-            </Button>
-          </div>
+      <div className="bg-white border-b border-gray-200 px-6 py-6">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-800">📊 Dashboard Commercial</h1>
+          <p className="text-gray-500 mt-1">Suivi de vos ventes et gestion des promos</p>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto p-4">
-        {loading ? (
-          <div className="text-center py-16 text-gray-400">Chargement...</div>
-        ) : events.length === 0 ? (
-          <div className="text-center py-16">
-            <span className="text-5xl">🌸</span>
-            <h2 className="text-xl font-bold text-gray-700 mt-4">Bienvenue !</h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-xs mx-auto">Créez votre premier événement pour commencer à partager des souvenirs fleuris.</p>
-            <Button onClick={() => setView("create")} className="mt-6 rounded-xl bg-purple-500 hover:bg-purple-600 text-white px-8">
-              Créer un événement
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500 font-semibold">REVENU TOTAL</p>
+              <TrendingUp className="w-5 h-5 text-rose-500" />
+            </div>
+            <p className="text-3xl font-bold text-gray-800">{stats.totalRevenue}€</p>
+            <p className="text-xs text-gray-400 mt-2">Paiements confirmés</p>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500 font-semibold">COMMANDES</p>
+              <Package className="w-5 h-5 text-blue-500" />
+            </div>
+            <p className="text-3xl font-bold text-gray-800">{stats.totalOrders}</p>
+            <p className="text-xs text-gray-400 mt-2">Total tous statuts</p>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500 font-semibold">PANIER MOYEN</p>
+              <Zap className="w-5 h-5 text-amber-500" />
+            </div>
+            <p className="text-3xl font-bold text-gray-800">{stats.avgOrderValue}€</p>
+            <p className="text-xs text-gray-400 mt-2">Commandes payées</p>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500 font-semibold">TAUX CONV.</p>
+              <TrendingUp className="w-5 h-5 text-green-500" />
+            </div>
+            <p className="text-3xl font-bold text-gray-800">{stats.conversionRate}%</p>
+            <p className="text-xs text-gray-400 mt-2">Commandes payées / total</p>
+          </div>
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Commandes par mois */}
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <h2 className="font-bold text-gray-800 mb-4">Commandes par mois</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={stats.monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="orders" fill="#f472b6" name="Commandes" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Revenus par mois */}
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <h2 className="font-bold text-gray-800 mb-4">Revenus par mois</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={stats.monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip formatter={value => `${value}€`} />
+                <Line type="monotone" dataKey="revenue" stroke="#ec4899" strokeWidth={2} name="Revenu" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Gestion Promos */}
+        <div className="bg-white rounded-lg p-6 border border-gray-200 space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Tag className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl font-bold text-gray-800">Codes Promos</h2>
+              <Badge className="bg-purple-100 text-purple-700">{promos.length}</Badge>
+            </div>
+            <Button onClick={() => { setEditingPromo(null); setPromoForm({
+              code: "",
+              discount_percent: 0,
+              discount_amount: 0,
+              active: true,
+              valid_from: "",
+              valid_until: "",
+              max_uses: null,
+              min_order_amount: null,
+              applies_to: "all",
+              description: ""
+            }); setShowPromoForm(true); }} className="bg-purple-600 hover:bg-purple-700">
+              <Plus className="w-4 h-4 mr-2" /> Nouveau code
             </Button>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <p className="text-sm text-gray-500 font-medium">{events.length} événement{events.length > 1 ? "s" : ""}</p>
-            {events.map(ev => (
-              <div key={ev.id} onClick={() => handleSelectEvent(ev)}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition cursor-pointer overflow-hidden">
-                <div className="flex items-center gap-4 p-4">
-                  {ev.cover_image ? (
-                    <img src={ev.cover_image} className="w-16 h-16 rounded-xl object-cover flex-shrink-0" alt={ev.couple_names} />
-                  ) : (
-                    <div className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl"
-                      style={{ background: ev.primary_color + "22" }}>
-                      🌸
+
+          {/* Promo Form */}
+          {showPromoForm && (
+            <div className="bg-purple-50 rounded-lg p-6 border border-purple-200 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Code *</label>
+                  <Input
+                    value={promoForm.code}
+                    onChange={e => setPromoForm({ ...promoForm, code: e.target.value.toUpperCase() })}
+                    placeholder="NOEL2024"
+                    className="uppercase"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Type réduction</label>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-600 mb-1 block">% discount</label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={promoForm.discount_percent}
+                        onChange={e => setPromoForm({ ...promoForm, discount_percent: parseFloat(e.target.value) })}
+                        placeholder="10"
+                      />
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-bold text-gray-800">{ev.couple_names}</p>
-                      <Badge className={ev.plan === "premium" ? "bg-amber-100 text-amber-700 text-xs" : "bg-green-100 text-green-700 text-xs"}>
-                        {ev.plan === "premium" ? "⭐ Complet" : "Essentiel"}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-0.5">{ev.event_date}</p>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <p className="text-xs text-purple-400 font-mono truncate">?slug={ev.slug}</p>
-                      <button onClick={(e) => copyLink(e, ev)}
-                        className="flex-shrink-0 p-1 rounded-md hover:bg-purple-50 transition text-purple-400 hover:text-purple-600">
-                        {copiedId === ev.id ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-                      </button>
-                      <a href={ev.public_url} target="_blank" rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex-shrink-0 p-1 rounded-md hover:bg-purple-50 transition text-purple-400 hover:text-purple-600">
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-600 mb-1 block">ou montant (€)</label>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={promoForm.discount_amount}
+                        onChange={e => setPromoForm({ ...promoForm, discount_amount: parseFloat(e.target.value) })}
+                        placeholder="5.00"
+                      />
                     </div>
                   </div>
-                  <ChevronLeft className="w-5 h-5 text-gray-300 rotate-180 flex-shrink-0" />
                 </div>
               </div>
-            ))}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Valide du</label>
+                  <Input
+                    type="date"
+                    value={promoForm.valid_from}
+                    onChange={e => setPromoForm({ ...promoForm, valid_from: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Valide jusqu'au</label>
+                  <Input
+                    type="date"
+                    value={promoForm.valid_until}
+                    onChange={e => setPromoForm({ ...promoForm, valid_until: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Max utilisations (vide = illimité)</label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={promoForm.max_uses || ""}
+                    onChange={e => setPromoForm({ ...promoForm, max_uses: e.target.value ? parseInt(e.target.value) : null })}
+                    placeholder="100"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Montant min commande (€)</label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={promoForm.min_order_amount || ""}
+                    onChange={e => setPromoForm({ ...promoForm, min_order_amount: e.target.value ? parseFloat(e.target.value) : null })}
+                    placeholder="50.00"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">S'applique à</label>
+                  <select
+                    value={promoForm.applies_to}
+                    onChange={e => setPromoForm({ ...promoForm, applies_to: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="all">Tous les produits</option>
+                    <option value="products">Produits seuls</option>
+                    <option value="guest_packs">Packs invités seuls</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="flex items-center gap-2 mt-6">
+                    <input
+                      type="checkbox"
+                      checked={promoForm.active}
+                      onChange={e => setPromoForm({ ...promoForm, active: e.target.checked })}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm font-semibold text-gray-700">Actif</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Description interne</label>
+                <Input
+                  value={promoForm.description}
+                  onChange={e => setPromoForm({ ...promoForm, description: e.target.value })}
+                  placeholder="Ex: Promo Noël 2024"
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={savePromo} disabled={savingPromo} className="flex-1 bg-purple-600 hover:bg-purple-700">
+                  {savingPromo ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  {editingPromo ? "Mettre à jour" : "Créer"}
+                </Button>
+                <Button onClick={() => setShowPromoForm(false)} variant="outline" className="flex-1">
+                  Annuler
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Promos List */}
+          <div className="space-y-2">
+            {promos.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-8">Aucun code promo créé</p>
+            ) : (
+              promos.map(promo => {
+                const isExpired = promo.valid_until && new Date(promo.valid_until) < new Date();
+                const isFull = promo.max_uses && promo.uses_count >= promo.max_uses;
+                
+                return (
+                  <div key={promo.id} className={`flex items-center justify-between p-4 rounded-lg border ${
+                    !promo.active ? "bg-gray-50 border-gray-200" : isExpired ? "bg-amber-50 border-amber-200" : isFull ? "bg-red-50 border-red-200" : "bg-white border-gray-200"
+                  }`}>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <code className="font-bold text-lg text-gray-800">{promo.code}</code>
+                        {!promo.active && <Badge className="bg-gray-200 text-gray-700">Inactif</Badge>}
+                        {isExpired && <Badge className="bg-amber-200 text-amber-700">Expiré</Badge>}
+                        {isFull && <Badge className="bg-red-200 text-red-700">Limité atteint</Badge>}
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600">
+                        {promo.discount_percent > 0 && <span>-{promo.discount_percent}%</span>}
+                        {promo.discount_amount > 0 && <span>-{promo.discount_amount}€</span>}
+                        {promo.max_uses && <span>•  {promo.uses_count}/{promo.max_uses} utilisations</span>}
+                        {promo.min_order_amount && <span>• Minimum {promo.min_order_amount}€</span>}
+                        {promo.description && <span className="text-gray-500">• {promo.description}</span>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => copyCode(promo.code)}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition"
+                      >
+                        {copiedCode === promo.code ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-gray-400" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => editPromo(promo)}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-400 hover:text-gray-600"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => deletePromo(promo.id)}
+                        className="p-2 hover:bg-red-50 rounded-lg transition text-gray-400 hover:text-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
