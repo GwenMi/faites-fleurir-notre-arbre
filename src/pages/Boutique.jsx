@@ -5,6 +5,7 @@ import { Loader2, ShoppingBag, Truck } from "lucide-react";
 import ProductCard from "@/components/shop/ProductCard";
 import OrderModal from "@/components/shop/OrderModal";
 import ProductReviews from "@/components/shop/ProductReviews";
+import GuestPacksSection from "@/components/shop/GuestPacksSection";
 
 const DEFAULT_PRODUCTS = [
   {
