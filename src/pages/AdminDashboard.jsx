@@ -14,6 +14,7 @@ import { createPageUrl } from "@/utils";
 import CommentModeration from "@/components/admin/CommentModeration";
 import ChallengeManager from "@/components/admin/ChallengeManager";
 import SeatingManager from "@/components/admin/SeatingManager";
+import RSVPManager from "@/components/admin/rsvp/RSVPManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);

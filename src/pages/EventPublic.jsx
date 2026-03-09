@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
+import RSVPSection from "@/components/public/RSVPSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
