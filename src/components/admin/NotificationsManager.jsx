@@ -2,185 +2,129 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Send, Users, Mail, CheckCircle2, Bell, RefreshCw } from "lucide-react";
+import { Bell, Save, Mail, CheckCircle2, Info } from "lucide-react";
 import { toast } from "sonner";
 
+const TRIGGERS = [
+  { key: "on_new_photo", label: "Nouvelle photo déposée", icon: "📸", desc: "Un invité soumet une nouvelle photo" },
+  { key: "on_new_rsvp", label: "Nouvelle réponse RSVP", icon: "📋", desc: "Un invité répond à votre invitation" },
+  { key: "on_new_guestbook", label: "Nouveau message livre d'or", icon: "💬", desc: "Un invité écrit dans le livre d'or" },
+  { key: "on_new_order", label: "Nouvelle commande", icon: "📦", desc: "Un invité passe une commande boutique" },
+];
+
 export default function NotificationsManager({ event }) {
-  const [responses, setResponses] = useState([]);
-  const [selected, setSelected] = useState(new Set());
-  const [subject, setSubject] = useState("");
-  const [body, setBody] = useState("");
-  const [sending, setSending] = useState(false);
-  const [sent, setSentCount] = useState(0);
+  const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   useEffect(() => { loadData(); }, [event?.id]);
 
   const loadData = async () => {
     setLoading(true);
-    const r = await base44.entities.RSVPResponse.filter({ event_id: event.id });
-    const withEmail = (r || []).filter(x => x.email);
-    setResponses(withEmail);
-    setSelected(new Set(withEmail.filter(x => x.attending).map(x => x.id)));
+    const existing = await base44.entities.NotificationSettings.filter({ event_id: event.id });
+    if (existing && existing.length > 0) {
+      setSettings(existing[0]);
+    } else {
+      setSettings({
+        event_id: event.id,
+        notify_email: "",
+        on_new_photo: true,
+        on_new_rsvp: true,
+        on_new_guestbook: true,
+        on_new_order: true,
+      });
+    }
     setLoading(false);
   };
 
-  const toggleAll = (attending) => {
-    const filtered = responses.filter(r => r.attending === attending);
-    const allSelected = filtered.every(r => selected.has(r.id));
-    const next = new Set(selected);
-    filtered.forEach(r => allSelected ? next.delete(r.id) : next.add(r.id));
-    setSelected(next);
-  };
-
-  const toggleOne = (id) => {
-    const next = new Set(selected);
-    next.has(id) ? next.delete(id) : next.add(id);
-    setSelected(next);
-  };
-
-  const handleSend = async () => {
-    if (!subject.trim() || !body.trim()) { toast.error("Objet et message requis"); return; }
-    if (selected.size === 0) { toast.error("Aucun destinataire sélectionné"); return; }
-    setSending(true);
-    setSentCount(0);
-    const targets = responses.filter(r => selected.has(r.id));
-    let count = 0;
-    for (const r of targets) {
-      await base44.integrations.Core.SendEmail({
-        to: r.email,
-        from_name: event.couple_names,
-        subject,
-        body: body.replace("{prenom}", r.guest_name),
-      }).catch(() => {});
-      count++;
-      setSentCount(count);
+  const handleSave = async () => {
+    if (!settings.notify_email?.trim()) { toast.error("Veuillez saisir une adresse email"); return; }
+    setSaving(true);
+    if (settings.id) {
+      await base44.entities.NotificationSettings.update(settings.id, settings);
+    } else {
+      const created = await base44.entities.NotificationSettings.create(settings);
+      setSettings(created);
     }
-    toast.success(`${count} email${count > 1 ? "s" : ""} envoyé${count > 1 ? "s" : ""} avec succès !`);
-    setSending(false);
+    toast.success("Préférences de notifications sauvegardées !");
+    setSaving(false);
   };
 
-  const attending = responses.filter(r => r.attending);
-  const absent = responses.filter(r => !r.attending);
+  const handleTest = async () => {
+    if (!settings.notify_email?.trim()) { toast.error("Veuillez d'abord saisir votre email"); return; }
+    setTesting(true);
+    await base44.integrations.Core.SendEmail({
+      to: settings.notify_email,
+      from_name: event.couple_names,
+      subject: `[Test] Notifications activées — ${event.couple_names}`,
+      body: `Bonjour,\n\nVos notifications sont bien configurées pour l'événement "${event.couple_names}".\n\nVous recevrez des emails automatiques selon vos préférences :\n${TRIGGERS.filter(t => settings[t.key]).map(t => `• ${t.label}`).join("\n")}\n\nÀ bientôt,\nFleurs de fête`,
+    });
+    toast.success("Email de test envoyé !");
+    setTesting(false);
+  };
 
-  const TEMPLATES = [
-    {
-      label: "Rappel de l'événement",
-      subject: `Rappel — ${event.couple_names}`,
-      body: `Bonjour {prenom},\n\nNous vous rappelons que notre événement "${event.couple_names}" aura lieu le ${event.event_date}.\n\nNous avons hâte de vous accueillir !\n\nÀ très bientôt,\n${event.couple_names}`,
-    },
-    {
-      label: "Info pratique",
-      subject: `Informations pratiques — ${event.couple_names}`,
-      body: `Bonjour {prenom},\n\nNous souhaitons vous partager quelques informations importantes pour la journée du ${event.event_date}.\n\n[Ajoutez vos informations ici]\n\nÀ bientôt,\n${event.couple_names}`,
-    },
-    {
-      label: "Remerciements",
-      subject: `Merci d'être venus — ${event.couple_names}`,
-      body: `Bonjour {prenom},\n\nNous tenions à vous remercier chaleureusement pour votre présence et les moments partagés lors de notre événement.\n\nVotre présence a rendu cette journée encore plus belle.\n\nAvec toute notre affection,\n${event.couple_names}`,
-    },
-  ];
+  const toggle = (key) => setSettings(s => ({ ...s, [key]: !s[key] }));
 
-  if (loading) return <div className="py-10 text-center text-gray-400 text-sm">Chargement...</div>;
+  if (loading || !settings) return <div className="py-10 text-center text-gray-400 text-sm">Chargement...</div>;
 
   return (
     <div className="space-y-5">
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-purple-50 rounded-2xl p-3 text-center border border-purple-100">
-          <p className="text-2xl font-bold text-purple-600">{responses.length}</p>
-          <p className="text-xs text-gray-500 mt-0.5">avec email</p>
-        </div>
-        <div className="bg-green-50 rounded-2xl p-3 text-center border border-green-100">
-          <p className="text-2xl font-bold text-green-600">{attending.filter(r => r.email).length}</p>
-          <p className="text-xs text-gray-500 mt-0.5">présents</p>
-        </div>
-        <div className="bg-red-50 rounded-2xl p-3 text-center border border-red-100">
-          <p className="text-2xl font-bold text-red-500">{absent.filter(r => r.email).length}</p>
-          <p className="text-xs text-gray-500 mt-0.5">absents</p>
+      <div>
+        <h3 className="font-bold text-gray-800 flex items-center gap-2"><Bell className="w-4 h-4 text-purple-500" /> Notifications par email</h3>
+        <p className="text-xs text-gray-400 mt-0.5">Recevez un email automatique lors des activités importantes sur votre événement.</p>
+      </div>
+
+      {/* Email */}
+      <div className="bg-purple-50 rounded-2xl border border-purple-100 p-4">
+        <p className="text-xs font-semibold text-purple-700 mb-2 flex items-center gap-1.5">
+          <Mail className="w-3.5 h-3.5" /> Adresse de réception
+        </p>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            value={settings.notify_email || ""}
+            onChange={e => setSettings(s => ({ ...s, notify_email: e.target.value }))}
+            placeholder="votre@email.com"
+            className="rounded-xl bg-white flex-1"
+          />
+          <Button variant="outline" size="sm" onClick={handleTest} disabled={testing} className="rounded-xl flex-shrink-0">
+            {testing ? "Envoi…" : "Tester"}
+          </Button>
         </div>
       </div>
 
-      {responses.length === 0 ? (
-        <div className="text-center py-8 text-gray-400">
-          <Mail className="w-10 h-10 mx-auto mb-2 opacity-30" />
-          <p className="text-sm">Aucun invité avec email pour l'instant.</p>
-          <p className="text-xs mt-1">Les invités qui renseignent leur email lors du RSVP apparaîtront ici.</p>
-        </div>
-      ) : (
-        <>
-          {/* Recipient selector */}
-          <div className="bg-gray-50 rounded-2xl border border-gray-100 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                <Users className="w-4 h-4" /> Destinataires
-                <Badge className="bg-purple-100 text-purple-600 text-xs">{selected.size} sélectionné{selected.size > 1 ? "s" : ""}</Badge>
-              </p>
-              <div className="flex gap-2">
-                <button onClick={() => toggleAll(true)} className="text-xs text-green-600 hover:underline">Présents</button>
-                <span className="text-gray-300">|</span>
-                <button onClick={() => toggleAll(false)} className="text-xs text-red-500 hover:underline">Absents</button>
-                <span className="text-gray-300">|</span>
-                <button onClick={() => setSelected(new Set(responses.map(r => r.id)))} className="text-xs text-purple-500 hover:underline">Tous</button>
-                <span className="text-gray-300">|</span>
-                <button onClick={() => setSelected(new Set())} className="text-xs text-gray-400 hover:underline">Aucun</button>
+      {/* Triggers */}
+      <div>
+        <p className="text-xs font-semibold text-gray-500 mb-3">Quand souhaitez-vous être notifié ?</p>
+        <div className="space-y-2">
+          {TRIGGERS.map(trigger => (
+            <label key={trigger.key}
+              className={`flex items-center gap-4 p-3.5 rounded-2xl border-2 cursor-pointer transition ${settings[trigger.key] ? "border-purple-200 bg-purple-50" : "border-gray-100 bg-white hover:bg-gray-50"}`}>
+              <span className="text-xl flex-shrink-0">{trigger.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-semibold ${settings[trigger.key] ? "text-purple-700" : "text-gray-700"}`}>{trigger.label}</p>
+                <p className="text-xs text-gray-400">{trigger.desc}</p>
               </div>
-            </div>
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-              {responses.map(r => (
-                <label key={r.id} className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition border ${selected.has(r.id) ? "bg-white border-purple-200 shadow-sm" : "border-transparent hover:bg-white/60"}`}>
-                  <input type="checkbox" checked={selected.has(r.id)} onChange={() => toggleOne(r.id)} className="rounded" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-700 truncate">{r.guest_name}</p>
-                    <p className="text-xs text-gray-400 truncate">{r.email}</p>
-                  </div>
-                  <Badge className={r.attending ? "bg-green-100 text-green-600 text-xs" : "bg-red-50 text-red-400 text-xs"}>
-                    {r.attending ? "Présent" : "Absent"}
-                  </Badge>
-                </label>
-              ))}
-            </div>
-          </div>
+              <div className="flex-shrink-0">
+                <div onClick={() => toggle(trigger.key)}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${settings[trigger.key] ? "bg-purple-500" : "bg-gray-200"}`}>
+                  <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${settings[trigger.key] ? "translate-x-5" : "translate-x-0.5"}`} />
+                </div>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
 
-          {/* Templates */}
-          <div>
-            <p className="text-xs font-semibold text-gray-500 mb-2">Modèles rapides</p>
-            <div className="flex flex-wrap gap-2">
-              {TEMPLATES.map(t => (
-                <button key={t.label} onClick={() => { setSubject(t.subject); setBody(t.body); }}
-                  className="text-xs bg-purple-50 hover:bg-purple-100 text-purple-500 border border-purple-100 rounded-full px-3 py-1.5 transition">
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-2xl p-3 text-xs text-blue-600">
+        <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
+        <span>Les notifications sont envoyées en temps réel dès qu'une action est effectuée par vos invités. Pensez à vérifier vos spams si vous ne recevez rien.</span>
+      </div>
 
-          {/* Compose */}
-          <div className="space-y-3">
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Objet de l'email *</p>
-              <Input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Ex: Informations importantes pour votre venue" className="rounded-xl" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Message * <span className="text-purple-400">(utilisez {"{prenom}"} pour personnaliser)</span></p>
-              <textarea value={body} onChange={e => setBody(e.target.value)} rows={7} placeholder="Bonjour {prenom},&#10;&#10;Votre message ici..."
-                className="w-full rounded-xl border border-input px-3 py-2 text-sm resize-none" />
-            </div>
-          </div>
-
-          {/* Send button */}
-          <Button onClick={handleSend} disabled={sending || selected.size === 0 || !subject.trim() || !body.trim()}
-            className="w-full h-11 rounded-xl bg-purple-500 hover:bg-purple-600 text-white font-semibold">
-            {sending ? (
-              <><RefreshCw className="w-4 h-4 mr-2 animate-spin" /> Envoi en cours... ({sent}/{selected.size})</>
-            ) : (
-              <><Send className="w-4 h-4 mr-2" /> Envoyer à {selected.size} destinataire{selected.size > 1 ? "s" : ""}</>
-            )}
-          </Button>
-          <p className="text-xs text-center text-gray-400">Les emails sont envoyés un par un depuis notre service d'envoi.</p>
-        </>
-      )}
+      <Button onClick={handleSave} disabled={saving} className="w-full h-11 rounded-xl bg-purple-500 hover:bg-purple-600 text-white font-semibold">
+        {saving ? "Sauvegarde…" : <><Save className="w-4 h-4 mr-2" /> Sauvegarder les préférences</>}
+      </Button>
     </div>
   );
 }
