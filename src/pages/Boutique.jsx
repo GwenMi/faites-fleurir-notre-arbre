@@ -147,7 +147,7 @@ export default function Boutique() {
       {/* Footer */}
       <footer className="py-10 px-6 border-t border-gray-100 text-center">
         <p className="font-sans-clean text-xs text-gray-400 mb-4">Fleurs en fête · Des souvenirs qui fleurissent 🌸</p>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean">
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean mb-4">
           <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
@@ -155,6 +155,11 @@ export default function Boutique() {
           <a href={createPageUrl("CGU")} className="hover:text-rose-400 transition">CGU</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("MentionsLegales")} className="hover:text-rose-400 transition">Mentions légales & RGPD</a>
+        </div>
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean">
+          <a href={createPageUrl("ClientDashboard")} className="hover:text-rose-400 transition">Mon compte</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("OrderTracking")} className="hover:text-rose-400 transition">Suivi commande</a>
         </div>
       </footer>
 
