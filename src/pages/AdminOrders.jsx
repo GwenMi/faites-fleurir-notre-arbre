@@ -147,6 +147,62 @@ contact@fleursenfete.com`,
 
   const STATUSES = Object.keys(STATUS_CONFIG);
 
+  const filteredOrders = orders.filter(order => {
+    if (filterStatus !== "all" && order.status !== filterStatus) return false;
+    if (filterDateFrom) {
+      const from = new Date(filterDateFrom);
+      from.setHours(0, 0, 0, 0);
+      if (new Date(order.created_date) < from) return false;
+    }
+    if (filterDateTo) {
+      const to = new Date(filterDateTo);
+      to.setHours(23, 59, 59, 999);
+      if (new Date(order.created_date) > to) return false;
+    }
+    return true;
+  });
+
+  const exportCSV = () => {
+    const escape = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const headers = [
+      "Date commande", "Nom client", "Email client", "Produit", "Quantité",
+      "Total TTC (€)", "Statut", "Type de pot", "Couleur ruban", "Type de graines",
+      "Texte personnalisé", "Adresse de livraison", "Date événement",
+      "Transporteur", "N° suivi"
+    ];
+    const rows = filteredOrders.map(o => {
+      const opts = o.options_selected || {};
+      return [
+        new Date(o.created_date).toLocaleDateString("fr-FR"),
+        o.customer_name,
+        o.customer_email,
+        o.product_name,
+        o.quantity,
+        (o.total_price ?? 0).toFixed(2),
+        STATUS_CONFIG[o.status]?.label || o.status,
+        opts.pot_type || "",
+        opts.ribbon_color || "",
+        opts.seed_type || "",
+        opts.custom_text || "",
+        (opts.delivery_address || "").replace(/\n/g, " | "),
+        opts.event_date ? new Date(opts.event_date).toLocaleDateString("fr-FR") : "",
+        o.tracking_carrier || "",
+        o.tracking_number || "",
+      ].map(escape).join(";");
+    });
+    const bom = "\uFEFF";
+    const csv = bom + [headers.map(escape).join(";"), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.download = `commandes-fleursenfete-${dateStr}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${filteredOrders.length} commande(s) exportée(s) en CSV`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       <style>{`
