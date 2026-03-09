@@ -32,6 +32,8 @@ export default function AdminOrders() {
   const [trackingOpen, setTrackingOpen] = useState(null); // order.id
   const [trackingForm, setTrackingForm] = useState({ number: "", carrier: CARRIERS[0].label });
   const [sendingTracking, setSendingTracking] = useState(false);
+  const [sendingInvoice, setSendingInvoice] = useState(null);
+  const [sendingReminder, setSendingReminder] = useState(null);
 
   useEffect(() => { loadOrders(); }, []);
 
