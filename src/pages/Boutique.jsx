@@ -32,6 +32,7 @@ export default function Boutique() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedPack, setSelectedPack] = useState(null);
 
   useEffect(() => {
     loadProducts();
