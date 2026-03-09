@@ -70,6 +70,56 @@ ${paymentType === "partial" ? `\nSOLDE À RÉGLER : ${(order.total_price - payme
   }
 }
 
+export async function notifyCustomerPaymentConfirmation(order, paymentAmount, paymentType) {
+  const isFullPayment = paymentType === "full";
+  
+  try {
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: isFullPayment 
+        ? `✅ Paiement confirmé — ${order.product_name}`
+        : `💳 Acompte reçu — ${order.product_name}`,
+      body: `
+Bonjour ${order.customer_name},
+
+${isFullPayment 
+  ? `Merci pour votre paiement intégral de ${paymentAmount.toFixed(2)} € ! 🎉
+
+Votre commande est entièrement réglée et nous commençons la préparation.
+
+📋 RÉCAPITULATIF
+Produit : ${order.product_name} × ${order.quantity}
+Montant payé : ${paymentAmount.toFixed(2)} €`
+  : `Merci pour votre acompte de ${paymentAmount.toFixed(2)} € ! 💚
+
+Votre commande est confirmée et nous commençons la préparation.
+
+📋 RÉCAPITULATIF
+Produit : ${order.product_name} × ${order.quantity}
+Acompte reçu : ${paymentAmount.toFixed(2)} €
+Solde à régler à la livraison : ${(order.total_price - paymentAmount).toFixed(2)} €`
+}
+
+📅 Événement : ${order.options_selected?.event_date 
+  ? new Date(order.options_selected.event_date).toLocaleDateString("fr-FR", { 
+      day: "numeric", month: "long", year: "numeric" 
+    })
+  : "Non renseignée"}
+
+🌸 Vous pouvez suivre votre commande ici : ${window.location.origin || "https://fleursenfete.com"}/suivi-commande
+
+Si vous avez des questions, n'hésitez pas à nous contacter.
+
+À bientôt !
+Gwenaëlle — Fleurs en fête 🌸
+contact@fleursenfete.com
+      `,
+    });
+  } catch (e) {
+    console.error("Erreur notification confirmation:", e);
+  }
+}
+
 export async function notifyCustomerPaymentReminder(order) {
   const balanceDue = order.total_price - (order.deposit_amount || 0);
   

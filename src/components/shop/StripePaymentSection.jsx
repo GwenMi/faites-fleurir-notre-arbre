@@ -77,10 +77,13 @@ export default function StripePaymentSection({
       });
 
       // Notifier l'admin du paiement
-      const { notifyAdminPaymentReceived, notifyCustomerPaymentReminder } = await import("@/components/admin/AdminNotifier");
+      const { notifyAdminPaymentReceived, notifyCustomerPaymentConfirmation, notifyCustomerPaymentReminder } = await import("@/components/admin/AdminNotifier");
       await notifyAdminPaymentReceived(order, amountToPay, paymentOption);
 
-      // Si acompte, rappeler le solde au client
+      // Envoyer confirmation au client
+      await notifyCustomerPaymentConfirmation(order, amountToPay, paymentOption);
+
+      // Si acompte, envoyer aussi rappel du solde
       if (paymentOption === "deposit") {
         await notifyCustomerPaymentReminder(order);
       }
@@ -88,7 +91,7 @@ export default function StripePaymentSection({
       setSucceeded(true);
       toast.success(`Paiement de ${amountToPay.toFixed(2)}€ confirmé ✓`);
 
-      // Callback après succès
+      // Callback après succès (redirection vers page confirmation)
       setTimeout(() => onPaymentSuccess?.(), 1500);
     } catch (err) {
       setError("Erreur lors du paiement : " + err.message);

@@ -54,16 +54,17 @@ import CGU from './pages/CGU';
 import CGV from './pages/CGV';
 import CRM from './pages/CRM';
 import CalendarView from './pages/CalendarView';
+import ClientDashboard from './pages/ClientDashboard';
 import Contact from './pages/Contact';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
+import OrderTracking from './pages/OrderTracking';
 import Quotes from './pages/Quotes';
 import ReviewOrder from './pages/ReviewOrder';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
-import OrderTracking from './pages/OrderTracking';
-import ClientDashboard from './pages/ClientDashboard';
+import OrderConfirmation from './pages/OrderConfirmation';
 import __Layout from './Layout.jsx';
 
 
@@ -75,16 +76,17 @@ export const PAGES = {
     "CGV": CGV,
     "CRM": CRM,
     "CalendarView": CalendarView,
+    "ClientDashboard": ClientDashboard,
     "Contact": Contact,
     "EventPublic": EventPublic,
     "Home": Home,
     "MentionsLegales": MentionsLegales,
+    "OrderTracking": OrderTracking,
     "Quotes": Quotes,
     "ReviewOrder": ReviewOrder,
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
-    "OrderTracking": OrderTracking,
-    "ClientDashboard": ClientDashboard,
+    "OrderConfirmation": OrderConfirmation,
 }
 
 export const pagesConfig = {
