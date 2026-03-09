@@ -282,6 +282,29 @@ export default function OrderTracking() {
                         </a>
                       </div>
                     )}
+
+                    {/* Facture */}
+                    {(order.payment_status === "paid" || order.payment_status === "partial") && (
+                      <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                        <p className="font-sans-clean text-sm font-semibold text-green-800 mb-3">📄 Votre facture</p>
+                        <div className="flex flex-col gap-3 sm:flex-row">
+                          <Button
+                            onClick={() => generateAndDownloadInvoice(order)}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-sans-clean text-sm"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Télécharger PDF
+                          </Button>
+                          <Button
+                            onClick={() => sendInvoiceByEmail(order)}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-sans-clean text-sm"
+                          >
+                            <Mail className="w-4 h-4 mr-2" />
+                            Envoyer par email
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
