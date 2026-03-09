@@ -376,7 +376,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
                 className="w-full h-12 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold text-sm hover:opacity-90 transition shadow-sm"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Commander {quantity} kit{quantity > 1 ? "s" : ""} — {total} €
+                Commander {isGuestPack ? `Pack ${guestPack.guests}` : `${quantity} kit${quantity > 1 ? "s" : ""}`} — {total} €
               </Button>
             )}
           </form>
