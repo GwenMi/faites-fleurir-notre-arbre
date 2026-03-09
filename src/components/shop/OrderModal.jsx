@@ -233,11 +233,27 @@ export default function OrderModal({ product, onClose }) {
               </div>
             )}
 
+            {/* CGV */}
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input type="checkbox" checked={cgvAccepted} onChange={e => setCgvAccepted(e.target.checked)}
+                className="mt-0.5 rounded border-gray-300 text-rose-400 focus:ring-rose-300" />
+              <span className="text-xs text-gray-500 leading-relaxed">
+                J'ai lu et j'accepte les{" "}
+                <a href="/app/cgv" target="_blank" className="text-rose-400 underline hover:text-rose-500">
+                  conditions générales de vente
+                </a>{" "}
+                et la{" "}
+                <a href="/app/mentionslegales" target="_blank" className="text-rose-400 underline hover:text-rose-500">
+                  politique de confidentialité
+                </a>. *
+              </span>
+            </label>
+
             {/* Submit */}
             {!showLateWarning && (
               <Button
                 type="submit"
-                disabled={loading || !name.trim() || !email.trim() || !eventDate}
+                disabled={loading || !name.trim() || !email.trim() || !eventDate || !address.trim() || !cgvAccepted}
                 className="w-full h-12 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold text-sm hover:opacity-90 transition shadow-sm"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
