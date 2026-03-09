@@ -1,4 +1,5 @@
 import RgpdBanner from "@/components/RgpdBanner";
+import FloatingChat from "@/components/FloatingChat";
 
 export default function Layout({ children, currentPageName }) {
   return (
@@ -12,6 +13,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
       {children}
       <RgpdBanner />
+      <FloatingChat />
     </div>
   );
 }
