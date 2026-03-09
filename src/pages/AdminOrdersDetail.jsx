@@ -164,6 +164,44 @@ export default function AdminOrdersDetail() {
     }
   };
 
+  const sendInvoiceEmail = async (orderData, paymentStatus, depositAmount) => {
+    try {
+      const amount = paymentStatus === "paid" 
+        ? orderData.total_price.toFixed(2)
+        : `${(depositAmount || 0).toFixed(2)} € (solde: ${(orderData.total_price - (depositAmount || 0)).toFixed(2)} €)`;
+
+      const emailBody = `Bonjour ${orderData.customer_name},
+
+Voici votre facture:
+
+═════════════════════════════════════
+Commande: #${orderData.id.slice(-8).toUpperCase()}
+Date: ${new Date(orderData.created_date).toLocaleDateString("fr-FR")}
+═════════════════════════════════════
+
+Produit: ${orderData.product_name}
+Quantité: ${orderData.quantity}
+Montant total: ${orderData.total_price.toFixed(2)} €
+
+📊 Statut paiement: ${paymentStatus === "paid" ? "✓ Payé" : "⚠ Acompte reçu"}
+Montant reçu: ${amount}
+
+${orderData.options_selected?.site_public_url ? `🌸 Votre espace: ${orderData.options_selected.site_public_url}` : ""}
+
+Merci de votre confiance!
+
+Fleurs en fête`;
+
+      await base44.integrations.Core.SendEmail({
+        to: orderData.customer_email,
+        subject: `Votre facture - Commande #${orderData.id.slice(-8).toUpperCase()}`,
+        body: emailBody
+      });
+    } catch (e) {
+      console.error("Erreur envoi facture:", e);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
