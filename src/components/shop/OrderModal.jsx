@@ -2,9 +2,10 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle, CreditCard } from "lucide-react";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import StripePaymentSection from "./StripePaymentSection";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
@@ -124,7 +125,8 @@ export default function OrderModal({ product, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm px-4 pb-4 sm:pb-0">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <Elements stripe={stripePromise}>
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
@@ -328,7 +330,8 @@ export default function OrderModal({ product, onClose }) {
             )}
           </form>
         )}
-      </div>
+        </div>
+      </Elements>
     </div>
   );
 }
