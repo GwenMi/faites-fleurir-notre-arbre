@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import CommentModeration from "@/components/admin/CommentModeration";
 import ChallengeManager from "@/components/admin/ChallengeManager";
+import SeatingManager from "@/components/admin/SeatingManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
