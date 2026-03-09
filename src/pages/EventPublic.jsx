@@ -98,6 +98,11 @@ export default function EventPublic() {
         </div>
       </div>
 
+      {/* RSVP Section */}
+      <div className="max-w-2xl mx-auto px-4">
+        <RSVPSection event={event} primaryColor={primaryColor} />
+      </div>
+
       {/* Flower Challenge Section */}
       <div className="max-w-2xl mx-auto px-4 pb-16">
         <FlowerChallengeSection event={event} />
