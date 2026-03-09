@@ -425,11 +425,28 @@ Fleurs en fête`;
           <div className="space-y-4">
             {/* Documents */}
             <div className="bg-white rounded-lg p-4 border border-gray-200">
-              <h3 className="font-bold text-gray-800 mb-3">📄 Documents</h3>
-              <Button onClick={downloadInvoice} variant="outline" className="w-full justify-start">
-                <FileText className="w-4 h-4 mr-2" />
-                Télécharger facture
-              </Button>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-gray-800">📄 Documents</h3>
+                {order.invoice_email_sent && (
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">✓ Envoyée</span>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Button onClick={downloadInvoice} variant="outline" className="w-full justify-start">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Télécharger facture
+                </Button>
+                {(order.payment_status === "paid" || order.payment_status === "partial") && (
+                  <Button 
+                    onClick={() => sendInvoiceEmail(order, order.payment_status, order.deposit_amount)}
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Renvoyer facture
+                  </Button>
+                )}
+              </div>
             </div>
 
             {/* Adresse */}
