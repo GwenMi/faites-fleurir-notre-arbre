@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/RSVPSection";
+import DayScheduleSection from "@/components/public/DayScheduleSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
