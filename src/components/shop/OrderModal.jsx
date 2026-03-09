@@ -145,15 +145,24 @@ export default function OrderModal({ product, guestPack, onClose }) {
       <Elements stripe={stripePromise}>
         <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
           {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
-          <div>
-            <h2 className="font-serif-elegant text-xl font-bold text-gray-800">{product.name}</h2>
-            <p className="text-rose-500 font-semibold text-sm">{product.price.toFixed(2)} € / unité</p>
+          <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+            <div>
+              {isGuestPack ? (
+                <>
+                  <h2 className="font-serif-elegant text-xl font-bold text-gray-800">Pack {guestPack.guests} invités</h2>
+                  <p className="text-rose-500 font-semibold text-sm">{guestPack.kitName} avec {guestPack.potName}</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="font-serif-elegant text-xl font-bold text-gray-800">{workingProduct.name}</h2>
+                  <p className="text-rose-500 font-semibold text-sm">{workingProduct.price?.toFixed(2)} € / unité</p>
+                </>
+              )}
+            </div>
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition">
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition">
-            <X className="w-5 h-5 text-gray-400" />
-          </button>
-        </div>
 
         {paymentStep && orderCreated ? (
           <StripePaymentSection 
