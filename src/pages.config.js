@@ -57,6 +57,7 @@ import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
 import ReviewOrder from './pages/ReviewOrder';
+import SupplierOrders from './pages/SupplierOrders';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "Home": Home,
     "MentionsLegales": MentionsLegales,
     "ReviewOrder": ReviewOrder,
+    "SupplierOrders": SupplierOrders,
 }
 
 export const pagesConfig = {
