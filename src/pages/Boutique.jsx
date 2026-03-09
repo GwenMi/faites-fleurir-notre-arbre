@@ -1,161 +1,227 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { createPageUrl } from "@/utils";
-import { Loader2, ShoppingBag, Truck } from "lucide-react";
-import ProductCard from "@/components/shop/ProductCard";
-import OrderModal from "@/components/shop/OrderModal";
-import ProductReviews from "@/components/shop/ProductReviews";
+import { ShoppingBag, Sparkles, Gift, TrendingUp, ChevronRight, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ProductCard from "../components/shop/ProductCard";
+import OrderModal from "../components/shop/OrderModal";
 
-const DEFAULT_PRODUCTS = [
+const PRODUCTS = [
   {
-    id: "__kit-composer",
-    name: "Kit à composer",
-    price: 2.50,
-    description: "Kit envoyé séparément permettant de préparer soi-même les pots souvenirs. Choisissez le type de pot, la couleur du ruban et les graines.",
-    options: ["type de pot", "couleur du ruban", "type de graines"],
-    active: true,
+    id: "compose",
+    name: "Kit à Composer",
+    basePrice: 2.50,
+    description: "Le kit envoyé séparément pour permettre aux mariés de préparer eux-mêmes les pots.",
+    includes: ["Pot", "Pastille de semis", "Graines", "Ruban", "Étiquette personnalisée", "QR code événement"],
+    icon: "🎨",
   },
   {
-    id: "__kit-classique",
-    name: "Kit classique prêt à offrir",
-    price: 4.50,
-    description: "Pot en verre avec graines, ruban et QR code prêt à distribuer aux invités. Rapide et élégant.",
-    options: ["couleur du ruban", "type de graines"],
-    active: true,
+    id: "ready",
+    name: "Kit Prêt à Offrir",
+    basePrice: 4.50,
+    description: "Les pots sont déjà assemblés et prêts à être posés sur la table des invités.",
+    includes: ["Pot assemblé", "Ruban", "Étiquette personnalisée", "QR code événement"],
+    icon: "🎁",
   },
+];
 
+const PACKS = [
+  { guests: 30, label: "Pack 30 invités" },
+  { guests: 50, label: "Pack 50 invités" },
+  { guests: 70, label: "Pack 70 invités" },
+  { guests: 100, label: "Pack 100 invités" },
+  { guests: 120, label: "Pack 120 invités" },
 ];
 
 export default function Boutique() {
-  const [products, setProducts] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    loadProducts();
+    loadOrders();
   }, []);
 
-  const loadProducts = async () => {
-    const dbProducts = await base44.entities.Product.filter({ active: true });
-    if (dbProducts && dbProducts.length > 0) {
-      setProducts(dbProducts);
-    } else {
-      setProducts(DEFAULT_PRODUCTS);
-    }
-    const dbReviews = await base44.entities.Review.filter({ approved: true });
-    setReviews(dbReviews || []);
-    setLoading(false);
+  const loadOrders = async () => {
+    const data = await base44.entities.Order.list("-created_date", 50);
+    setOrders(data || []);
+  };
+
+  const freeShippingRemaining = Math.max(0, 20 - orders.length);
+  const showLaunchOffer = freeShippingRemaining > 0;
+
+  const openProduct = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-purple-50">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
         .font-sans-clean { font-family: 'Lato', system-ui, sans-serif; }
-        .gold-line { background: linear-gradient(90deg, transparent, #c9a96e, transparent); height: 1px; }
       `}</style>
 
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100">
-        <a href={createPageUrl("Home")}>
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-            alt="Fleurs de fête"
-            className="h-12"
-          />
-        </a>
-        <div className="flex items-center gap-3">
-          <a href={createPageUrl("Boutique")}
-            className="font-sans-clean text-sm font-semibold text-rose-500 border-b-2 border-rose-300 pb-0.5">
-            Boutique
-          </a>
-          <a href={createPageUrl("AdminDashboard")}
-            className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
-            Mon espace
-          </a>
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <div className="bg-gradient-to-br from-rose-50 to-pink-50 px-6 md:px-12 py-16 text-center">
-        <ShoppingBag className="w-10 h-10 text-rose-300 mx-auto mb-4" />
-        <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-3">Boutique</p>
-        <h1 className="font-serif-elegant text-4xl md:text-6xl font-bold text-gray-800 mb-4">
-          Nos kits <span className="text-rose-400">fleurs</span>
-        </h1>
-        <div className="gold-line max-w-xs mx-auto mb-5" />
-        <p className="font-sans-clean text-gray-500 text-base max-w-md mx-auto leading-relaxed font-light">
-          Des kits soigneusement préparés pour offrir à chaque invité un souvenir qui fleurit.
-          Commandez directement en ligne.
-        </p>
-      </div>
-
-      {/* Products */}
-      <div className="max-w-4xl mx-auto px-6 py-14">
-        {loading ? (
-          <div className="text-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-rose-300 mx-auto" />
+      {/* Launch offer banner */}
+      {showLaunchOffer && (
+        <div className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-4 py-3 text-center sticky top-0 z-20 shadow-lg">
+          <div className="max-w-4xl mx-auto flex items-center justify-center gap-2">
+            <Sparkles className="w-5 h-5" />
+            <p className="font-semibold text-sm">
+              🎉 Offre de lancement — Livraison offerte sur les {freeShippingRemaining} premières commandes !
+            </p>
           </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {products.map(product => (
-                <div key={product.id} className="flex flex-col">
-                  <ProductCard
-                    product={product}
-                    onOrder={setSelectedProduct}
-                    reviews={reviews}
-                  />
-                  <div className="px-1">
-                    <ProductReviews productId={product.id} />
-                  </div>
-                </div>
-              ))}
-            </div>
+        </div>
+      )}
 
-            {/* Livraison section */}
-            <div className="mt-12 bg-white rounded-3xl border-2 border-rose-100 shadow-sm p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0">
-                  <Truck className="w-5 h-5 text-rose-400" />
-                </div>
-                <h2 className="font-serif-elegant text-2xl font-bold text-gray-800">Livraison</h2>
-              </div>
-              <div className="font-sans-clean text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Chaque commande est préparée avec soin avant expédition.</p>
-                <p>
-                  Afin de garantir la préparation et la livraison dans les délais, nous vous recommandons de passer commande
-                  <span className="font-semibold text-gray-800"> jusqu'à 21 jours avant votre événement</span>.
-                </p>
-                <p className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-amber-800">
-                  <span className="mt-0.5">⚠️</span>
-                  <span>Les commandes passées <span className="font-semibold">moins de 14 jours</span> avant la date de l'événement peuvent être acceptées, mais la livraison dans les délais ne peut pas être garantie.</span>
-                </p>
-              </div>
-            </div>
-          </>
-        )}
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 sticky top-12 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="flex items-center gap-3 mb-3">
+            <ShoppingBag className="w-7 h-7 text-rose-400" />
+            <h1 className="font-serif-elegant text-3xl font-bold text-gray-800">Notre Boutique</h1>
+          </div>
+          <p className="text-gray-500 text-sm">Kits "Fleurs en fête" pour votre événement • Livraison en France métropolitaine</p>
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer className="py-10 px-6 border-t border-gray-100 text-center">
-        <p className="font-sans-clean text-xs text-gray-400 mb-4">Fleurs en fête · Des souvenirs qui fleurissent 🌸</p>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean">
-          <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
-          <span className="text-gray-200">·</span>
-          <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
-          <span className="text-gray-200">·</span>
-          <a href={createPageUrl("CGU")} className="hover:text-rose-400 transition">CGU</a>
-          <span className="text-gray-200">·</span>
-          <a href={createPageUrl("MentionsLegales")} className="hover:text-rose-400 transition">Mentions légales & RGPD</a>
-        </div>
-      </footer>
+      <div className="max-w-4xl mx-auto px-4 py-12 space-y-16">
+        {/* Products */}
+        <section>
+          <div className="mb-8">
+            <h2 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Choisissez votre kit</h2>
+            <p className="text-gray-500 text-sm">Chaque kit inclut un QR code pour accéder à votre espace événement personnalisé</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {PRODUCTS.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onSelect={() => openProduct(product)}
+              />
+            ))}
+          </div>
+        </section>
 
-      {/* Order modal */}
-      {selectedProduct && (
-        <OrderModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        {/* Pot choice highlight */}
+        <section className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100">
+          <div className="flex items-start gap-4">
+            <div className="text-4xl flex-shrink-0">🫙</div>
+            <div className="flex-1">
+              <h3 className="font-bold text-lg text-gray-800 mb-2">Choisissez votre pot</h3>
+              <div className="space-y-3 text-sm text-gray-600">
+                <p>
+                  <span className="font-semibold text-gray-800">Pot plastique</span> — Inclus dans le prix
+                </p>
+                <p>
+                  <span className="font-semibold text-gray-800">Pot verre 🏆</span> — +0,20 € par pot
+                  <span className="ml-2 inline-block bg-amber-200 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">Option élégante</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Packs */}
+        <section>
+          <div className="mb-8">
+            <h2 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Acheter par packs</h2>
+            <p className="text-gray-500 text-sm">Les prix ci-dessous sont calculés avec le pot plastique inclus</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {PACKS.map(pack => (
+              <div key={pack.guests} className="bg-white rounded-2xl p-5 border border-gray-100 hover:border-rose-200 hover:shadow-md transition">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-bold text-gray-800">{pack.label}</h4>
+                  <Gift className="w-5 h-5 text-rose-400" />
+                </div>
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  {PRODUCTS.map(prod => (
+                    <div key={prod.id} className="flex items-center justify-between py-1">
+                      <span>{prod.name}</span>
+                      <span className="font-bold text-gray-800">
+                        {(prod.basePrice * pack.guests).toFixed(2)} €
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-rose-50 rounded-xl p-3 mb-4">
+                  <p className="text-xs text-gray-500 mb-1">Total avec pots plastique</p>
+                  <p className="text-2xl font-bold text-rose-500">
+                    {(PRODUCTS[0].basePrice * pack.guests).toFixed(2)} € · {PRODUCTS[1].basePrice * pack.guests).toFixed(2)} €
+                  </p>
+                </div>
+                <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+                  💡 Nous recommandons de prévoir quelques pots supplémentaires pour les invités imprévus.
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Pack promotion */}
+        <section className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-8 border border-emerald-200">
+          <div className="flex items-start gap-4">
+            <TrendingUp className="w-7 h-7 text-emerald-600 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-bold text-lg text-emerald-900 mb-2">Promotion packs</h3>
+              <p className="text-emerald-800 text-sm">
+                Achetez au moins 2 packs et obtenez une réduction automatique de <span className="font-bold text-lg">10 %</span> sur votre commande ! 🎉
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Delivery conditions */}
+        <section className="bg-white rounded-3xl p-8 border border-gray-100">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="text-3xl">📦</div>
+            <div className="flex-1">
+              <h3 className="font-bold text-xl text-gray-800 mb-3">Conditions de livraison</h3>
+              <div className="space-y-3 text-gray-600 text-sm leading-relaxed">
+                <p>
+                  Chaque commande est préparée avec soin avant expédition.
+                </p>
+                <p>
+                  Afin de garantir la préparation et la livraison dans les délais, nous vous recommandons de passer commande <span className="font-semibold text-gray-800">jusqu'à 21 jours avant votre événement</span>.
+                </p>
+                <p>
+                  Les commandes passées <span className="font-semibold text-gray-800">moins de 14 jours avant</span> la date de l'événement peuvent être acceptées, mais <span className="font-semibold">la livraison dans les délais ne peut pas être garantie</span>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="text-center py-8">
+          <Button
+            onClick={() => {
+              const element = document.querySelector('[data-scroll-to]');
+              if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="px-8 py-4 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold hover:opacity-90 transition shadow-lg text-base h-auto"
+          >
+            <ShoppingBag className="w-5 h-5 mr-2" />
+            Commencer mon achat
+          </Button>
+        </section>
+
+        {/* Footer */}
+        <div className="border-t border-gray-100 pt-8 pb-12 text-center text-sm text-gray-500 space-y-2">
+          <p>Des questions sur nos kits ? <a href="/app/contact" className="text-rose-400 hover:text-rose-500 underline">Contactez-nous</a></p>
+          <p>Consultez nos <a href="/app/cgv" className="text-rose-400 hover:text-rose-500 underline">conditions générales de vente</a> et notre <a href="/app/mentionslegales" className="text-rose-400 hover:text-rose-500 underline">politique de confidentialité</a></p>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {showModal && selectedProduct && (
+        <OrderModal
+          product={selectedProduct}
+          onClose={() => {
+            setShowModal(false);
+            loadOrders();
+          }}
+        />
       )}
     </div>
   );
