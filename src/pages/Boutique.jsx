@@ -162,6 +162,9 @@ export default function Boutique() {
       {selectedProduct && (
         <OrderModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       )}
+      {selectedPack && (
+        <OrderModal guestPack={selectedPack} onClose={() => setSelectedPack(null)} />
+      )}
     </div>
   );
 }
