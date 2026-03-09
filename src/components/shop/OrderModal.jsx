@@ -14,8 +14,9 @@ const stripePromise = loadStripe(
 const RIBBON_COLORS = ["Blanc", "Ivoire", "Rose poudré", "Bordeaux", "Vert sauge", "Bleu ardoise", "Doré", "Noir"];
 const SEED_TYPES = ["Lavande", "Tournesol", "Marguerite", "Coquelicot", "Bleuet", "Forget-me-not"];
 
-export default function OrderModal({ product, onClose }) {
-  const [quantity, setQuantity] = useState(10);
+export default function OrderModal({ product, guestPack, onClose }) {
+  const isGuestPack = !!guestPack;
+  const [quantity, setQuantity] = useState(isGuestPack ? 1 : 10);
   const [ribbon, setRibbon] = useState(RIBBON_COLORS[0]);
   const [seeds, setSeeds] = useState(SEED_TYPES[0]);
   const [potType, setPotType] = useState("Verre");
@@ -29,9 +30,12 @@ export default function OrderModal({ product, onClose }) {
   const [success, setSuccess] = useState(false);
   const [showLateWarning, setShowLateWarning] = useState(false);
 
-  const isPremium = product.name.toLowerCase().includes("premium");
-  const hasCompose = product.name.toLowerCase().includes("composer");
-  const total = (product.price * quantity).toFixed(2);
+  const workingProduct = product || guestPack;
+  const isPremium = workingProduct?.name?.toLowerCase()?.includes("premium");
+  const hasCompose = workingProduct?.name?.toLowerCase()?.includes("composer");
+  const itemQuantity = isGuestPack ? guestPack.guests : quantity;
+  const basePrice = isGuestPack ? guestPack.totalPrice : (workingProduct.price * quantity);
+  const total = basePrice.toFixed(2);
 
   const daysUntilEvent = eventDate
     ? Math.floor((new Date(eventDate) - new Date()) / (1000 * 60 * 60 * 24))
