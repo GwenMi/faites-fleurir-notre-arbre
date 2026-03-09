@@ -160,29 +160,51 @@ export async function generateInvoicePDF(order) {
   doc.text("TOTAL TTC :", totX, y);
   doc.text(`${totalTTC.toFixed(2)} €`, 192, y, { align: "right" });
 
+  // Section paiement + QR Code
+  let paymentSectionY = y + 10;
+  
+  // Afficher le paiement Stripe si présent
+  if (stripePayment?.status === "succeeded") {
+    doc.setDrawColor(230, 230, 230);
+    doc.roundedRect(14, paymentSectionY - 2, 90, 32, 3, 3, "S");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(22, 163, 74);
+    doc.text("✓ PAIEMENT SÉCURISÉ REÇU", 17, paymentSectionY + 2);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Montant : ${(stripePayment.amount_cents / 100).toFixed(2)} €`, 17, paymentSectionY + 8);
+    doc.text(`Type : ${stripePayment.payment_type === "full" ? "Paiement intégral" : "Acompte (50%)"}`, 17, paymentSectionY + 13);
+    if (stripePayment.charge_id) {
+      doc.text(`ID : ${stripePayment.charge_id.slice(-12)}`, 17, paymentSectionY + 18);
+    }
+    doc.text(`Via Stripe | ${new Date(stripePayment.created_date).toLocaleDateString("fr-FR")}`, 17, paymentSectionY + 23);
+    paymentSectionY += 38;
+  }
+
   // QR Code du site événement
   const siteUrl = opts.site_public_url;
   if (siteUrl) {
     const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(siteUrl)}`;
     const qrBase64 = await loadImageAsBase64(qrApiUrl);
     if (qrBase64) {
-      const qrY = y + 10;
       doc.setDrawColor(230, 230, 230);
-      doc.roundedRect(14, qrY - 2, 50, 54, 3, 3, "S");
-      doc.addImage(qrBase64, "PNG", 16, qrY, 22, 22);
+      doc.roundedRect(14, paymentSectionY - 2, 50, 54, 3, 3, "S");
+      doc.addImage(qrBase64, "PNG", 16, paymentSectionY, 22, 22);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(7.5);
       doc.setTextColor(236, 90, 112);
-      doc.text("Espace événement", 40, qrY + 4);
+      doc.text("Espace événement", 40, paymentSectionY + 4);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(6.5);
       doc.setTextColor(120, 120, 120);
-      doc.text("Scannez ce QR code", 40, qrY + 9);
-      doc.text("pour accéder au site", 40, qrY + 13.5);
-      doc.text("de votre événement 🌸", 40, qrY + 18);
+      doc.text("Scannez ce QR code", 40, paymentSectionY + 9);
+      doc.text("pour accéder au site", 40, paymentSectionY + 13.5);
+      doc.text("de votre événement 🌸", 40, paymentSectionY + 18);
       const urlLines = doc.splitTextToSize(siteUrl, 47);
       doc.setTextColor(100, 149, 237);
-      doc.text(urlLines, 16, qrY + 27);
+      doc.text(urlLines, 16, paymentSectionY + 27);
     }
   }
 
