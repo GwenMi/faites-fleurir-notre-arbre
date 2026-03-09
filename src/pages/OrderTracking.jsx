@@ -141,35 +141,87 @@ export default function OrderTracking() {
         )}
 
         {orders.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {orders.map(order => {
               const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.pending;
               const Icon = statusInfo.icon;
+              
+              // Timeline des étapes
+              const timeline = [
+                { status: "pending", label: "Commande reçue", done: true },
+                { status: "confirmed", label: "Préparation", done: ["confirmed", "shipped", "delivered"].includes(order.status) },
+                { status: "shipped", label: "Expédition", done: ["shipped", "delivered"].includes(order.status) },
+                { status: "delivered", label: "Livraison", done: order.status === "delivered" }
+              ];
+              
               return (
-                <div key={order.id} className="bg-white rounded-2xl shadow p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="font-serif-elegant text-lg font-bold text-gray-800">{order.product_name}</h3>
-                      <p className="font-sans-clean text-xs text-gray-500">
-                        Commande du {new Date(order.created_date).toLocaleDateString("fr-FR")}
-                      </p>
-                    </div>
-                    <div className={`flex items-center gap-2 px-3 py-1 rounded-full font-sans-clean text-sm font-medium ${statusInfo.color}`}>
-                      <Icon className="w-4 h-4" />
-                      {statusInfo.label}
+                <div key={order.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                  {/* Header */}
+                  <div className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-6 py-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="font-serif-elegant text-2xl font-bold">{order.product_name}</h3>
+                        <p className="font-sans-clean text-sm opacity-90 mt-1">
+                          Commande #{order.id.slice(-8).toUpperCase()} • {new Date(order.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                        </p>
+                      </div>
+                      <div className={`flex items-center gap-2 px-4 py-2 rounded-full font-sans-clean text-sm font-bold bg-white ${statusInfo.color}`}>
+                        <Icon className="w-5 h-5" />
+                        {statusInfo.label}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-4 border-y border-gray-100">
-                    <div>
-                      <p className="font-sans-clean text-xs text-gray-500 font-semibold">Quantité</p>
-                      <p className="font-sans-clean font-bold text-gray-800">{order.quantity} kit{order.quantity > 1 ? "s" : ""}</p>
+                  <div className="px-6 py-6">
+                    {/* Infos rapides */}
+                    <div className="grid grid-cols-3 gap-4 mb-8 pb-8 border-b border-gray-100">
+                      <div>
+                        <p className="font-sans-clean text-xs text-gray-500 font-semibold uppercase">Quantité</p>
+                        <p className="font-sans-clean font-bold text-lg text-gray-800 mt-1">{order.quantity} kit{order.quantity > 1 ? "s" : ""}</p>
+                      </div>
+                      <div>
+                        <p className="font-sans-clean text-xs text-gray-500 font-semibold uppercase">Montant</p>
+                        <p className="font-sans-clean font-bold text-lg text-rose-600 mt-1">{order.total_price?.toFixed(2) || "—"} €</p>
+                      </div>
+                      <div>
+                        <p className="font-sans-clean text-xs text-gray-500 font-semibold uppercase">Paiement</p>
+                        <div className="mt-1">
+                          {order.payment_status === "paid" && <span className="text-xs font-bold text-green-600">✓ Payé</span>}
+                          {order.payment_status === "partial" && <span className="text-xs font-bold text-blue-600">⚠ Acompte</span>}
+                          {order.payment_status === "unpaid" && <span className="text-xs font-bold text-amber-600">⏳ En attente</span>}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-sans-clean text-xs text-gray-500 font-semibold">Montant</p>
-                      <p className="font-sans-clean font-bold text-rose-600">{order.total_price?.toFixed(2) || "—"} €</p>
+
+                    {/* Timeline */}
+                    <div className="mb-8">
+                      <p className="font-sans-clean text-sm font-semibold text-gray-700 mb-4">📅 Étapes de votre commande</p>
+                      <div className="space-y-3">
+                        {timeline.map((step, idx) => (
+                          <div key={step.status} className="flex gap-4">
+                            <div className="flex flex-col items-center">
+                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${
+                                step.done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"
+                              }`}>
+                                {step.done ? "✓" : idx + 1}
+                              </div>
+                              {idx < timeline.length - 1 && <div className="w-0.5 h-8 bg-gray-200 mt-1"></div>}
+                            </div>
+                            <div className="pt-1">
+                              <p className={`font-sans-clean font-semibold ${step.done ? "text-gray-800" : "text-gray-500"}`}>
+                                {step.label}
+                              </p>
+                              <p className="font-sans-clean text-xs text-gray-400">
+                                {step.status === "pending" && "Votre commande a été créée"}
+                                {step.status === "confirmed" && "Nous préparons votre colis"}
+                                {step.status === "shipped" && "Votre colis est en route"}
+                                {step.status === "delivered" && "Votre colis est arrivé"}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
                   {/* Paiement */}
                   <div className="mt-4">
