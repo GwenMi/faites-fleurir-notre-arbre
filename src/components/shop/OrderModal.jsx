@@ -122,11 +122,19 @@ export default function OrderModal({ product, onClose }) {
         </div>
 
         {success ? (
-          <div className="px-6 py-12 text-center">
-            <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-            <h3 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Commande reçue !</h3>
-            <p className="text-gray-500 text-sm">Nous vous contacterons à <span className="font-semibold">{email}</span> pour confirmer et organiser la livraison.</p>
-            <button onClick={onClose} className="mt-6 px-8 py-3 rounded-full bg-rose-400 text-white font-semibold text-sm hover:bg-rose-500 transition">
+          <div className="px-6 py-10 text-center">
+            <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">Commande reçue !</h3>
+            <p className="text-gray-500 text-sm mb-5">Un email de confirmation a été envoyé à <span className="font-semibold">{email}</span>.</p>
+            {siteUrl && (
+              <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 mb-5 text-left">
+                <p className="text-xs font-bold text-rose-500 mb-1">🌸 Votre espace événement est prêt !</p>
+                <p className="text-xs text-gray-500 mb-3">Nous avons créé un site dédié à votre événement. Partagez-le avec vos invités — le QR code sera sur votre facture.</p>
+                <a href={siteUrl} target="_blank" rel="noreferrer"
+                  className="block text-xs text-indigo-500 underline break-all font-mono">{siteUrl}</a>
+              </div>
+            )}
+            <button onClick={onClose} className="px-8 py-3 rounded-full bg-rose-400 text-white font-semibold text-sm hover:bg-rose-500 transition">
               Fermer
             </button>
           </div>
