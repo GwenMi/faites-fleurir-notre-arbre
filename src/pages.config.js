@@ -47,52 +47,14 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AdminDashboard from './pages/AdminDashboard';
-import AdminOrders from './pages/AdminOrders';
-import Boutique from './pages/Boutique';
-import CGU from './pages/CGU';
-import CGV from './pages/CGV';
-import CRM from './pages/CRM';
-import CalendarView from './pages/CalendarView';
-import ClientDashboard from './pages/ClientDashboard';
-import Contact from './pages/Contact';
-import EventPublic from './pages/EventPublic';
-import Home from './pages/Home';
-import MentionsLegales from './pages/MentionsLegales';
-import OrderTracking from './pages/OrderTracking';
-import Quotes from './pages/Quotes';
-import ReviewOrder from './pages/ReviewOrder';
-import Stats from './pages/Stats';
-import SupplierOrders from './pages/SupplierOrders';
-import OrderConfirmation from './pages/OrderConfirmation';
-import AdminOrdersDetail from './pages/AdminOrdersDetail';
-import __Layout from './Layout.jsx';
+import Shop from './pages/Shop';
 
 
 export const PAGES = {
-    "AdminDashboard": AdminDashboard,
-    "AdminOrders": AdminOrders,
-    "Boutique": Boutique,
-    "CGU": CGU,
-    "CGV": CGV,
-    "CRM": CRM,
-    "CalendarView": CalendarView,
-    "ClientDashboard": ClientDashboard,
-    "Contact": Contact,
-    "EventPublic": EventPublic,
-    "Home": Home,
-    "MentionsLegales": MentionsLegales,
-    "OrderTracking": OrderTracking,
-    "Quotes": Quotes,
-    "ReviewOrder": ReviewOrder,
-    "Stats": Stats,
-    "SupplierOrders": SupplierOrders,
-    "OrderConfirmation": OrderConfirmation,
-    "AdminOrdersDetail": AdminOrdersDetail,
+    "Shop": Shop,
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "Shop",
     Pages: PAGES,
-    Layout: __Layout,
 };
