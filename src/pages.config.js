@@ -52,6 +52,10 @@ import AdminOrders from './pages/AdminOrders';
 import Boutique from './pages/Boutique';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
+import CGV from './pages/CGV';
+import CGU from './pages/CGU';
+import MentionsLegales from './pages/MentionsLegales';
+import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +65,10 @@ export const PAGES = {
     "Boutique": Boutique,
     "EventPublic": EventPublic,
     "Home": Home,
+    "CGV": CGV,
+    "CGU": CGU,
+    "MentionsLegales": MentionsLegales,
+    "Contact": Contact,
 }
 
 export const pagesConfig = {
