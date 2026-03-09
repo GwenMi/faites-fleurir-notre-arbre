@@ -29,6 +29,16 @@ export async function generateInvoicePDF(order) {
   const invoiceDate = new Date(order.created_date || Date.now()).toLocaleDateString("fr-FR");
   const pageW = 210;
 
+  // Récupérer le paiement Stripe associé
+  let stripePayment = null;
+  try {
+    const { base44 } = await import("@/api/base44Client");
+    const payments = await base44.entities.StripePayment.filter({ order_id: order.id }, "-created_date", 1);
+    stripePayment = payments?.[0];
+  } catch (e) {
+    // Paiement non trouvé ou erreur
+  }
+
   const totalTTC = order.total_price || 0;
   const totalHT = totalTTC / (1 + TVA_RATE);
   const tvaAmount = totalTTC - totalHT;
