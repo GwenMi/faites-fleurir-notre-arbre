@@ -192,6 +192,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="seating" className="flex-1 rounded-xl text-xs">
               <LayoutGrid className="w-3 h-3 mr-1" /> Tables
             </TabsTrigger>
+            <TabsTrigger value="orders" className="flex-1 rounded-xl text-xs">
+              <Truck className="w-3 h-3 mr-1" /> Livraison
+            </TabsTrigger>
             <TabsTrigger value="notifications" className="flex-1 rounded-xl text-xs">
               <Bell className="w-3 h-3 mr-1" /> Emails
             </TabsTrigger>
@@ -248,6 +251,12 @@ export default function AdminDashboard() {
           <TabsContent value="seating">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <SeatingManager event={selectedEvent} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="orders">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <OrderTracking event={selectedEvent} />
             </div>
           </TabsContent>
 
