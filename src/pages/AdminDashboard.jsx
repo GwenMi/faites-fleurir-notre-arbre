@@ -227,6 +227,12 @@ export default function AdminDashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="schedule">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <ScheduleManager eventId={selectedEvent.id} />
+            </div>
+          </TabsContent>
+
           <TabsContent value="rsvp">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <RSVPManager event={selectedEvent} />
