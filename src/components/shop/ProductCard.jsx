@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 
 export default function ProductCard({ product, onSelect }) {
-  const price = product.basePrice?.toFixed(2) || "0.00";
+  const price = (product.price || product.basePrice)?.toFixed(2) || "0.00";
 
   return (
     <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl hover:border-rose-300 transition group">
