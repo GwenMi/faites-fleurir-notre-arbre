@@ -6,6 +6,7 @@ import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle } from "lucide-reac
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripePaymentSection from "./StripePaymentSection";
+import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
 
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLIC_KEY || "pk_test_placeholder"
