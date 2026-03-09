@@ -1,7 +1,6 @@
-export default function Layout({ children, currentPageName }) {
-  const isPublicPage = currentPageName === "EventPublic";
-  const isHomePage = currentPageName === "Home";
+import RgpdBanner from "@/components/RgpdBanner";
 
+export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen">
       <style>{`
@@ -12,6 +11,7 @@ export default function Layout({ children, currentPageName }) {
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       `}</style>
       {children}
+      <RgpdBanner />
     </div>
   );
 }

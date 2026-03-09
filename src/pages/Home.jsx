@@ -183,13 +183,23 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-12 px-4 border-t border-gray-100">
+      <footer className="py-12 px-6 border-t border-gray-100 text-center">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
           alt="Fleurs de fête"
           className="w-20 mx-auto mb-3 opacity-60"
         />
-        <p className="font-sans-clean text-xs text-gray-400 tracking-widest">"Merci d'avoir partagé ce moment avec nous"</p>
+        <p className="font-sans-clean text-xs text-gray-400 tracking-widest mb-6">"Merci d'avoir partagé ce moment avec nous"</p>
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean">
+          <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("CGU")} className="hover:text-rose-400 transition">CGU</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("MentionsLegales")} className="hover:text-rose-400 transition">Mentions légales & RGPD</a>
+        </div>
+        <p className="font-sans-clean text-xs text-gray-300 mt-4">© 2025 Fleurs en fête — Papin Gwenaëlle — contact@fleursenfete.com</p>
       </footer>
     </div>
   );
