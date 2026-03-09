@@ -136,7 +136,17 @@ export default function OrderModal({ product, onClose }) {
           </button>
         </div>
 
-        {success ? (
+        {paymentStep && orderCreated ? (
+          <StripePaymentSection 
+            order={orderCreated}
+            paymentOption={paymentOption}
+            setPaymentOption={setPaymentOption}
+            total={total}
+            depositAmount={depositAmount}
+            onPaymentSuccess={() => doSubmit()}
+            onBack={() => { setPaymentStep(false); setOrderCreated(null); }}
+          />
+        ) : success ? (
           <div className="px-6 py-10 text-center">
             <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Commande reçue !</h3>
