@@ -230,6 +230,38 @@ export default function AdminOrders() {
                     </div>
                   </div>
 
+                  {/* Invoice & Reminder actions */}
+                  <div className="mt-3 pt-3 border-t border-gray-50 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => downloadInvoice(order)}
+                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition font-medium"
+                    >
+                      <FileText className="w-3.5 h-3.5" /> Télécharger la facture
+                    </button>
+                    <button
+                      onClick={() => sendInvoiceByEmail(order)}
+                      disabled={sendingInvoice === order.id}
+                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-purple-200 text-purple-600 bg-purple-50 hover:bg-purple-100 transition font-medium disabled:opacity-50"
+                    >
+                      {sendingInvoice === order.id
+                        ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        : <Mail className="w-3.5 h-3.5" />}
+                      Envoyer la facture
+                    </button>
+                    {(order.status === "pending" || order.status === "confirmed") && (
+                      <button
+                        onClick={() => sendReminder(order)}
+                        disabled={sendingReminder === order.id}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-amber-200 text-amber-600 bg-amber-50 hover:bg-amber-100 transition font-medium disabled:opacity-50"
+                      >
+                        {sendingReminder === order.id
+                          ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          : <Bell className="w-3.5 h-3.5" />}
+                        Relancer le client
+                      </button>
+                    )}
+                  </div>
+
                   {/* Tracking section */}
                   <div className="mt-3 pt-3 border-t border-gray-50">
                     {order.tracking_number ? (
