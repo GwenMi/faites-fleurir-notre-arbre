@@ -7,6 +7,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripePaymentSection from "./StripePaymentSection";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
+import { notifyAdminNewOrder, notifyAdminPaymentReceived, notifyCustomerPaymentReminder } from "@/components/admin/AdminNotifier";
 
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLIC_KEY || "pk_test_placeholder"
