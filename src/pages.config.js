@@ -58,6 +58,7 @@ import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
 import ReviewOrder from './pages/ReviewOrder';
 import SupplierOrders from './pages/SupplierOrders';
+import Stats from './pages/Stats';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "MentionsLegales": MentionsLegales,
     "ReviewOrder": ReviewOrder,
     "SupplierOrders": SupplierOrders,
+    "Stats": Stats,
 }
 
 export const pagesConfig = {
