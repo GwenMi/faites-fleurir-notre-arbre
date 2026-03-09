@@ -232,7 +232,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
             )}
 
             {/* Pot type (compose only) */}
-            {hasCompose && (
+            {!isGuestPack && hasCompose && (
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Type de pot</label>
                 <div className="flex gap-2">
