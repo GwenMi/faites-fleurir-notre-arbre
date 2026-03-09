@@ -227,6 +227,25 @@ export default function ChallengeManager({ event, onRefresh }) {
       {/* Flower posts */}
       {activeTab === "flowers" && (
         <div>
+          {flowerPosts.length > 0 && guests.filter(g => flowerPosts.some(p => p.user_email === g.email)).length > 0 && (
+            <div className="mb-4 bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-rose-700">Envoyer un email de remerciement</p>
+                <p className="text-xs text-rose-500 mt-0.5">
+                  {guests.filter(g => flowerPosts.some(p => p.user_email === g.email)).length} invité(s) ayant partagé une fleur recevront un email avec un lien vers la galerie.
+                </p>
+              </div>
+              <Button
+                onClick={handleSendThankYouEmails}
+                disabled={sendingEmails}
+                size="sm"
+                className="flex-shrink-0 bg-rose-500 hover:bg-rose-600 text-white rounded-xl"
+              >
+                <Mail className="w-3.5 h-3.5 mr-1.5" />
+                {sendingEmails ? "Envoi..." : "Envoyer"}
+              </Button>
+            </div>
+          )}
           {flowerPosts.length === 0 ? (
             <div className="text-center py-12 text-gray-400">
               <Flower2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
