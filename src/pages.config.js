@@ -59,6 +59,7 @@ import MentionsLegales from './pages/MentionsLegales';
 import ReviewOrder from './pages/ReviewOrder';
 import SupplierOrders from './pages/SupplierOrders';
 import Stats from './pages/Stats';
+import CalendarView from './pages/CalendarView';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "ReviewOrder": ReviewOrder,
     "SupplierOrders": SupplierOrders,
     "Stats": Stats,
+    "CalendarView": CalendarView,
 }
 
 export const pagesConfig = {
