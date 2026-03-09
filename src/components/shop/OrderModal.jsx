@@ -15,7 +15,9 @@ export default function OrderModal({ product, onClose }) {
   const [customText, setCustomText] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
   const [eventDate, setEventDate] = useState("");
+  const [cgvAccepted, setCgvAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showLateWarning, setShowLateWarning] = useState(false);
