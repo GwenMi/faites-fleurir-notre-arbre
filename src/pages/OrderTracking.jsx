@@ -308,3 +308,87 @@ function getTrackingUrl(carrier, trackingNumber) {
   };
   return carriers[carrier?.toLowerCase()] || "#";
 }
+
+async function generateAndDownloadInvoice(order) {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 15;
+  let yPos = margin;
+
+  // Header
+  doc.setFillColor(244, 114, 182);
+  doc.rect(0, 0, pageWidth, 30, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(24);
+  doc.setFont(undefined, "bold");
+  doc.text("FACTURE", margin, yPos + 18);
+  
+  // Reset text color
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  yPos = 40;
+
+  // Order info
+  doc.setFont(undefined, "bold");
+  doc.text(`Facture #${order.id.slice(-8).toUpperCase()}`, margin, yPos);
+  doc.setFont(undefined, "normal");
+  doc.setFontSize(9);
+  doc.text(`Date: ${new Date(order.created_date).toLocaleDateString("fr-FR")}`, margin, yPos + 8);
+  yPos += 20;
+
+  // Customer info
+  doc.setFont(undefined, "bold");
+  doc.text("Client:", margin, yPos);
+  doc.setFont(undefined, "normal");
+  doc.text(order.customer_name, margin, yPos + 7);
+  doc.text(order.customer_email, margin, yPos + 14);
+  yPos += 25;
+
+  // Product details
+  doc.setFillColor(240, 240, 240);
+  doc.rect(margin, yPos - 5, pageWidth - 2 * margin, 25, "F");
+  doc.setFont(undefined, "bold");
+  doc.text("Produit", margin + 5, yPos + 2);
+  doc.text("Quantité", pageWidth - 60, yPos + 2);
+  doc.text("Prix unitaire", pageWidth - 40, yPos + 2);
+  doc.text("Total", pageWidth - margin - 20, yPos + 2);
+  
+  doc.setFont(undefined, "normal");
+  doc.text(order.product_name, margin + 5, yPos + 12);
+  doc.text(String(order.quantity), pageWidth - 60, yPos + 12);
+  doc.text(`${(order.total_price / order.quantity).toFixed(2)} €`, pageWidth - 40, yPos + 12);
+  doc.text(`${order.total_price.toFixed(2)} €`, pageWidth - margin - 20, yPos + 12);
+  yPos += 35;
+
+  // Amounts
+  doc.setFont(undefined, "normal");
+  doc.text(`Sous-total: ${order.total_price.toFixed(2)} €`, pageWidth - margin - 50, yPos);
+  
+  if (order.payment_status === "partial") {
+    yPos += 8;
+    doc.setFillColor(200, 220, 255);
+    doc.rect(pageWidth - margin - 55, yPos - 5, 50, 20, "F");
+    doc.setFont(undefined, "bold");
+    doc.setTextColor(0, 0, 139);
+    doc.text(`Acompte: ${(order.deposit_amount || 0).toFixed(2)} €`, pageWidth - margin - 50, yPos + 2);
+    doc.text(`Solde: ${((order.total_price || 0) - (order.deposit_amount || 0)).toFixed(2)} €`, pageWidth - margin - 50, yPos + 10);
+    doc.setTextColor(0, 0, 0);
+  }
+
+  doc.save(`Facture_${order.id.slice(-8).toUpperCase()}.pdf`);
+}
+
+async function sendInvoiceByEmail(order) {
+  try {
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `Votre facture - Commande #${order.id.slice(-8).toUpperCase()}`,
+      body: `Bonjour ${order.customer_name},\n\nVoici les détails de votre commande:\n\nCommande: #${order.id.slice(-8).toUpperCase()}\nProduit: ${order.product_name}\nQuantité: ${order.quantity}\nMontant: ${order.total_price.toFixed(2)} €\nStatut paiement: ${order.payment_status === "paid" ? "✓ Payé" : order.payment_status === "partial" ? "⚠ Acompte" : "⏳ En attente"}\n\nMerci de votre confiance!\n\nFleurs en fête`
+    });
+    return true;
+  } catch (e) {
+    console.error("Erreur envoi email:", e);
+    return false;
+  }
+}
