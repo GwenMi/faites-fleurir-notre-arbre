@@ -97,6 +97,26 @@ export default function ChallengeManager({ event, onRefresh }) {
     setSaving(false);
   };
 
+  const handleSendThankYouEmails = async () => {
+    const guestsWithFlower = guests.filter(g => flowerPosts.some(p => p.user_email === g.email));
+    if (guestsWithFlower.length === 0) {
+      toast.error("Aucun invité avec une fleur partagée");
+      return;
+    }
+    setSendingEmails(true);
+    let sent = 0;
+    for (const guest of guestsWithFlower) {
+      await base44.integrations.Core.SendEmail({
+        to: guest.email,
+        subject: `Merci pour votre fleur 🌸 — ${event.couple_names}`,
+        body: `Bonjour ${guest.pseudo},\n\nMerci d'avoir participé au défi des fleurs pour l'événement de ${event.couple_names} !\n\nVotre contribution fleurie fait partie d'un souvenir unique que nous chérissons. Retrouvez toute la galerie des fleurs partagées via ce lien :\n\n${event.public_url}\n\nAvec toute notre gratitude,\n${event.couple_names} 🌸`,
+      });
+      sent++;
+    }
+    setSendingEmails(false);
+    toast.success(`${sent} email${sent > 1 ? "s" : ""} de remerciement envoyé${sent > 1 ? "s" : ""} !`);
+  };
+
   const handleDeletePost = async (postId) => {
     await base44.entities.FlowerPost.delete(postId);
     toast.success("Photo supprimée");
