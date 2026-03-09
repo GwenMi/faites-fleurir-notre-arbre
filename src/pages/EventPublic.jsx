@@ -91,6 +91,9 @@ export default function EventPublic() {
               🌱 Graine offerte : {event.seed_type}
             </div>
           )}
+          {event.event_date && (
+            <CountdownWidget eventDate={event.event_date} primaryColor={primaryColor} />
+          )}
         </div>
       </div>
 
