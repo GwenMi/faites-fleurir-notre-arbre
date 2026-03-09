@@ -329,6 +329,10 @@ export default function AdminDashboard() {
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition text-sm font-semibold">
               <Package className="w-4 h-4" /> Commandes
             </a>
+            <a href={createPageUrl("SupplierOrders")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition text-sm font-semibold">
+              <Package className="w-4 h-4" /> Achats
+            </a>
             <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
               <Plus className="w-4 h-4 mr-1" /> Nouvel événement
             </Button>
