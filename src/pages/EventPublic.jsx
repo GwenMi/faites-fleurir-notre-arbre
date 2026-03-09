@@ -6,6 +6,7 @@ import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/RSVPSection";
 import DayScheduleSection from "@/components/public/DayScheduleSection";
 import BestOfSection from "@/components/public/BestOfSection";
+import PhotoGallery from "@/components/public/PhotoGallery";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
@@ -113,6 +114,11 @@ export default function EventPublic() {
       {/* Best of Section */}
       <div className="max-w-2xl mx-auto">
         <BestOfSection event={event} primaryColor={primaryColor} />
+      </div>
+
+      {/* Photo Gallery */}
+      <div className="max-w-2xl mx-auto">
+        <PhotoGallery event={event} primaryColor={primaryColor} />
       </div>
 
       {/* Flower Challenge Section */}
