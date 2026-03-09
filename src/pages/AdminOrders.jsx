@@ -119,6 +119,29 @@ export default function AdminOrders() {
     setSendingReminder(null);
   };
 
+  const sendReviewRequest = async (order) => {
+    setSendingReviewLink(order.id);
+    const reviewUrl = `${window.location.origin}${createPageUrl("ReviewOrder")}?order_id=${order.id}`;
+    await base44.integrations.Core.SendEmail({
+      to: order.customer_email,
+      subject: `🌸 Votre avis compte beaucoup pour nous — Fleurs en fête`,
+      body: `Bonjour ${order.customer_name},
+
+Nous espérons que votre commande "${order.product_name}" a fleuri dans les cœurs de vos invités 🌷
+
+Votre avis nous aiderait énormément à améliorer nos kits et à inspirer d'autres familles qui préparent leur grand jour.
+
+👉 Laisser mon avis en 30 secondes :
+${reviewUrl}
+
+Un grand merci pour votre confiance et vos belles fêtes,
+Gwenaëlle — Fleurs en fête 🌸
+contact@fleursenfete.com`,
+    });
+    toast.success(`Demande d'avis envoyée à ${order.customer_email} ⭐`);
+    setSendingReviewLink(null);
+  };
+
   const STATUSES = Object.keys(STATUS_CONFIG);
 
   return (
@@ -259,6 +282,18 @@ export default function AdminOrders() {
                           ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           : <Bell className="w-3.5 h-3.5" />}
                         Relancer le client
+                      </button>
+                    )}
+                    {order.status === "delivered" && (
+                      <button
+                        onClick={() => sendReviewRequest(order)}
+                        disabled={sendingReviewLink === order.id}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border border-yellow-200 text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition font-medium disabled:opacity-50"
+                      >
+                        {sendingReviewLink === order.id
+                          ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          : <Star className="w-3.5 h-3.5" />}
+                        Demander un avis
                       </button>
                     )}
                   </div>
