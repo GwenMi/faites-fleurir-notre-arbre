@@ -7,6 +7,7 @@ import GuestAuth, { getGuestSession, setGuestSession, clearGuestSession } from "
 import FlowerGallery from "./FlowerGallery";
 import PostUploadModal from "./PostUploadModal";
 import FlowerTree from "./FlowerTree";
+import GuestbookSection from "./GuestbookSection";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
