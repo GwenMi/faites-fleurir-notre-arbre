@@ -118,12 +118,21 @@ export default function OrderModal({ product, guestPack, onClose }) {
       : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
 
     const productName = isGuestPack ? `Pack ${guestPack.guests} invités - ${guestPack.kitName}` : workingProduct.name;
+    
+    // Envoyer l'email de confirmation
     await base44.integrations.Core.SendEmail({
       to: email.trim(),
       subject: `🌸 Confirmation de commande — ${productName}`,
-      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande ${isGuestPack ? `du pack ${guestPack.guests} invités (${guestPack.kitName} avec ${guestPack.potName})` : `de ${quantity} kit${quantity > 1 ? "s" : ""} "${workingProduct.name}"`} pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${siteUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande ${isGuestPack ? `du pack ${guestPack.guests} invités (${guestPack.kitName} avec ${guestPack.potName})` : `de ${quantity} kit${quantity > 1 ? "s" : ""} "${workingProduct.name}"`} pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${siteUrl}\n\nSuivre votre commande : ${window.location.origin}/app/OrderTracking\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
     });
 
+    // Générer et envoyer la facture PDF
+    const doc = await generateInvoicePDF(orderCreated);
+    const pdfBlob = doc.output("blob");
+    
+    // Note: L'envoi du PDF par email nécessiterait une fonction backend
+    // Pour maintenant, le PDF est disponible au téléchargement en ligne
+    
     setLoading(false);
     setSuccess(true);
   };
