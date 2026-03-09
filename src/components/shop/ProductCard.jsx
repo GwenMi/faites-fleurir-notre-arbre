@@ -1,41 +1,37 @@
-import { StarSummary } from "./ProductReviews";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag } from "lucide-react";
 
-export default function ProductCard({ product, onOrder, reviews }) {
-  const ICONS = {
-    "Kit à composer": "🌱",
-    "Kit classique prêt à offrir": "🌸",
-    "Kit premium personnalisé": "💐",
-  };
-  const icon = ICONS[product.name] || "🪴";
+export default function ProductCard({ product, onSelect }) {
+  const price = product.basePrice?.toFixed(2) || "0.00";
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-      {/* Image / placeholder */}
-      {product.image ? (
-        <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
-      ) : (
-        <div className="w-full h-48 flex items-center justify-center text-6xl bg-gradient-to-br from-rose-50 to-pink-50">
-          {icon}
-        </div>
-      )}
+    <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl hover:border-rose-300 transition group">
+      <div className="p-8 text-center">
+        <p className="text-5xl mb-4 group-hover:scale-110 transition">{product.icon}</p>
+        <h3 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">{product.name}</h3>
+        <p className="text-sm text-gray-500 leading-relaxed mb-6">{product.description}</p>
 
-      <div className="p-5 flex flex-col flex-1">
-        <p className="font-serif-elegant text-xl font-bold text-gray-800 mb-1">{product.name}</p>
-        <StarSummary productId={product.id} reviews={reviews} />
-        <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-1 mt-2">{product.description}</p>
-
-        <div className="flex items-center justify-between mt-auto">
-          <div>
-            <span className="text-2xl font-bold text-rose-500">{product.price.toFixed(2)} €</span>
-            <span className="text-xs text-gray-400 ml-1">/ unité</span>
-          </div>
-          <button
-            onClick={() => onOrder(product)}
-            className="bg-gradient-to-r from-rose-400 to-pink-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-sm"
-          >
-            Commander
-          </button>
+        <div className="mb-8">
+          <p className="text-4xl font-bold text-rose-500 mb-1">{price} €</p>
+          <p className="text-xs text-gray-400">par unité</p>
         </div>
+
+        <div className="space-y-2.5 mb-8 bg-gray-50 rounded-2xl p-5 text-left">
+          {product.includes?.map((item, i) => (
+            <div key={i} className="flex items-start gap-3 text-sm text-gray-600">
+              <span className="text-rose-400 font-bold flex-shrink-0">✓</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          onClick={onSelect}
+          className="w-full rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold hover:opacity-90 transition h-12 text-base"
+        >
+          <ShoppingBag className="w-4 h-4 mr-2" />
+          Configurer mon kit
+        </Button>
       </div>
     </div>
   );
