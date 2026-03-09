@@ -52,16 +52,16 @@ import AdminOrders from './pages/AdminOrders';
 import Boutique from './pages/Boutique';
 import CGU from './pages/CGU';
 import CGV from './pages/CGV';
+import CRM from './pages/CRM';
+import CalendarView from './pages/CalendarView';
 import Contact from './pages/Contact';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
-import ReviewOrder from './pages/ReviewOrder';
-import SupplierOrders from './pages/SupplierOrders';
-import Stats from './pages/Stats';
-import CalendarView from './pages/CalendarView';
-import CRM from './pages/CRM';
 import Quotes from './pages/Quotes';
+import ReviewOrder from './pages/ReviewOrder';
+import Stats from './pages/Stats';
+import SupplierOrders from './pages/SupplierOrders';
 import __Layout from './Layout.jsx';
 
 
@@ -71,16 +71,16 @@ export const PAGES = {
     "Boutique": Boutique,
     "CGU": CGU,
     "CGV": CGV,
+    "CRM": CRM,
+    "CalendarView": CalendarView,
     "Contact": Contact,
     "EventPublic": EventPublic,
     "Home": Home,
     "MentionsLegales": MentionsLegales,
-    "ReviewOrder": ReviewOrder,
-    "SupplierOrders": SupplierOrders,
-    "Stats": Stats,
-    "CalendarView": CalendarView,
-    "CRM": CRM,
     "Quotes": Quotes,
+    "ReviewOrder": ReviewOrder,
+    "Stats": Stats,
+    "SupplierOrders": SupplierOrders,
 }
 
 export const pagesConfig = {

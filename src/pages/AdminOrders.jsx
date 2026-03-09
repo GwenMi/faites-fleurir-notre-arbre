@@ -97,8 +97,8 @@ export default function AdminOrders() {
     await loadOrders();
   };
 
-  const downloadInvoice = (order) => {
-    const doc = generateInvoicePDF(order);
+  const downloadInvoice = async (order) => {
+    const doc = await generateInvoicePDF(order);
     const invoiceNumber = `FEF-${(order.id || "").slice(-8).toUpperCase()}`;
     doc.save(`Facture-${invoiceNumber}.pdf`);
   };
