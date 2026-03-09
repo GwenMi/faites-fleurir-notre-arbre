@@ -99,6 +99,11 @@ export default function EventPublic() {
         </div>
       </div>
 
+      {/* Day Schedule Section */}
+      <div className="max-w-2xl mx-auto px-4">
+        <DayScheduleSection event={event} primaryColor={primaryColor} />
+      </div>
+
       {/* RSVP Section */}
       <div className="max-w-2xl mx-auto px-4">
         <RSVPSection event={event} primaryColor={primaryColor} />
