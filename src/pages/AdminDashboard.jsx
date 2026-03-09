@@ -325,12 +325,24 @@ export default function AdminDashboard() {
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png" alt="Fleurs de fête" className="h-9" />
           </div>
           <div className="flex items-center gap-2">
+            <a href={createPageUrl("CalendarView")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 text-purple-500 hover:bg-purple-100 transition text-sm font-semibold">
+              <Calendar className="w-4 h-4" /> Calendrier
+            </a>
+            <a href={createPageUrl("CRM")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition text-sm font-semibold">
+              <Users className="w-4 h-4" /> CRM
+            </a>
+            <a href={createPageUrl("Stats")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition text-sm font-semibold">
+              <TrendingUp className="w-4 h-4" /> Stats
+            </a>
             <a href={createPageUrl("AdminOrders")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition text-sm font-semibold">
               <Package className="w-4 h-4" /> Commandes
             </a>
             <a href={createPageUrl("SupplierOrders")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 text-indigo-500 hover:bg-indigo-100 transition text-sm font-semibold">
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition text-sm font-semibold">
               <Package className="w-4 h-4" /> Achats
             </a>
             <Button onClick={() => setView("create")} className="rounded-xl bg-purple-500 hover:bg-purple-600 text-white shadow-md">
