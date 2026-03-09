@@ -143,6 +143,18 @@ export default function AdminOrders() {
                       </div>
                       <p className="text-xs text-gray-400 mb-2">{order.customer_email}</p>
 
+                      {opts.delivery_address && (
+                        <div className="flex items-start gap-1.5 mb-2">
+                          <span className="text-sm">📦</span>
+                          <p className="text-xs text-gray-600 whitespace-pre-line leading-relaxed">{opts.delivery_address}</p>
+                        </div>
+                      )}
+                      {opts.event_date && (
+                        <p className="text-xs text-gray-500 mb-2">
+                          📅 Événement le {new Date(opts.event_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                        </p>
+                      )}
+
                       <div className="bg-rose-50 rounded-xl px-3 py-2 mb-3 inline-block">
                         <p className="text-sm font-semibold text-rose-700">
                           🌸 {order.product_name} × {order.quantity}
