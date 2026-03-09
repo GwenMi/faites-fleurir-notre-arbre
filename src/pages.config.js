@@ -50,12 +50,12 @@
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import Boutique from './pages/Boutique';
+import CGU from './pages/CGU';
+import CGV from './pages/CGV';
+import Contact from './pages/Contact';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
-import CGV from './pages/CGV';
-import CGU from './pages/CGU';
 import MentionsLegales from './pages/MentionsLegales';
-import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
@@ -63,12 +63,12 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminOrders": AdminOrders,
     "Boutique": Boutique,
+    "CGU": CGU,
+    "CGV": CGV,
+    "Contact": Contact,
     "EventPublic": EventPublic,
     "Home": Home,
-    "CGV": CGV,
-    "CGU": CGU,
     "MentionsLegales": MentionsLegales,
-    "Contact": Contact,
 }
 
 export const pagesConfig = {
