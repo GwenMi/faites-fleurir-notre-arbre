@@ -127,10 +127,15 @@ export default function EventPublic() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-8 px-4 border-t border-gray-100">
-        <p className="font-sans-clean text-xs text-gray-300 tracking-widest">
-          Créé avec Fleurs de fête 🌸
-        </p>
+      <footer className="py-8 px-4 border-t border-gray-100 text-center">
+        <p className="font-sans-clean text-xs text-gray-300 mb-3">Créé avec Fleurs en fête 🌸</p>
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-300 font-sans-clean">
+          <a href="/app/cgv" className="hover:text-rose-300 transition">CGV</a>
+          <span>·</span>
+          <a href="/app/mentionslegales" className="hover:text-rose-300 transition">Mentions légales</a>
+          <span>·</span>
+          <a href="/app/contact" className="hover:text-rose-300 transition">Contact</a>
+        </div>
       </footer>
     </div>
   );
