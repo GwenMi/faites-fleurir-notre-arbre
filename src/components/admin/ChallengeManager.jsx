@@ -38,6 +38,7 @@ export default function ChallengeManager({ event, onRefresh }) {
     challenge_description: "",
   });
   const [activeTab, setActiveTab] = useState("settings"); // settings | flowers | challenges | participants
+  const [sendingEmails, setSendingEmails] = useState(false);
 
   useEffect(() => {
     loadData();
