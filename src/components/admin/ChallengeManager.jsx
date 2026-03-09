@@ -312,32 +312,64 @@ export default function ChallengeManager({ event, onRefresh }) {
               <Users className="w-10 h-10 mx-auto mb-3 opacity-30" />
               <p className="text-sm">Aucun participant inscrit pour l'instant</p>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {guests.map(g => {
-                const hasFlower = flowerPosts.some(p => p.user_email === g.email);
-                const hasChallenge = challengePosts.some(p => p.user_email === g.email);
-                return (
-                  <div key={g.id} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
-                        <span className="text-rose-500 font-bold text-sm">{g.pseudo[0].toUpperCase()}</span>
+          ) : (() => {
+            // Sort guests who posted flowers by post date
+            const rankedGuests = guests
+              .map(g => {
+                const post = flowerPosts.find(p => p.user_email === g.email);
+                return { ...g, flowerPost: post || null };
+              })
+              .sort((a, b) => {
+                if (a.flowerPost && b.flowerPost) return new Date(a.flowerPost.created_date) - new Date(b.flowerPost.created_date);
+                if (a.flowerPost) return -1;
+                if (b.flowerPost) return 1;
+                return 0;
+              });
+
+            const rankBadges = [
+              { label: "🌿 Main verte", bg: "bg-green-100", text: "text-green-700" },
+              { label: "🥈 2ème fleur", bg: "bg-gray-100", text: "text-gray-600" },
+              { label: "🥉 3ème fleur", bg: "bg-amber-100", text: "text-amber-700" },
+            ];
+
+            let flowerRank = 0;
+            return (
+              <div className="space-y-2">
+                {rankedGuests.map(g => {
+                  const hasFlower = !!g.flowerPost;
+                  const hasChallenge = challengePosts.some(p => p.user_email === g.email);
+                  let rankBadge = null;
+                  if (hasFlower) {
+                    rankBadge = rankBadges[flowerRank] || { label: `🌸 #${flowerRank + 1}`, bg: "bg-rose-50", text: "text-rose-500" };
+                    flowerRank++;
+                  }
+                  return (
+                    <div key={g.id} className={`flex items-center justify-between rounded-xl px-4 py-3 ${flowerRank === 1 && hasFlower ? "bg-green-50 border border-green-200" : "bg-gray-50"}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${hasFlower ? "bg-green-100" : "bg-rose-100"}`}>
+                          <span className={`font-bold text-sm ${hasFlower ? "text-green-600" : "text-rose-500"}`}>{g.pseudo[0].toUpperCase()}</span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm text-gray-800">{g.pseudo}</p>
+                          <p className="text-xs text-gray-400">{g.email}</p>
+                          {g.flowerPost && (
+                            <p className="text-xs text-gray-400">
+                              {new Date(g.flowerPost.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-sm text-gray-800">{g.pseudo}</p>
-                        <p className="text-xs text-gray-400">{g.email}</p>
+                      <div className="flex items-center gap-2 flex-wrap justify-end">
+                        {rankBadge && <Badge className={`${rankBadge.bg} ${rankBadge.text} text-xs font-semibold`}>{rankBadge.label}</Badge>}
+                        {hasChallenge && <Badge className="bg-orange-100 text-orange-700 text-xs">🎭 Défi</Badge>}
+                        {!hasFlower && !hasChallenge && <Badge className="bg-gray-100 text-gray-500 text-xs">En attente</Badge>}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {hasFlower && <Badge className="bg-green-100 text-green-700 text-xs">🌸 Fleur</Badge>}
-                      {hasChallenge && <Badge className="bg-orange-100 text-orange-700 text-xs">🎭 Défi</Badge>}
-                      {!hasFlower && !hasChallenge && <Badge className="bg-gray-100 text-gray-500 text-xs">En attente</Badge>}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>
