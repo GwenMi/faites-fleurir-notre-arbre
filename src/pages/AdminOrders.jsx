@@ -222,9 +222,61 @@ contact@fleursenfete.com`,
               <h1 className="font-bold text-gray-800">Commandes boutique</h1>
             </div>
           </div>
-          <button onClick={loadOrders} className="p-2 rounded-xl hover:bg-gray-50 transition text-gray-400">
-            <RefreshCw className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={loadOrders} className="p-2 rounded-xl hover:bg-gray-50 transition text-gray-400">
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <button
+              onClick={exportCSV}
+              disabled={filteredOrders.length === 0}
+              className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition disabled:opacity-40"
+            >
+              <Download className="w-3.5 h-3.5" /> Exporter CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Filters bar */}
+      <div className="bg-white border-b border-gray-100 px-4 py-3">
+        <div className="max-w-3xl mx-auto flex flex-wrap items-center gap-3">
+          <Filter className="w-4 h-4 text-gray-400 flex-shrink-0" />
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+            className="text-xs border border-gray-200 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200 text-gray-600"
+          >
+            <option value="all">Tous les statuts</option>
+            {Object.entries(STATUS_CONFIG).map(([k, v]) => (
+              <option key={k} value={k}>{v.label}</option>
+            ))}
+          </select>
+          <div className="flex items-center gap-1.5">
+            <label className="text-xs text-gray-400">Du</label>
+            <input
+              type="date"
+              value={filterDateFrom}
+              onChange={e => setFilterDateFrom(e.target.value)}
+              className="text-xs border border-gray-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-rose-200 text-gray-600"
+            />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <label className="text-xs text-gray-400">Au</label>
+            <input
+              type="date"
+              value={filterDateTo}
+              onChange={e => setFilterDateTo(e.target.value)}
+              className="text-xs border border-gray-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-rose-200 text-gray-600"
+            />
+          </div>
+          {(filterStatus !== "all" || filterDateFrom || filterDateTo) && (
+            <button
+              onClick={() => { setFilterStatus("all"); setFilterDateFrom(""); setFilterDateTo(""); }}
+              className="text-xs text-gray-400 hover:text-gray-600 underline"
+            >
+              Réinitialiser
+            </button>
+          )}
         </div>
       </div>
 
