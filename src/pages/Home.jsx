@@ -190,7 +190,7 @@ export default function Home() {
           className="w-20 mx-auto mb-3 opacity-60"
         />
         <p className="font-sans-clean text-xs text-gray-400 tracking-widest mb-6">"Merci d'avoir partagé ce moment avec nous"</p>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean">
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean mb-4">
           <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
@@ -199,7 +199,12 @@ export default function Home() {
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("MentionsLegales")} className="hover:text-rose-400 transition">Mentions légales & RGPD</a>
         </div>
-        <p className="font-sans-clean text-xs text-gray-300 mt-4">© 2025 Fleurs en fête — Papin Gwenaëlle — contact@fleursenfete.com</p>
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-gray-400 font-sans-clean mb-4">
+          <a href={createPageUrl("ClientDashboard")} className="hover:text-rose-400 transition">Mon compte</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("OrderTracking")} className="hover:text-rose-400 transition">Suivi commande</a>
+        </div>
+        <p className="font-sans-clean text-xs text-gray-300">© 2025 Fleurs en fête — Papin Gwenaëlle — contact@fleursenfete.com</p>
       </footer>
     </div>
   );
