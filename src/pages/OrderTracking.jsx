@@ -14,24 +14,42 @@ const STATUS_MAP = {
 };
 
 export default function OrderTracking() {
-  const [searchType, setSearchType] = useState("email");
-  const [searchValue, setSearchValue] = useState("");
+  const [searchType, setSearchType] = useState("id_email");
+  const [orderId, setOrderId] = useState("");
+  const [email, setEmail] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchValue.trim()) return;
+    setError("");
+    
+    if (!orderId.trim() || !email.trim()) {
+      setError("Veuillez entrer un numéro de commande et un email");
+      return;
+    }
 
     setLoading(true);
-    const query = searchType === "email" 
-      ? { customer_email: searchValue.trim() }
-      : { customer_name: { $regex: searchValue.trim(), $options: "i" } };
+    try {
+      // Chercher par ID de commande ET email pour sécurité
+      const result = await base44.entities.Order.filter({
+        id: orderId.trim(),
+        customer_email: email.trim().toLowerCase()
+      }, "-created_date", 1);
 
-    const result = await base44.entities.Order.filter(query, "-created_date", 50);
-    setOrders(result || []);
-    setSearched(true);
+      if (result && result.length > 0) {
+        setOrders(result);
+      } else {
+        setOrders([]);
+        setError("Aucune commande trouvée avec ces coordonnées. Vérifiez votre numéro et email.");
+      }
+      setSearched(true);
+    } catch (e) {
+      setError("Erreur lors de la recherche. Veuillez réessayer.");
+      console.error(e);
+    }
     setLoading(false);
   };
 
