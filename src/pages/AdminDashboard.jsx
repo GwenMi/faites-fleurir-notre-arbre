@@ -263,8 +263,11 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="qr">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-6">
               <QRCodeDisplay event={selectedEvent} />
+              <div className="border-t border-gray-100 pt-5">
+                <VisualPackGenerator event={selectedEvent} />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
