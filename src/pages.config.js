@@ -62,6 +62,7 @@ import Quotes from './pages/Quotes';
 import ReviewOrder from './pages/ReviewOrder';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
+import OrderTracking from './pages/OrderTracking';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "ReviewOrder": ReviewOrder,
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
+    "OrderTracking": OrderTracking,
 }
 
 export const pagesConfig = {
