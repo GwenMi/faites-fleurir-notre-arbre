@@ -408,6 +408,96 @@ contact@fleursenfete.com`,
                     </div>
                   </div>
 
+                  {/* Payment tracking */}
+                  <div className="mt-3 pt-3 border-t border-gray-50">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <CreditCard className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-xs text-gray-500 font-medium">Encaissement :</span>
+                        {(() => {
+                          const ps = order.payment_status || "unpaid";
+                          const psCfg = { unpaid: "bg-red-100 text-red-600", partial: "bg-amber-100 text-amber-700", paid: "bg-green-100 text-green-700" };
+                          const psLabel = { unpaid: "Non réglée", partial: "Acompte reçu", paid: "Réglée" };
+                          return <Badge className={psCfg[ps] + " text-xs"}>{psLabel[ps]}</Badge>;
+                        })()}
+                        {(order.payment_status === "partial") && order.total_price != null && (
+                          <span className="text-xs text-amber-600 font-semibold">
+                            {(order.deposit_amount || 0).toFixed(2)} € reçus · solde {((order.total_price || 0) - (order.deposit_amount || 0)).toFixed(2)} €
+                          </span>
+                        )}
+                        {order.payment_status === "paid" && (
+                          <span className="text-xs text-green-600 font-semibold">✓ {order.total_price?.toFixed(2)} € encaissés</span>
+                        )}
+                        {order.payment_reminder_sent && (
+                          <span className="text-xs bg-blue-50 text-blue-500 rounded-full px-2 py-0.5">Rappel envoyé</span>
+                        )}
+                      </div>
+                      <button onClick={() => openPaymentForm(order)} className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold underline flex-shrink-0">
+                        {paymentOpen === order.id ? "Fermer" : "Modifier"}
+                      </button>
+                    </div>
+
+                    {paymentOpen === order.id && (
+                      <div className="mt-3 bg-indigo-50 rounded-xl p-4 space-y-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-xs font-semibold text-indigo-700 flex items-center gap-1">
+                            <Euro className="w-3 h-3" /> Suivi encaissement
+                          </p>
+                          <button onClick={() => setPaymentOpen(null)} className="text-gray-400 hover:text-gray-600">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-xs text-indigo-600 mb-1 block">Statut de paiement</label>
+                          <select
+                            value={paymentForm.payment_status}
+                            onChange={e => setPaymentForm(f => ({ ...f, payment_status: e.target.value }))}
+                            className="w-full text-sm border border-indigo-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                          >
+                            <option value="unpaid">Non réglée</option>
+                            <option value="partial">Acompte reçu</option>
+                            <option value="paid">Réglée intégralement</option>
+                          </select>
+                        </div>
+                        {paymentForm.payment_status === "partial" && (
+                          <div>
+                            <label className="text-xs text-indigo-600 mb-1 block">Montant de l'acompte reçu (€)</label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder="Ex : 50.00"
+                              value={paymentForm.deposit_amount}
+                              onChange={e => setPaymentForm(f => ({ ...f, deposit_amount: e.target.value }))}
+                              className="rounded-xl border-indigo-200 focus:ring-indigo-300"
+                            />
+                            {paymentForm.deposit_amount && order.total_price && (
+                              <p className="text-xs text-indigo-500 mt-1">
+                                Solde restant : <strong>{(order.total_price - Number(paymentForm.deposit_amount)).toFixed(2)} €</strong>
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        <div>
+                          <label className="text-xs text-indigo-600 mb-1 block">Notes (mode de paiement, date…)</label>
+                          <Input
+                            placeholder="Ex : Virement reçu le 05/03"
+                            value={paymentForm.payment_notes}
+                            onChange={e => setPaymentForm(f => ({ ...f, payment_notes: e.target.value }))}
+                            className="rounded-xl border-indigo-200 focus:ring-indigo-300"
+                          />
+                        </div>
+                        <Button
+                          onClick={() => savePayment(order)}
+                          disabled={savingPayment}
+                          className="w-full rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-sm h-10"
+                        >
+                          {savingPayment ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
+                          Enregistrer
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Status update */}
                   <div className="mt-3 pt-3 border-t border-gray-50">
                     <p className="text-xs text-gray-400 mb-2">Changer le statut :</p>
