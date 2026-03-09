@@ -185,22 +185,57 @@ export default function OrderModal({ product, guestPack, onClose }) {
             onBack={() => { setPaymentStep(false); setOrderCreated(null); }}
           />
         ) : success ? (
-          <div className="px-6 py-10 text-center">
-            <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">Commande reçue !</h3>
-            <p className="text-gray-500 text-sm mb-5">Un email de confirmation a été envoyé à <span className="font-semibold">{email}</span>.</p>
-            {siteUrl && (
-              <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 mb-5 text-left">
-                <p className="text-xs font-bold text-rose-500 mb-1">🌸 Votre espace événement est prêt !</p>
-                <p className="text-xs text-gray-500 mb-3">Nous avons créé un site dédié à votre événement. Partagez-le avec vos invités — le QR code sera sur votre facture.</p>
-                <a href={siteUrl} target="_blank" rel="noreferrer"
-                  className="block text-xs text-indigo-500 underline break-all font-mono">{siteUrl}</a>
-              </div>
-            )}
-            <button onClick={onClose} className="px-8 py-3 rounded-full bg-rose-400 text-white font-semibold text-sm hover:bg-rose-500 transition">
-              Fermer
-            </button>
-          </div>
+           <div className="px-6 py-10 text-center space-y-4">
+             <CheckCircle className="w-14 h-14 text-green-400 mx-auto" />
+             <div>
+               <h3 className="text-2xl font-bold text-gray-800 mb-1">Commande reçue !</h3>
+               <p className="text-gray-500 text-sm">Email de confirmation envoyé à <span className="font-semibold">{email}</span></p>
+             </div>
+
+             {/* Étapes suivantes */}
+             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-left">
+               <p className="text-xs font-bold text-blue-600 mb-3">📋 Prochaines étapes :</p>
+               <ul className="text-xs text-gray-700 space-y-2">
+                 <li className="flex items-start gap-2">
+                   <span className="font-bold text-blue-600 flex-shrink-0">1.</span>
+                   <span>Consultez votre email pour la facture complète avec QR code</span>
+                 </li>
+                 <li className="flex items-start gap-2">
+                   <span className="font-bold text-blue-600 flex-shrink-0">2.</span>
+                   <span>Accédez à votre espace événement (lien dans l'email)</span>
+                 </li>
+                 <li className="flex items-start gap-2">
+                   <span className="font-bold text-blue-600 flex-shrink-0">3.</span>
+                   <span>Suivez votre commande en ligne</span>
+                 </li>
+               </ul>
+             </div>
+
+             {siteUrl && (
+               <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-left">
+                 <p className="text-xs font-bold text-rose-500 mb-2">🌸 Espace événement</p>
+                 <a href={siteUrl} target="_blank" rel="noreferrer"
+                   className="block text-xs text-rose-600 hover:text-rose-700 underline break-all font-mono mb-3">{siteUrl}</a>
+                 <a href={siteUrl} target="_blank" rel="noreferrer"
+                   className="inline-block px-3 py-1.5 bg-rose-500 text-white text-xs font-semibold rounded-lg hover:bg-rose-600 transition">
+                   Ouvrir →
+                 </a>
+               </div>
+             )}
+
+             {/* Lien suivi */}
+             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left">
+               <p className="text-xs font-bold text-amber-600 mb-2">📦 Suivre ma commande</p>
+               <a href="/app/OrderTracking"
+                 className="inline-block px-3 py-1.5 bg-amber-500 text-white text-xs font-semibold rounded-lg hover:bg-amber-600 transition">
+                 Accéder au suivi →
+               </a>
+             </div>
+
+             <button onClick={onClose} className="w-full px-8 py-3 rounded-full bg-gray-800 text-white font-semibold text-sm hover:bg-gray-900 transition">
+               Fermer
+             </button>
+           </div>
         ) : (
           <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
             {/* Pack summary or quantity */}
