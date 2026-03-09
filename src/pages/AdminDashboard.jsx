@@ -9,7 +9,7 @@ import PollManager from "@/components/admin/PollManager";
 import PostManager from "@/components/admin/PostManager";
 import QRCodeDisplay from "@/components/admin/QRCodeDisplay";
 import VisualPackGenerator from "@/components/admin/VisualPackGenerator";
-import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2, LayoutGrid, ClipboardList, CalendarClock, Bell, Truck, Star } from "lucide-react";
+import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2, LayoutGrid, ClipboardList, CalendarClock, Bell, Truck, Star, PiggyBank } from "lucide-react";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import CommentModeration from "@/components/admin/CommentModeration";
@@ -21,6 +21,7 @@ import NotificationsManager from "@/components/admin/NotificationsManager";
 import OrderTracking from "@/components/admin/OrderTracking";
 import BestOfManager from "@/components/admin/BestOfManager";
 import ThankyouEmailManager from "@/components/admin/ThankyouEmailManager";
+import BudgetManager from "@/components/admin/BudgetManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
