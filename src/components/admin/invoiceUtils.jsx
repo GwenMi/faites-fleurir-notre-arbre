@@ -1,6 +1,21 @@
 import jsPDF from "jspdf";
 
 const TVA_RATE = 0.20;
+
+async function loadImageAsBase64(url) {
+  try {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = url;
+    await new Promise((resolve) => { img.onload = resolve; img.onerror = resolve; });
+    if (!img.naturalWidth) return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    return canvas.toDataURL("image/png");
+  } catch { return null; }
+}
 const BUSINESS = {
   name: "Fleurs en fête",
   email: "contact@fleursenfete.com",

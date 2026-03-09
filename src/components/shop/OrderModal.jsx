@@ -31,8 +31,33 @@ export default function OrderModal({ product, onClose }) {
     : null;
   const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
 
+  const [siteUrl, setSiteUrl] = useState("");
+
   const doSubmit = async () => {
     setLoading(true);
+
+    // 1. Créer automatiquement le site événement gratuit
+    const baseSlug = name.trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 28);
+    const slug = `${baseSlug}-${Date.now().toString(36)}`;
+    const publicUrl = `${window.location.origin}/app/EventPublic?slug=${slug}`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(publicUrl)}`;
+
+    const eventRecord = await base44.entities.Event.create({
+      couple_names: name.trim(),
+      event_date: eventDate,
+      event_type: "mariage",
+      slug,
+      public_url: publicUrl,
+      qr_code_url: qrCodeUrl,
+      status: "active",
+      plan: "basic",
+      template: "floral",
+      welcome_message: `Bienvenue sur notre espace événement 🌸`,
+    });
+
+    // 2. Créer la commande avec le lien vers le site
     await base44.entities.Order.create({
       customer_name: name.trim(),
       customer_email: email.trim(),
@@ -46,19 +71,27 @@ export default function OrderModal({ product, onClose }) {
         ...(isPremium && customText && { custom_text: customText }),
         event_date: eventDate,
         delivery_address: address.trim(),
+        site_public_url: publicUrl,
+        site_slug: slug,
       },
       total_price: parseFloat(total),
       status: "pending",
+      event_id: eventRecord.id,
     });
-    // Send confirmation email
+
+    setSiteUrl(publicUrl);
+
+    // 3. Email de confirmation avec le lien du site
     const lateNote = isLate
       ? "\n\n⚠️ Rappel délais : Votre événement est dans moins de 14 jours. Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie."
       : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
+
     await base44.integrations.Core.SendEmail({
       to: email.trim(),
       subject: `🌸 Confirmation de commande — ${product.name}`,
-      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${publicUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
     });
+
     setLoading(false);
     setSuccess(true);
   };
