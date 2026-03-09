@@ -186,7 +186,11 @@ export default function OrderModal({ product, guestPack, onClose }) {
             setPaymentOption={setPaymentOption}
             total={total}
             depositAmount={depositAmount}
-            onPaymentSuccess={() => doSubmit()}
+            onPaymentSuccess={() => {
+              setTimeout(() => {
+                window.location.href = `${window.location.origin}/app/OrderConfirmation?order_id=${orderCreated?.id}`;
+              }, 2000);
+            }}
             onBack={() => { setPaymentStep(false); setOrderCreated(null); }}
           />
         ) : success ? (
