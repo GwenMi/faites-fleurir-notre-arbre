@@ -296,8 +296,11 @@ contact@fleursenfete.com`,
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-sm text-gray-500 font-medium">{orders.length} commande{orders.length > 1 ? "s" : ""}</p>
-            {orders.map(order => {
+            <p className="text-sm text-gray-500 font-medium">
+              {filteredOrders.length} commande{filteredOrders.length > 1 ? "s" : ""}
+              {filteredOrders.length !== orders.length && <span className="text-gray-400"> (sur {orders.length})</span>}
+            </p>
+            {filteredOrders.map(order => {
               const statusCfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
               const opts = order.options_selected || {};
               return (
