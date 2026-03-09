@@ -9,7 +9,7 @@ import PollManager from "@/components/admin/PollManager";
 import PostManager from "@/components/admin/PostManager";
 import QRCodeDisplay from "@/components/admin/QRCodeDisplay";
 import VisualPackGenerator from "@/components/admin/VisualPackGenerator";
-import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2, LayoutGrid, ClipboardList, CalendarClock, Bell, Truck } from "lucide-react";
+import { Plus, Settings, Image, BarChart2, Newspaper, ExternalLink, ChevronLeft, Copy, Check, Link, MessageSquare, Package, Flower2, LayoutGrid, ClipboardList, CalendarClock, Bell, Truck, Star } from "lucide-react";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import CommentModeration from "@/components/admin/CommentModeration";
@@ -198,6 +198,9 @@ export default function AdminDashboard() {
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex-1 rounded-xl text-xs">
               <Bell className="w-3 h-3 mr-1" /> Emails
+            </TabsTrigger>
+            <TabsTrigger value="bestof" className="flex-1 rounded-xl text-xs">
+              <Star className="w-3 h-3 mr-1" /> Best of
             </TabsTrigger>
             <TabsTrigger value="challenge" className="flex-1 rounded-xl text-xs">
               <Flower2 className="w-3 h-3 mr-1" /> Défi
