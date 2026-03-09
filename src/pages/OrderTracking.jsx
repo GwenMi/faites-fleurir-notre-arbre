@@ -223,30 +223,22 @@ export default function OrderTracking() {
                       </div>
                     </div>
 
-                  {/* Paiement */}
-                  <div className="mt-4">
-                    <p className="font-sans-clean text-xs font-semibold text-gray-500 uppercase mb-2">Paiement</p>
-                    <div className="flex items-center gap-2 font-sans-clean text-sm">
-                      {order.payment_status === "paid" && (
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 text-green-700">
-                          <CheckCircle className="w-4 h-4" />
-                          Payé en intégralité
+                    {/* Paiement détail */}
+                    {order.payment_status === "partial" && (
+                      <div className="mb-8 pb-8 border-b border-gray-100 bg-blue-50 rounded-lg p-4">
+                        <p className="font-sans-clean text-sm font-semibold text-blue-800 mb-3">💳 Détail paiement</p>
+                        <div className="space-y-2 font-sans-clean text-sm text-blue-700">
+                          <div className="flex justify-between">
+                            <span>Acompte reçu:</span>
+                            <strong className="text-green-600">+{(order.deposit_amount || 0).toFixed(2)} €</strong>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Solde à payer:</span>
+                            <strong className="text-amber-600">{((order.total_price || 0) - (order.deposit_amount || 0)).toFixed(2)} €</strong>
+                          </div>
                         </div>
-                      )}
-                      {order.payment_status === "partial" && (
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700">
-                          <Package className="w-4 h-4" />
-                          Acompte reçu - Solde à la livraison
-                        </div>
-                      )}
-                      {order.payment_status === "unpaid" && (
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700">
-                          <AlertCircle className="w-4 h-4" />
-                          Paiement en attente
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                      </div>
+                    )}
 
                   {/* Tracking */}
                   {order.tracking_number && (
