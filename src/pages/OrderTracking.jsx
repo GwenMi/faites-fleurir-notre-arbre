@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Search, Loader2, Package, Truck, CheckCircle, AlertCircle } from "lucide-react";
+import { Search, Loader2, Package, Truck, CheckCircle, AlertCircle, Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import jsPDF from "jspdf";
 
 const STATUS_MAP = {
   pending: { label: "En attente", icon: AlertCircle, color: "text-amber-500" },
