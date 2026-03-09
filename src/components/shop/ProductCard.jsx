@@ -1,4 +1,6 @@
-export default function ProductCard({ product, onOrder }) {
+import { StarSummary } from "./ProductReviews";
+
+export default function ProductCard({ product, onOrder, reviews }) {
   const ICONS = {
     "Kit à composer": "🌱",
     "Kit classique prêt à offrir": "🌸",
@@ -19,7 +21,8 @@ export default function ProductCard({ product, onOrder }) {
 
       <div className="p-5 flex flex-col flex-1">
         <p className="font-serif-elegant text-xl font-bold text-gray-800 mb-1">{product.name}</p>
-        <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-1">{product.description}</p>
+        <StarSummary productId={product.id} reviews={reviews} />
+        <p className="text-sm text-gray-500 leading-relaxed mb-4 flex-1 mt-2">{product.description}</p>
 
         <div className="flex items-center justify-between mt-auto">
           <div>
