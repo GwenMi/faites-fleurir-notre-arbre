@@ -179,6 +179,19 @@ export default function OrderModal({ product, onClose }) {
               <Input type="email" placeholder="Votre email *" value={email} onChange={e => setEmail(e.target.value)} required className="rounded-xl h-11" />
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">
+                  Adresse de livraison complète *
+                </label>
+                <textarea
+                  placeholder={"N° et rue\nCode postal, Ville\nPays"}
+                  value={address}
+                  onChange={e => setAddress(e.target.value)}
+                  required
+                  rows={3}
+                  className="w-full rounded-xl border border-input px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-rose-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">
                   Date de votre événement *
                 </label>
                 <p className="text-xs text-gray-400 mb-2">Cette information nous permet de vérifier les délais de préparation et de livraison.</p>
