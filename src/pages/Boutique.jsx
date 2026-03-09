@@ -86,12 +86,12 @@ export default function Boutique() {
 
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-16">
         {/* Products */}
-        <section>
+        <section data-scroll-to>
           <div className="mb-8">
             <h2 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Choisissez votre kit</h2>
             <p className="text-gray-500 text-sm">Chaque kit inclut un QR code pour accéder à votre espace événement personnalisé</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {PRODUCTS.map(product => (
               <ProductCard
                 key={product.id}
@@ -125,36 +125,44 @@ export default function Boutique() {
         <section>
           <div className="mb-8">
             <h2 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Acheter par packs</h2>
-            <p className="text-gray-500 text-sm">Les prix ci-dessous sont calculés avec le pot plastique inclus</p>
+            <p className="text-gray-500 text-sm">Configurez facilement la quantité dont vous avez besoin</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {PACKS.map(pack => (
-              <div key={pack.guests} className="bg-white rounded-2xl p-5 border border-gray-100 hover:border-rose-200 hover:shadow-md transition">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-bold text-gray-800">{pack.label}</h4>
-                  <Gift className="w-5 h-5 text-rose-400" />
-                </div>
-                <div className="space-y-2 text-sm text-gray-600 mb-4">
-                  {PRODUCTS.map(prod => (
-                    <div key={prod.id} className="flex items-center justify-between py-1">
-                      <span>{prod.name}</span>
-                      <span className="font-bold text-gray-800">
-                        {(prod.basePrice * pack.guests).toFixed(2)} €
-                      </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {PACKS.map(pack => {
+              const compose = PRODUCTS[0].basePrice * pack.guests;
+              const ready = PRODUCTS[1].basePrice * pack.guests;
+              return (
+                <div key={pack.guests} className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-rose-300 hover:shadow-lg transition flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-bold text-lg text-gray-800">{pack.guests} 👥</h4>
+                    <Gift className="w-5 h-5 text-rose-400" />
+                  </div>
+                  <div className="space-y-3 text-sm text-gray-600 mb-4 flex-1">
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <span className="text-gray-700">Kit à Composer</span>
+                      <span className="font-bold text-gray-800">{compose.toFixed(2)} €</span>
                     </div>
-                  ))}
-                </div>
-                <div className="bg-rose-50 rounded-xl p-3 mb-4">
-                  <p className="text-xs text-gray-500 mb-1">Total avec pots plastique</p>
-                  <p className="text-2xl font-bold text-rose-500">
-                    {(PRODUCTS[0].basePrice * pack.guests).toFixed(2)} € · {PRODUCTS[1].basePrice * pack.guests).toFixed(2)} €
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <span className="text-gray-700">Kit Prêt à Offrir</span>
+                      <span className="font-bold text-gray-800">{ready.toFixed(2)} €</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
+                    💡 Prévoir quelques pots supplémentaires pour les invités imprévus
                   </p>
+                  <button
+                    onClick={() => {
+                      setSelectedProduct(PRODUCTS[0]);
+                      // Hack: modifier quantity via state dans le modal
+                      setShowModal(true);
+                    }}
+                    className="w-full py-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 text-sm font-semibold transition"
+                  >
+                    Configurer ce pack
+                  </button>
                 </div>
-                <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
-                  💡 Nous recommandons de prévoir quelques pots supplémentaires pour les invités imprévus.
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
