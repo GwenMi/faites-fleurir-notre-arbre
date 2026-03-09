@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Loader2, ShoppingBag, Truck } from "lucide-react";
 import ProductCard from "@/components/shop/ProductCard";
 import OrderModal from "@/components/shop/OrderModal";
+import ProductReviews from "@/components/shop/ProductReviews";
 
 const DEFAULT_PRODUCTS = [
   {
@@ -27,6 +28,7 @@ const DEFAULT_PRODUCTS = [
 
 export default function Boutique() {
   const [products, setProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -41,6 +43,8 @@ export default function Boutique() {
     } else {
       setProducts(DEFAULT_PRODUCTS);
     }
+    const dbReviews = await base44.entities.Review.filter({ approved: true });
+    setReviews(dbReviews || []);
     setLoading(false);
   };
 
@@ -98,11 +102,16 @@ export default function Boutique() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {products.map(product => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onOrder={setSelectedProduct}
-                />
+                <div key={product.id} className="flex flex-col">
+                  <ProductCard
+                    product={product}
+                    onOrder={setSelectedProduct}
+                    reviews={reviews}
+                  />
+                  <div className="px-1">
+                    <ProductReviews productId={product.id} />
+                  </div>
+                </div>
               ))}
             </div>
 
