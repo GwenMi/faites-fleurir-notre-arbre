@@ -19,6 +19,7 @@ import RSVPManager from "@/components/admin/rsvp/RSVPManager";
 import ScheduleManager from "@/components/admin/ScheduleManager";
 import NotificationsManager from "@/components/admin/NotificationsManager";
 import OrderTracking from "@/components/admin/OrderTracking";
+import BestOfManager from "@/components/admin/BestOfManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);

@@ -5,6 +5,7 @@ import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSectio
 import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/RSVPSection";
 import DayScheduleSection from "@/components/public/DayScheduleSection";
+import BestOfSection from "@/components/public/BestOfSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
