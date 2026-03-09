@@ -247,33 +247,37 @@ export default function OrderModal({ product, guestPack, onClose }) {
             )}
 
             {/* Ribbon color */}
-            <div>
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Couleur du ruban</label>
-              <div className="flex flex-wrap gap-2">
-                {RIBBON_COLORS.map(c => (
-                  <button key={c} type="button" onClick={() => setRibbon(c)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${ribbon === c ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                    {c}
-                  </button>
-                ))}
+            {!isGuestPack && (
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Couleur du ruban</label>
+                <div className="flex flex-wrap gap-2">
+                  {RIBBON_COLORS.map(c => (
+                    <button key={c} type="button" onClick={() => setRibbon(c)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${ribbon === c ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                      {c}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Seed type */}
-            <div>
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Type de graines</label>
-              <div className="flex flex-wrap gap-2">
-                {SEED_TYPES.map(s => (
-                  <button key={s} type="button" onClick={() => setSeeds(s)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${seeds === s ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
-                    {s}
-                  </button>
-                ))}
+            {!isGuestPack && (
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Type de graines</label>
+                <div className="flex flex-wrap gap-2">
+                  {SEED_TYPES.map(s => (
+                    <button key={s} type="button" onClick={() => setSeeds(s)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${seeds === s ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Custom text (premium only) */}
-            {isPremium && (
+            {!isGuestPack && isPremium && (
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
                   Texte personnalisé <span className="text-gray-300 font-normal normal-case">(ex: Sophie & Thomas · 14 juin 2026)</span>
