@@ -57,7 +57,7 @@ export default function OrderModal({ product, onClose }) {
     await base44.integrations.Core.SendEmail({
       to: email.trim(),
       subject: `🌸 Confirmation de commande — ${product.name}`,
-      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\nNous vous contacterons pour confirmer les détails de livraison.\n\nMerci pour votre confiance,\nL'équipe Fleurs de fête 🌸`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
     });
     setLoading(false);
     setSuccess(true);
