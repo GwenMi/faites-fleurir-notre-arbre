@@ -85,37 +85,49 @@ export default function OrderTracking() {
         {/* Formulaire */}
         <form onSubmit={handleSearch} className="bg-white rounded-3xl shadow-lg p-8 mb-8">
           <div className="space-y-4">
-            <div className="flex gap-3">
-              {["email", "nom"].map(type => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setSearchType(type)}
-                  className={`flex-1 py-2 rounded-xl font-sans-clean font-medium text-sm transition ${
-                    searchType === type
-                      ? "bg-rose-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {type === "email" ? "Rechercher par email" : "Rechercher par nom"}
-                </button>
-              ))}
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 font-sans-clean">
+              💡 Entrez le <strong>numéro de commande</strong> (visible dans vos emails) et votre <strong>email</strong> pour retrouver votre commande.
             </div>
-            <div className="flex gap-3">
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 font-sans-clean">Numéro de commande *</label>
               <Input
-                placeholder={searchType === "email" ? "votre@email.com" : "Votre nom"}
-                value={searchValue}
-                onChange={e => setSearchValue(e.target.value)}
+                placeholder="Ex: 507a8b2c3d4e5f6g (dans l'URL ou l'email)"
+                value={orderId}
+                onChange={e => setOrderId(e.target.value)}
                 className="rounded-xl h-11 text-sm"
               />
-              <Button
-                type="submit"
-                disabled={loading || !searchValue.trim()}
-                className="px-6 rounded-xl bg-rose-500 hover:bg-rose-600 text-white"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              </Button>
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 font-sans-clean">Email de commande *</label>
+              <Input
+                type="email"
+                placeholder="votre@email.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="rounded-xl h-11 text-sm"
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800 font-sans-clean flex gap-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={loading || !orderId.trim() || !email.trim()}
+              className="w-full h-12 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
+            >
+              {loading ? (
+                <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Recherche en cours...</>
+              ) : (
+                <><Search className="w-4 h-4 mr-2" /> Retrouver ma commande</>
+              )}
+            </Button>
           </div>
         </form>
 
