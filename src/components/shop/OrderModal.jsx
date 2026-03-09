@@ -45,6 +45,7 @@ export default function OrderModal({ product, onClose }) {
         seed_type: seeds,
         ...(isPremium && customText && { custom_text: customText }),
         event_date: eventDate,
+        delivery_address: address.trim(),
       },
       total_price: parseFloat(total),
       status: "pending",
@@ -64,7 +65,8 @@ export default function OrderModal({ product, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !eventDate) return;
+    if (!name.trim() || !email.trim() || !eventDate || !address.trim()) return;
+    if (!cgvAccepted) return;
     if (isLate && !showLateWarning) {
       setShowLateWarning(true);
       return;
