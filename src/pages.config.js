@@ -61,6 +61,7 @@ import SupplierOrders from './pages/SupplierOrders';
 import Stats from './pages/Stats';
 import CalendarView from './pages/CalendarView';
 import CRM from './pages/CRM';
+import Quotes from './pages/Quotes';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "Stats": Stats,
     "CalendarView": CalendarView,
     "CRM": CRM,
+    "Quotes": Quotes,
 }
 
 export const pagesConfig = {
