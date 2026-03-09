@@ -180,6 +180,9 @@ export default function AdminDashboard() {
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger value="schedule" className="flex-1 rounded-xl text-xs">
+              <CalendarClock className="w-3 h-3 mr-1" /> Journée
+            </TabsTrigger>
             <TabsTrigger value="rsvp" className="flex-1 rounded-xl text-xs">
               <ClipboardList className="w-3 h-3 mr-1" /> RSVP
             </TabsTrigger>
