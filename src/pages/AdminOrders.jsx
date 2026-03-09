@@ -35,6 +35,9 @@ export default function AdminOrders() {
   const [sendingInvoice, setSendingInvoice] = useState(null);
   const [sendingReminder, setSendingReminder] = useState(null);
   const [sendingReviewLink, setSendingReviewLink] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
 
   useEffect(() => { loadOrders(); }, []);
 
