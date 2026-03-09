@@ -204,6 +204,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="notifications" className="flex-1 rounded-xl text-xs">
               <Bell className="w-3 h-3 mr-1" /> Emails
             </TabsTrigger>
+            <TabsTrigger value="budget" className="flex-1 rounded-xl text-xs">
+              <PiggyBank className="w-3 h-3 mr-1" /> Budget
+            </TabsTrigger>
             <TabsTrigger value="bestof" className="flex-1 rounded-xl text-xs">
               <Star className="w-3 h-3 mr-1" /> Best of
             </TabsTrigger>
@@ -278,6 +281,12 @@ export default function AdminDashboard() {
           <TabsContent value="notifications">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <NotificationsManager event={selectedEvent} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="budget">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <BudgetManager event={selectedEvent} />
             </div>
           </TabsContent>
 
