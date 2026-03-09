@@ -76,6 +76,15 @@ export default function StripePaymentSection({
         ...(paymentOption === "deposit" && { deposit_amount: depositAmount }),
       });
 
+      // Notifier l'admin du paiement
+      const { notifyAdminPaymentReceived, notifyCustomerPaymentReminder } = await import("@/components/admin/AdminNotifier");
+      await notifyAdminPaymentReceived(order, amountToPay, paymentOption);
+
+      // Si acompte, rappeler le solde au client
+      if (paymentOption === "deposit") {
+        await notifyCustomerPaymentReminder(order);
+      }
+
       setSucceeded(true);
       toast.success(`Paiement de ${amountToPay.toFixed(2)}€ confirmé ✓`);
 
