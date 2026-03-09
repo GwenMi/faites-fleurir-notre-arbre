@@ -22,7 +22,7 @@ const BUSINESS = {
   tagline: "Des souvenirs qui fleurissent 🌸",
 };
 
-export function generateInvoicePDF(order) {
+export async function generateInvoicePDF(order) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const opts = order.options_selected || {};
   const invoiceNumber = `FEF-${(order.id || "").slice(-8).toUpperCase()}`;
