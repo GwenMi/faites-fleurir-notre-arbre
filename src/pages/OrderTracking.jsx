@@ -132,11 +132,11 @@ export default function OrderTracking() {
         </form>
 
         {/* Résultats */}
-        {searched && !loading && orders.length === 0 && (
-          <div className="text-center py-12">
+        {searched && !loading && orders.length === 0 && !error && (
+          <div className="text-center py-12 bg-white rounded-2xl">
             <AlertCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="font-sans-clean text-gray-600 mb-2">Aucune commande trouvée</p>
-            <p className="font-sans-clean text-sm text-gray-400">Vérifiez vos coordonnées et réessayez</p>
+            <p className="font-sans-clean text-sm text-gray-400">Vérifiez votre numéro et email, puis réessayez</p>
           </div>
         )}
 
