@@ -3,11 +3,6 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Minus, Plus, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import StripePaymentSection from "./StripePaymentSection";
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const RIBBON_COLORS = ["Blanc", "Ivoire", "Rose poudré", "Bordeaux", "Vert sauge", "Bleu ardoise", "Doré", "Noir"];
 const SEED_TYPES = ["Lavande", "Tournesol", "Marguerite", "Coquelicot", "Bleuet", "Forget-me-not"];
@@ -16,7 +11,7 @@ export default function OrderModal({ product, onClose }) {
   const [quantity, setQuantity] = useState(10);
   const [ribbon, setRibbon] = useState(RIBBON_COLORS[0]);
   const [seeds, setSeeds] = useState(SEED_TYPES[0]);
-  const [potType, setPotType] = useState("Verre");
+  const [potType, setPotType] = useState("plastique");
   const [customText, setCustomText] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,9 +22,17 @@ export default function OrderModal({ product, onClose }) {
   const [success, setSuccess] = useState(false);
   const [showLateWarning, setShowLateWarning] = useState(false);
 
-  const isPremium = product.name.toLowerCase().includes("premium");
-  const hasCompose = product.name.toLowerCase().includes("composer");
-  const total = (product.price * quantity).toFixed(2);
+  const hasCompose = product.id === "compose";
+  
+  // Calcul du prix avec option pot
+  const potSurcharge = potType === "verre" ? 0.20 : 0;
+  const pricePerUnit = product.basePrice + potSurcharge;
+  const subtotal = pricePerUnit * quantity;
+  
+  // Promotion packs : 10% si au moins 2 packs (120+ items)
+  const isPackPromo = quantity >= 120 ? 0.90 : 1.0;
+  const total = (subtotal * isPackPromo).toFixed(2);
+  const discount = isPackPromo < 1 ? (subtotal * (1 - isPackPromo)).toFixed(2) : "0.00";
 
   const daysUntilEvent = eventDate
     ? Math.floor((new Date(eventDate) - new Date()) / (1000 * 60 * 60 * 24))
@@ -37,13 +40,10 @@ export default function OrderModal({ product, onClose }) {
   const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
 
   const [siteUrl, setSiteUrl] = useState("");
-  const [orderCreated, setOrderCreated] = useState(null);
-  const [paymentStep, setPaymentStep] = useState(false);
-  const [paymentOption, setPaymentOption] = useState("full"); // "full" ou "deposit"
 
-  const depositAmount = Math.round(parseFloat(total) * 0.5 * 100) / 100; // 50%
+  const doSubmit = async () => {
+    setLoading(true);
 
-  const createOrder = async () => {
     // 1. Créer automatiquement le site événement gratuit
     const baseSlug = name.trim().toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -65,8 +65,8 @@ export default function OrderModal({ product, onClose }) {
       welcome_message: `Bienvenue sur notre espace événement 🌸`,
     });
 
-    // 2. Créer la commande
-    const order = await base44.entities.Order.create({
+    // 2. Créer la commande avec le lien vers le site
+    await base44.entities.Order.create({
       customer_name: name.trim(),
       customer_email: email.trim(),
       product_id: product.id,
@@ -76,26 +76,22 @@ export default function OrderModal({ product, onClose }) {
         ...(hasCompose && { pot_type: potType }),
         ribbon_color: ribbon,
         seed_type: seeds,
-        ...(isPremium && customText && { custom_text: customText }),
+        custom_text: customText,
         event_date: eventDate,
         delivery_address: address.trim(),
         site_public_url: publicUrl,
         site_slug: slug,
+        pot_surcharge: potSurcharge,
+        pack_promo_applied: isPackPromo < 1,
       },
       total_price: parseFloat(total),
       status: "pending",
       event_id: eventRecord.id,
-      payment_status: "unpaid",
     });
 
     setSiteUrl(publicUrl);
-    setOrderCreated(order);
-    setPaymentStep(true);
-  };
 
-  const doSubmit = async () => {
-    setLoading(true);
-
+    // 3. Email de confirmation avec le lien du site
     const lateNote = isLate
       ? "\n\n⚠️ Rappel délais : Votre événement est dans moins de 14 jours. Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie."
       : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
@@ -103,7 +99,7 @@ export default function OrderModal({ product, onClose }) {
     await base44.integrations.Core.SendEmail({
       to: email.trim(),
       subject: `🌸 Confirmation de commande — ${product.name}`,
-      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${siteUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
+      body: `Bonjour ${name.trim()},\n\nNous avons bien reçu votre commande de ${quantity} kit${quantity > 1 ? "s" : ""} "${product.name}" pour un total de ${total} €.\n\nAdresse de livraison : ${address.trim()}\nDate de votre événement : ${eventDate ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "Non renseignée"}\n${lateNote}\n\n🌸 VOTRE ESPACE ÉVÉNEMENT GRATUIT\nNous avons créé un espace en ligne personnalisé pour votre événement. Partagez-le avec vos invités !\n👉 ${publicUrl}\n(Vous pourrez personnaliser cet espace depuis le lien ci-dessus)\n\nVous recevrez également un QR Code sur votre bon de commande / facture pour le partager facilement.\n\nVous disposez d'un droit de rétractation de 14 jours à compter de la réception (hors produits personnalisés). Pour exercer ce droit : contact@fleursenfete.com\n\nMerci pour votre confiance,\nGwenaëlle — Fleurs en fête 🌸\ncontact@fleursenfete.com`,
     });
 
     setLoading(false);
@@ -118,15 +114,12 @@ export default function OrderModal({ product, onClose }) {
       setShowLateWarning(true);
       return;
     }
-    setLoading(true);
-    await createOrder();
-    setLoading(false);
+    await doSubmit();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm px-4 pb-4 sm:pb-0">
-      <Elements stripe={stripePromise}>
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
@@ -138,17 +131,7 @@ export default function OrderModal({ product, onClose }) {
           </button>
         </div>
 
-        {paymentStep && orderCreated ? (
-          <StripePaymentSection 
-            order={orderCreated}
-            paymentOption={paymentOption}
-            setPaymentOption={setPaymentOption}
-            total={total}
-            depositAmount={depositAmount}
-            onPaymentSuccess={() => doSubmit()}
-            onBack={() => { setPaymentStep(false); setOrderCreated(null); }}
-          />
-        ) : success ? (
+        {success ? (
           <div className="px-6 py-10 text-center">
             <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Commande reçue !</h3>
@@ -180,24 +163,40 @@ export default function OrderModal({ product, onClose }) {
                   className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 transition">
                   <Plus className="w-4 h-4 text-gray-500" />
                 </button>
-                <span className="text-sm text-gray-400 ml-2">= <span className="font-bold text-rose-500">{total} €</span></span>
+                <div className="ml-auto flex flex-col items-end gap-1">
+                  {isPackPromo < 1 && (
+                    <div className="text-xs">
+                      <span className="text-gray-400">Avant promo : </span>
+                      <span className="text-gray-400 line-through">{subtotal.toFixed(2)} €</span>
+                    </div>
+                  )}
+                  <span className="text-sm text-gray-400">= <span className="font-bold text-rose-500">{total} €</span></span>
+                  {isPackPromo < 1 && (
+                    <span className="text-xs text-emerald-600 font-bold">-{discount} € (pack -10%)</span>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Pot type (compose only) */}
-            {hasCompose && (
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Type de pot</label>
-                <div className="flex gap-2">
-                  {["Verre", "Plastique"].map(p => (
-                    <button key={p} type="button" onClick={() => setPotType(p)}
-                      className={`flex-1 py-2 rounded-xl border-2 text-sm font-medium transition ${potType === p ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
-                      {p === "Verre" ? "🫙 Verre" : "🧴 Plastique"}
-                    </button>
-                  ))}
-                </div>
+            {/* Pot type */}
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">Choisir votre pot</label>
+              <div className="space-y-2">
+                {[
+                  { id: "plastique", label: "🧴 Pot plastique", price: 0 },
+                  { id: "verre", label: "🫙 Pot verre", price: 0.20 }
+                ].map(pot => (
+                  <button key={pot.id} type="button" onClick={() => setPotType(pot.id)}
+                    className={`w-full flex items-center justify-between p-3 rounded-xl border-2 text-sm font-medium transition ${potType === pot.id ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-600 hover:border-gray-300"}`}>
+                    <span className="flex items-center gap-2">
+                      {pot.label}
+                      {pot.id === "verre" && <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">Option élégante</span>}
+                    </span>
+                    {pot.price > 0 && <span className="text-xs text-gray-400">+{pot.price.toFixed(2)} €</span>}
+                  </button>
+                ))}
               </div>
-            )}
+            </div>
 
             {/* Ribbon color */}
             <div>
@@ -330,8 +329,7 @@ export default function OrderModal({ product, onClose }) {
             )}
           </form>
         )}
-        </div>
-      </Elements>
+      </div>
     </div>
   );
 }
