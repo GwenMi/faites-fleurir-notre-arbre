@@ -36,6 +36,19 @@ export default function PostUploadModal({ type, eventId, guest, challenge, onClo
       image: file_url,
       caption: caption.trim() || undefined,
     });
+
+    // Notify the event owner
+    const events = await base44.entities.Event.filter({ id: eventId }).catch(() => []);
+    const event = events?.[0];
+    if (event?.created_by) {
+      const label = isFlower ? "🌸 fleur" : "🎭 défi";
+      await base44.integrations.Core.SendEmail({
+        to: event.created_by,
+        subject: `Nouvelle ${label} partagée — ${event.couple_names}`,
+        body: `Bonjour,\n\n${guest.pseudo} vient de partager une ${label} sur votre page "${event.couple_names}".\n${caption ? `\nCaption : "${caption}"` : ""}\n\nConnectez-vous à votre tableau de bord pour modérer les photos.\n\nFleurs de fête 🌸`,
+      }).catch(() => {});
+    }
+
     toast.success(isFlower ? "Votre fleur est partagée ! 🌸" : "Gage relevé avec brio ! 🎭");
     setUploading(false);
     onSuccess();
