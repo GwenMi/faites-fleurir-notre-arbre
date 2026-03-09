@@ -143,7 +143,7 @@ export default function Home() {
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-gray-400 mb-3">Essentiel</p>
             <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">Gratuit</p>
             <p className="font-sans-clean text-sm text-gray-400 mb-1">Pour commencer</p>
-            <p className="font-sans-clean text-xs text-gray-300 mb-7">Prix par pot inclus dans votre commande</p>
+            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Site disponible uniquement avec une commande de pots</p>
             <ul className="space-y-3 mb-8">
               {FEATURES_BASIC.map(f => (
                 <li key={f} className="flex items-center gap-3 font-sans-clean text-sm text-gray-600">
@@ -165,7 +165,7 @@ export default function Home() {
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-rose-400 mb-3">Complet</p>
             <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">19 €</p>
             <p className="font-sans-clean text-sm text-gray-400 mb-1">Par événement</p>
-            <p className="font-sans-clean text-xs text-gray-300 mb-7">Prix par pot inclus dans votre commande</p>
+            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Site disponible uniquement avec une commande de pots</p>
             <ul className="space-y-3 mb-8">
               {FEATURES_PREMIUM.map(f => (
                 <li key={f} className="flex items-center gap-3 font-sans-clean text-sm text-gray-700">
