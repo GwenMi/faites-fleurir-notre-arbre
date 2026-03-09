@@ -20,6 +20,7 @@ import ScheduleManager from "@/components/admin/ScheduleManager";
 import NotificationsManager from "@/components/admin/NotificationsManager";
 import OrderTracking from "@/components/admin/OrderTracking";
 import BestOfManager from "@/components/admin/BestOfManager";
+import ThankyouEmailManager from "@/components/admin/ThankyouEmailManager";
 
 export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
@@ -196,6 +197,9 @@ export default function AdminDashboard() {
             <TabsTrigger value="orders" className="flex-1 rounded-xl text-xs">
               <Truck className="w-3 h-3 mr-1" /> Livraison
             </TabsTrigger>
+            <TabsTrigger value="thankyou" className="flex-1 rounded-xl text-xs">
+              💌 Merci
+            </TabsTrigger>
             <TabsTrigger value="notifications" className="flex-1 rounded-xl text-xs">
               <Bell className="w-3 h-3 mr-1" /> Emails
             </TabsTrigger>
@@ -261,6 +265,12 @@ export default function AdminDashboard() {
           <TabsContent value="orders">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
               <OrderTracking event={selectedEvent} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="thankyou">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <ThankyouEmailManager event={selectedEvent} />
             </div>
           </TabsContent>
 
