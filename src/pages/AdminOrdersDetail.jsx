@@ -135,6 +135,13 @@ export default function AdminOrdersDetail() {
     setSaving(true);
     try {
       await base44.entities.Order.update(order.id, editPayment);
+      
+      // Envoyer la facture automatiquement si le paiement passe à 'paid' ou 'partial'
+      if ((editPayment.payment_status === "paid" || editPayment.payment_status === "partial") && 
+          order.payment_status !== editPayment.payment_status) {
+        await sendInvoiceEmail(order, editPayment.payment_status, editPayment.deposit_amount);
+      }
+      
       const updated = await base44.entities.Order.filter({ id: order.id }, "-created_date", 1);
       if (updated?.length) {
         setOrder(updated[0]);
