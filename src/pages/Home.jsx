@@ -74,7 +74,7 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-10">
-          <a href={createPageUrl("AdminDashboard")}
+          <a href={createPageUrl("Boutique")}
             className="flex-1 py-4 rounded-full font-sans-clean font-bold text-white shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
             <Sparkles className="w-4 h-4" /> Créer mon événement
           </a>
