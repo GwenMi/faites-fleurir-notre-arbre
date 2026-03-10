@@ -109,17 +109,23 @@ export default function GuestbookSection({ event, guest }) {
       ) : (
         <div className="space-y-4">
           {entries.map(entry => (
-            <div key={entry.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <div key={entry.id} className={`bg-white border rounded-2xl p-5 shadow-sm ${entry.featured ? "border-yellow-300 ring-1 ring-yellow-200" : "border-gray-100"}`}>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-purple-500 font-bold text-sm">{entry.pseudo[0].toUpperCase()}</span>
                 </div>
-                <div>
-                  <p className="font-semibold text-sm text-gray-800 font-sans-clean">{entry.pseudo}</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-sm text-gray-800 font-sans-clean">{entry.pseudo}</p>
+                    {entry.featured && <span className="text-xs">⭐</span>}
+                  </div>
                   <p className="text-xs text-gray-400 font-sans-clean">{formatDate(entry.created_date)}</p>
                 </div>
               </div>
               <p className="font-serif-elegant text-gray-700 text-base leading-relaxed italic">"{entry.message}"</p>
+              {entry.photo_url && (
+                <img src={entry.photo_url} alt="" className="mt-3 rounded-xl max-h-48 object-cover border border-gray-100" />
+              )}
             </div>
           ))}
         </div>
