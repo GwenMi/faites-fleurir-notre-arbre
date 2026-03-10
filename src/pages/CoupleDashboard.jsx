@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, HandHeart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -15,6 +15,7 @@ import RSVPReminderPanel from "@/components/couple/RSVPReminderPanel";
 import BudgetManager from "@/components/admin/BudgetManager";
 import ThemeEditor from "@/components/couple/ThemeEditor";
 import WeddingChecklistManager from "@/components/couple/WeddingChecklistManager";
+import ThankYouManager from "@/components/couple/ThankYouManager";
 
 const TABS = [
   { key: "guests", label: "Mes invités", icon: Users },
@@ -27,6 +28,7 @@ const TABS = [
   { key: "wishlist", label: "Liste cadeaux", icon: Gift },
   { key: "faq", label: "FAQ", icon: HelpCircle },
   { key: "checklist", label: "Checklist", icon: ClipboardCheck },
+  { key: "thankyou", label: "Remerciements", icon: HandHeart },
   { key: "theme", label: "Thème", icon: Paintbrush },
 ];
 
@@ -116,7 +118,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, theme: ThemeEditor };
+  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
