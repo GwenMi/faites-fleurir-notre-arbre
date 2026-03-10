@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, Mail, CheckCircle, Heart } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
 import RSVPTracker from "@/components/couple/RSVPTracker";
+import PhotoModerationPanel from "@/components/couple/PhotoModerationPanel";
 
 const TABS = [
   { key: "guests", label: "Mes invités", icon: Users },
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
+  { key: "photos", label: "Photos", icon: Camera },
 ];
 
 export default function CoupleDashboard() {
@@ -93,7 +95,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const ActiveTab = activeTab === "guests" ? GuestListManager : RSVPTracker;
+  const ActiveTab = activeTab === "guests" ? GuestListManager : activeTab === "rsvp" ? RSVPTracker : PhotoModerationPanel;
 
   return (
     <div className="min-h-screen bg-gray-50">
