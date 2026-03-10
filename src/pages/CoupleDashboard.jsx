@@ -27,6 +27,7 @@ const TABS = [
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
   { key: "reminders", label: "Relances", icon: BellRing },
   { key: "campaigns", label: "Campagnes email", icon: MailCheck },
+  { key: "guestbook", label: "Livre d'or", icon: BookOpen },
   { key: "programme", label: "Programme", icon: CalendarDays },
   { key: "seating", label: "Plan de table", icon: LayoutGrid },
   { key: "photos", label: "Photos", icon: Camera },
