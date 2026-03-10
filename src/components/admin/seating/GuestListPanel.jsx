@@ -70,13 +70,16 @@ export default function GuestListPanel({ eventId, guests, tables, selectedGuest,
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5 mt-1">Non placés ({filtered(unassigned).length})</p>
             {filtered(unassigned).map(g => (
               <div key={g.id}
+                draggable
+                onDragStart={e => { e.dataTransfer.setData("guestId", g.id); e.dataTransfer.effectAllowed = "move"; }}
                 onClick={() => onSelectGuest(selectedGuest?.id === g.id ? null : g)}
-                className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer transition mb-1 ${selectedGuest?.id === g.id ? "bg-amber-50 border border-amber-200" : "bg-gray-50 hover:bg-purple-50 border border-transparent hover:border-purple-100"}`}>
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-grab active:cursor-grabbing transition mb-1 ${selectedGuest?.id === g.id ? "bg-amber-50 border border-amber-200" : "bg-gray-50 hover:bg-purple-50 border border-transparent hover:border-purple-100"}`}>
                 <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 flex-shrink-0">
                   {g.name[0].toUpperCase()}
                 </div>
                 <span className="text-sm text-gray-700 flex-1 truncate">{g.name}</span>
                 {g.source === "rsvp" && <span className="text-xs text-purple-400 flex-shrink-0">RSVP</span>}
+                <span className="text-gray-300 text-xs flex-shrink-0" title="Glisser vers une table">⠿</span>
                 <button onClick={e => { e.stopPropagation(); handleRemove(g); }} className="text-gray-200 hover:text-red-400 transition flex-shrink-0">
                   <X className="w-3.5 h-3.5" />
                 </button>
