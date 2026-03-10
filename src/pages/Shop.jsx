@@ -203,37 +203,43 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-8">
           {step === 1 && (
-            <StepKitOptions
-              selection={selection}
-              onUpdate={updateSelection}
+            <StepAuthentication
               onNext={() => setStep(2)}
-              PRICING={PRICING}
+              onBack={() => setStep(0)}
             />
           )}
           {step === 2 && (
+            <StepKitOptions
+              selection={selection}
+              onUpdate={updateSelection}
+              onNext={() => setStep(3)}
+              PRICING={PRICING}
+            />
+          )}
+          {step === 3 && (
             <StepPackSelector
               selection={selection}
               onUpdate={updateSelection}
               pricing={pricing}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
               onNext={() => setStep(4)}
               onBack={() => setStep(2)}
             />
           )}
           {step === 4 && (
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
+              onNext={() => setStep(5)}
+              onBack={() => setStep(3)}
+            />
+          )}
+          {step === 5 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
-              onBack={() => setStep(3)}
+              onBack={() => setStep(4)}
             />
           )}
         </div>
