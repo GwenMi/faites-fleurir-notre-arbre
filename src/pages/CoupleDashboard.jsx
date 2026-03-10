@@ -168,7 +168,7 @@ export default function CoupleDashboard() {
 
         {/* Tabs */}
         <div className="max-w-4xl mx-auto px-4">
-          <div className="flex gap-1 border-t border-gray-100">
+          <div className="flex gap-1 border-t border-gray-100 overflow-x-auto no-scrollbar">
             {TABS.map(tab => {
               const Icon = tab.icon;
               return (
