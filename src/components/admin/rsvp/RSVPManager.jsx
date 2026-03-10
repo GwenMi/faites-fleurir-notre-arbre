@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { List, HelpCircle, BarChart2 } from "lucide-react";
+import { List, HelpCircle, UtensilsCrossed } from "lucide-react";
 import RSVPStats from "./RSVPStats";
 import RSVPQuestions from "./RSVPQuestions";
 import RSVPResponseList from "./RSVPResponseList";
+import MealSummary from "./MealSummary";
 
 export default function RSVPManager({ event }) {
   const [responses, setResponses] = useState([]);
@@ -41,6 +42,9 @@ export default function RSVPManager({ event }) {
           <TabsTrigger value="questions" className="flex-1 rounded-xl text-xs">
             <HelpCircle className="w-3 h-3 mr-1" /> Questions
           </TabsTrigger>
+          <TabsTrigger value="meals" className="flex-1 rounded-xl text-xs">
+            <UtensilsCrossed className="w-3 h-3 mr-1" /> Traiteur
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="responses">
@@ -51,6 +55,9 @@ export default function RSVPManager({ event }) {
         </TabsContent>
         <TabsContent value="questions">
           <RSVPQuestions eventId={event.id} questions={questions} onRefresh={loadData} />
+        </TabsContent>
+        <TabsContent value="meals">
+          <MealSummary responses={responses} />
         </TabsContent>
       </Tabs>
     </div>
