@@ -22,6 +22,11 @@ const TABS = [
   { key: "faq", label: "FAQ", icon: HelpCircle },
 ];
 
+// Wrapper to adapt ScheduleManager (takes eventId) to the tab interface (receives event)
+function ScheduleManagerWrapper({ event }) {
+  return <ScheduleManager eventId={event.id} />;
+}
+
 export default function CoupleDashboard() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
