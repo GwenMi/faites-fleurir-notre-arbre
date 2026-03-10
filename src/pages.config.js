@@ -72,6 +72,7 @@ import SupplierOrders from './pages/SupplierOrders';
 import Products from './pages/Products';
 import AccountSettings from './pages/AccountSettings';
 import MyOrders from './pages/MyOrders';
+import AdminReviews from './pages/AdminReviews';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +102,7 @@ export const PAGES = {
     "Products": Products,
     "AccountSettings": AccountSettings,
     "MyOrders": MyOrders,
+    "AdminReviews": AdminReviews,
 }
 
 export const pagesConfig = {
