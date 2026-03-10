@@ -51,14 +51,17 @@ export default function EventPublic() {
 
   const primaryColor = event.primary_color || "#f43f5e";
   const secondaryColor = event.secondary_color || "#86efac";
+  const fontHeading = event.font_heading || "Cormorant Garamond";
+  const fontBody = event.font_body || "Lato";
+  const fontImportUrl = `https://fonts.googleapis.com/css2?family=${fontHeading.replace(/ /g, "+")}:wght@400;600;700&family=${fontBody.replace(/ /g, "+")}:wght@300;400;700&display=swap`;
 
   return (
     <div className="min-h-screen bg-white">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
-        .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
-        .font-sans-clean { font-family: 'Lato', system-ui, sans-serif; }
-        .gold-line { background: linear-gradient(90deg, transparent, #c9a96e, transparent); height: 1px; }
+        @import url('${fontImportUrl}');
+        .font-serif-elegant { font-family: '${fontHeading}', Georgia, serif; }
+        .font-sans-clean { font-family: '${fontBody}', system-ui, sans-serif; }
+        .gold-line { background: linear-gradient(90deg, transparent, ${primaryColor}88, transparent); height: 1px; }
       `}</style>
 
       {/* Hero */}
