@@ -57,6 +57,8 @@ import CRM from './pages/CRM';
 import CalendarView from './pages/CalendarView';
 import ClientDashboard from './pages/ClientDashboard';
 import Contact from './pages/Contact';
+import CoupleDashboard from './pages/CoupleDashboard';
+import CreateMyEvent from './pages/CreateMyEvent';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
@@ -67,8 +69,6 @@ import ReviewOrder from './pages/ReviewOrder';
 import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
-import CreateMyEvent from './pages/CreateMyEvent';
-import CoupleDashboard from './pages/CoupleDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +83,8 @@ export const PAGES = {
     "CalendarView": CalendarView,
     "ClientDashboard": ClientDashboard,
     "Contact": Contact,
+    "CoupleDashboard": CoupleDashboard,
+    "CreateMyEvent": CreateMyEvent,
     "EventPublic": EventPublic,
     "Home": Home,
     "MentionsLegales": MentionsLegales,
@@ -93,8 +95,6 @@ export const PAGES = {
     "Shop": Shop,
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
-    "CreateMyEvent": CreateMyEvent,
-    "CoupleDashboard": CoupleDashboard,
 }
 
 export const pagesConfig = {
