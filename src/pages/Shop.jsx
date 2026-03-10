@@ -71,9 +71,9 @@ function ShopHomePage({ onStart }) {
 
       {/* Photo band */}
       <div className="grid grid-cols-3 gap-0 max-h-48 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1487530811015-780fbb43a7dd?w=400&q=80" alt="" className="w-full h-48 object-cover" />
-        <img src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&q=80" alt="" className="w-full h-48 object-cover" />
-        <img src="https://images.unsplash.com/photo-1490750967868-88df5691cc01?w=400&q=80" alt="" className="w-full h-48 object-cover" />
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80" alt="Fleurs colorées" className="w-full h-48 object-cover" />
+        <img src="https://images.unsplash.com/photo-1553514029-1efb3dd023d0?w=400&q=80" alt="Pots de plantes" className="w-full h-48 object-cover" />
+        <img src="https://images.unsplash.com/photo-1471595896169-91de35d0fbf8?w=400&q=80" alt="Mariage floral" className="w-full h-48 object-cover" />
       </div>
 
       {/* Comment ça marche */}
