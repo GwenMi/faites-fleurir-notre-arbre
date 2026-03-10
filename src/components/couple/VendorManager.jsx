@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Trash2, Phone, Mail, Globe, FileCheck, AlertCircle, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Pencil, Trash2, Phone, Mail, Globe, FileCheck, AlertCircle, X, ChevronDown, ChevronUp, History } from "lucide-react";
 import { toast } from "sonner";
+import VendorPaymentHistory from "./VendorPaymentHistory";
 
 const CATEGORIES = [
   { key: "traiteur", label: "Traiteur", emoji: "🍽️" },
