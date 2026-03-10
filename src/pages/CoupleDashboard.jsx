@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -12,6 +12,7 @@ import FAQManager from "@/components/couple/FAQManager";
 import SeatingManager from "@/components/admin/SeatingManager";
 import ScheduleManager from "@/components/admin/ScheduleManager";
 import RSVPReminderPanel from "@/components/couple/RSVPReminderPanel";
+import BudgetManager from "@/components/admin/BudgetManager";
 
 const TABS = [
   { key: "guests", label: "Mes invités", icon: Users },
@@ -20,6 +21,7 @@ const TABS = [
   { key: "programme", label: "Programme", icon: CalendarDays },
   { key: "seating", label: "Plan de table", icon: LayoutGrid },
   { key: "photos", label: "Photos", icon: Camera },
+  { key: "budget", label: "Budget", icon: PiggyBank },
   { key: "wishlist", label: "Liste cadeaux", icon: Gift },
   { key: "faq", label: "FAQ", icon: HelpCircle },
 ];
@@ -110,7 +112,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, wishlist: WishlistManager, faq: FAQManager };
+  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
