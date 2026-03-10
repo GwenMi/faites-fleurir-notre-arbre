@@ -214,7 +214,7 @@ export default function OrderConfirmation() {
             <Download className="w-4 h-4 mr-2" />
             Télécharger facture PDF
           </Button>
-          {order.options_selected?.site_public_url && (
+          {order.options_selected?.site_public_url ? (
             <a
               href={order.options_selected.site_public_url}
               target="_blank"
@@ -224,7 +224,14 @@ export default function OrderConfirmation() {
               <Eye className="w-4 h-4" />
               Voir votre espace événement
             </a>
-          )}
+          ) : isFullPayment ? (
+            <a
+              href={createPageUrl("CreateMyEvent") + `?order_id=${order.id}`}
+              className="inline-flex items-center justify-center gap-2 rounded-xl h-11 bg-purple-500 hover:bg-purple-600 text-white font-sans-clean font-semibold transition"
+            >
+              🌸 Créer mon site de mariage
+            </a>
+          ) : null}
         </div>
 
         {/* Next Steps */}
