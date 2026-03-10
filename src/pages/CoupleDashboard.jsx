@@ -17,6 +17,7 @@ import ThemeEditor from "@/components/couple/ThemeEditor";
 import WeddingChecklistManager from "@/components/couple/WeddingChecklistManager";
 import ThankYouManager from "@/components/couple/ThankYouManager";
 import StatsPanel from "@/components/couple/StatsPanel";
+import MobilePreview from "@/components/couple/MobilePreview";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
@@ -32,6 +33,7 @@ const TABS = [
   { key: "checklist", label: "Checklist", icon: ClipboardCheck },
   { key: "thankyou", label: "Remerciements", icon: HandHeart },
   { key: "theme", label: "Thème", icon: Paintbrush },
+  { key: "preview", label: "Aperçu mobile", icon: Smartphone },
 ];
 
 // Wrapper to adapt ScheduleManager (takes eventId) to the tab interface (receives event)
@@ -120,7 +122,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
