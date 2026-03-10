@@ -110,24 +110,7 @@ function ShopHomePage({ onStart }) {
       </div>
 
       {/* Avis */}
-      <div className="px-6 md:px-12 py-16 max-w-4xl mx-auto text-center">
-        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Témoignages</p>
-        <h2 className="font-serif-shop text-4xl font-bold text-gray-800 mb-10">Ils nous ont fait confiance</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {REVIEWS.map((r, i) => (
-            <div key={i} className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm text-left">
-              <div className="flex gap-0.5 mb-3">
-                {Array.from({ length: r.stars }).map((_, s) => (
-                  <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="font-sans-shop text-sm text-gray-600 leading-relaxed mb-4 italic">"{r.text}"</p>
-              <p className="font-sans-shop text-xs font-bold text-gray-800">{r.name}</p>
-              <p className="font-sans-shop text-xs text-gray-400">{r.event}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ReviewCarousel />
 
       {/* CTA final */}
       <div className="bg-gradient-to-r from-rose-400 to-pink-500 px-6 py-16 text-center text-white">
