@@ -41,7 +41,7 @@ export default function GuestbookSection({ event, guest }) {
       approved: false,
     });
     setMessage("");
-    toast.success("Votre message a été ajouté au livre d'or 💌");
+    toast.success("Votre message a été envoyé — il sera visible après validation des mariés 💌");
     await loadEntries();
     setSending(false);
   };
