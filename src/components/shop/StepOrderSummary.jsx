@@ -130,15 +130,23 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         🌸 <strong>Après le paiement</strong>, vous pourrez créer votre site de mariage avec QR code personnalisé inclus.
       </div>
 
-      <div className="flex gap-3">
-        <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
-          <ChevronLeft className="w-4 h-4 mr-2" /> Retour
-        </Button>
-        <Button onClick={handleOrder} disabled={loading} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
-          {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-          {loading ? "Enregistrement..." : "Confirmer la commande →"}
-        </Button>
-      </div>
+      {!paymentStarted ? (
+        <div className="flex gap-3">
+          <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
+            <ChevronLeft className="w-4 h-4 mr-2" /> Retour
+          </Button>
+          <Button onClick={() => setPaymentStarted(true)} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
+            Procéder au paiement →
+          </Button>
+        </div>
+      ) : (
+        <StripePaymentForm
+          customerInfo={customerInfo}
+          total={pricing.total}
+          onSuccess={handlePaymentSuccess}
+          onBack={() => setPaymentStarted(false)}
+        />
+      )}
     </div>
   );
 }
