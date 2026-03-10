@@ -6,8 +6,9 @@ import StepKitOptions from "@/components/shop/StepKitOptions";
 import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
+import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
-import { Sparkles, Star, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
+import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
 const STEPS = ["Authentification", "Kit & options", "Pack invités", "Vos informations", "Récapitulatif"];
 
@@ -17,12 +18,6 @@ export const PRICING = {
   POT_BLANC_EXTRA: 0.50,
   SAC_CADEAU: 0.40,
 };
-
-const REVIEWS = [
-  { name: "Marie & Thomas", event: "Mariage juin 2024", text: "Un cadeaux d'invité unique et poétique. Tout le monde a adoré !", stars: 5 },
-  { name: "Camille R.", event: "Baptême de Léo", text: "Superbe qualité, livraison rapide. Les pots étaient magnifiques.", stars: 5 },
-  { name: "Aurélie D.", event: "Anniversaire 40 ans", text: "Original et plein de sens. Je recommande vivement.", stars: 5 },
-];
 
 function ShopHomePage({ onStart }) {
   return (
