@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Mail, CheckCircle2, Clock, X, Loader2, Upload } from "lucide-react";
+import { Plus, Trash2, Mail, CheckCircle2, Clock, X, Loader2, Users } from "lucide-react";
 import { toast } from "sonner";
 
 const RSVP_BADGE = {
