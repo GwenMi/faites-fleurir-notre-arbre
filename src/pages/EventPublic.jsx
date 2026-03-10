@@ -8,6 +8,7 @@ import DayScheduleSection from "@/components/public/DayScheduleSection";
 import BestOfSection from "@/components/public/BestOfSection";
 import PhotoGallery from "@/components/public/PhotoGallery";
 import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection";
+import WishlistSection from "@/components/public/WishlistSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
@@ -120,6 +121,11 @@ export default function EventPublic() {
       {/* Photo Gallery */}
       <div className="max-w-2xl mx-auto">
         <PhotoGallery event={event} primaryColor={primaryColor} />
+      </div>
+
+      {/* Wishlist Section */}
+      <div className="max-w-2xl mx-auto">
+        <WishlistSection event={event} primaryColor={primaryColor} />
       </div>
 
       {/* Guest Photos Section */}
