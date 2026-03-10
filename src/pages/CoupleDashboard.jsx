@@ -20,6 +20,7 @@ import StatsPanel from "@/components/couple/StatsPanel";
 import MobilePreview from "@/components/couple/MobilePreview";
 import ScheduledEmailsManager from "@/components/couple/ScheduledEmailsManager";
 import GuestbookManager from "@/components/couple/GuestbookManager";
+import VendorManager from "@/components/couple/VendorManager";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
