@@ -241,9 +241,31 @@ ${coupleNames}`;
                     )}
                     {item.description && <p className="text-xs text-gray-500 mt-1 leading-relaxed">{item.description}</p>}
                     {vendor && (
-                      <span className="inline-flex items-center gap-1 mt-2 text-xs bg-rose-50 text-rose-500 border border-rose-100 rounded-full px-2 py-0.5">
-                        <Users className="w-3 h-3" /> {vendor.name}
-                      </span>
+                      <div className="flex items-center gap-2 mt-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1 text-xs bg-rose-50 text-rose-500 border border-rose-100 rounded-full px-2 py-0.5">
+                          <Users className="w-3 h-3" /> {vendor.name}
+                          {vendor.email && <span className="text-rose-300">· {vendor.email}</span>}
+                        </span>
+                        {vendor.email && (
+                          sentIds.includes(item.id) ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-green-500 bg-green-50 border border-green-100 rounded-full px-2 py-0.5">
+                              <CheckCircle className="w-3 h-3" /> Rappel envoyé
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleSendReminder(item, vendor)}
+                              disabled={sendingId === item.id}
+                              className="inline-flex items-center gap-1 text-xs bg-purple-50 text-purple-500 border border-purple-100 rounded-full px-2 py-0.5 hover:bg-purple-100 transition disabled:opacity-50"
+                            >
+                              <Send className="w-3 h-3" />
+                              {sendingId === item.id ? "Envoi…" : "Envoyer rappel"}
+                            </button>
+                          )
+                        )}
+                        {vendor && !vendor.email && (
+                          <span className="text-xs text-gray-400 italic">Pas d'email renseigné</span>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
