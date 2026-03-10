@@ -175,7 +175,7 @@ export default function CoupleDashboard() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-2 px-5 py-3.5 text-sm font-sans-clean font-semibold border-b-2 transition ${
+                  className={`flex-shrink-0 flex items-center gap-2 px-5 py-3.5 text-sm font-sans-clean font-semibold border-b-2 transition ${
                     activeTab === tab.key
                       ? "border-rose-400 text-rose-600"
                       : "border-transparent text-gray-500 hover:text-gray-700"
