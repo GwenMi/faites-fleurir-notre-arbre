@@ -34,13 +34,51 @@ export default function ScheduleManager({ eventId }) {
 
   const loadData = async () => {
     setLoading(true);
-    const [data, vendorData] = await Promise.all([
+    const [data, vendorData, events] = await Promise.all([
       base44.entities.DaySchedule.filter({ event_id: eventId }),
       base44.entities.Vendor.filter({ event_id: eventId }),
+      base44.entities.Event.filter({ id: eventId }),
     ]);
     setItems((data || []).sort((a, b) => a.time.localeCompare(b.time)));
     setVendors(vendorData || []);
+    setEvent((events || [])[0] || null);
     setLoading(false);
+  };
+
+  const handleSendReminder = async (item, vendor) => {
+    if (!vendor.email) {
+      toast.error(`Aucun email renseigné pour ${vendor.name}`);
+      return;
+    }
+    setSendingId(item.id);
+    const eventDate = event?.event_date
+      ? new Date(event.event_date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+      : "le jour de l'événement";
+    const coupleNames = event?.couple_names || "les mariés";
+
+    const subject = `Rappel de mission — ${item.title} à ${item.time}`;
+    const body = `Bonjour ${vendor.contact_name || vendor.name},
+
+Vous intervenez pour le mariage de ${coupleNames} le ${eventDate}.
+
+Voici le rappel de votre mission :
+
+📌 Étape : ${item.title}
+🕐 Heure prévue : ${item.time}${item.location ? `\n📍 Lieu : ${item.location}` : ""}${item.description ? `\n📝 Détails : ${item.description}` : ""}
+
+Merci de bien noter cette information et de confirmer votre disponibilité si nécessaire.
+
+Cordialement,
+${coupleNames}`;
+
+    await base44.integrations.Core.SendEmail({
+      to: vendor.email,
+      subject,
+      body,
+    });
+    setSentIds(prev => [...prev, item.id]);
+    setSendingId(null);
+    toast.success(`Rappel envoyé à ${vendor.name} (${vendor.email})`);
   };
 
   const handleSave = async () => {
