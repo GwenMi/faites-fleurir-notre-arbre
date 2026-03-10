@@ -21,11 +21,14 @@ const EMPTY_FORM = { time: "", title: "", description: "", location: "", icon: "
 export default function ScheduleManager({ eventId }) {
   const [items, setItems] = useState([]);
   const [vendors, setVendors] = useState([]);
+  const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_FORM);
   const [editId, setEditId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [sendingId, setSendingId] = useState(null);
+  const [sentIds, setSentIds] = useState([]);
 
   useEffect(() => { loadData(); }, [eventId]);
 
