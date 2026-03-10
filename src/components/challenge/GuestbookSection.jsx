@@ -21,8 +21,11 @@ export default function GuestbookSection({ event, guest }) {
 
   const loadEntries = async () => {
     setLoading(true);
-    const data = await base44.entities.GuestbookEntry.filter({ event_id: event.id });
-    setEntries((data || []).sort((a, b) => new Date(b.created_date) - new Date(a.created_date)));
+    const data = await base44.entities.GuestbookEntry.filter({ event_id: event.id, approved: true });
+    setEntries((data || []).sort((a, b) => {
+      if (b.featured !== a.featured) return b.featured ? 1 : -1;
+      return new Date(b.created_date) - new Date(a.created_date);
+    }));
     setLoading(false);
   };
 
