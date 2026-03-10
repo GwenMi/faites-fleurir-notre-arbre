@@ -110,6 +110,7 @@ export default function VendorManager({ event }) {
   const getCat = (key) => CATEGORIES.find(c => c.key === key) || CATEGORIES[CATEGORIES.length - 1];
 
   return (
+    <>
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
