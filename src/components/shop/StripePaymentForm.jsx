@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
   ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
-  : Promise.reject(new Error("Stripe key not configured"));
+  : null;
 
 function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
   const stripe = useStripe();
