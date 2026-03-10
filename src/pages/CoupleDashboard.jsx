@@ -19,6 +19,7 @@ import ThankYouManager from "@/components/couple/ThankYouManager";
 import StatsPanel from "@/components/couple/StatsPanel";
 import MobilePreview from "@/components/couple/MobilePreview";
 import ScheduledEmailsManager from "@/components/couple/ScheduledEmailsManager";
+import GuestbookManager from "@/components/couple/GuestbookManager";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
