@@ -128,7 +128,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
