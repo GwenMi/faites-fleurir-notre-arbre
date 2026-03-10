@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import StripePaymentForm from "./StripePaymentForm";
 
 export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, onBack }) {
   const [loading, setLoading] = useState(false);
+  const [paymentStarted, setPaymentStarted] = useState(false);
 
   const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
   const potLabel = selection.potType === "blanc" ? "Pot blanc" : "Pot en verre";
   const basePrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
 
-  const handleOrder = async () => {
+  const handlePaymentSuccess = async () => {
     setLoading(true);
     try {
       const order = await base44.entities.Order.create({
@@ -22,8 +24,8 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         product_name: `Pack ${selection.packSize} invités × ${selection.packQty} — ${kitLabel}`,
         quantity: pricing.totalPots,
         total_price: pricing.total,
-        status: "pending",
-        payment_status: "unpaid",
+        status: "confirmed",
+        payment_status: "paid",
         options_selected: {
           kitType: selection.kitType,
           potType: selection.potType,
@@ -48,15 +50,13 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           pricing,
           PRICING
         });
-        toast.success('Devis généré et envoyé par email');
       } catch (pdfError) {
         console.log('PDF generation warning:', pdfError.message);
-        toast.info('Commande créée, devis en cours d\'envoi...');
       }
 
       window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${order.id}`;
     } catch (e) {
-      toast.error("Erreur lors de la commande");
+      toast.error("Erreur lors de la finalisation de la commande");
       setLoading(false);
     }
   };
