@@ -45,6 +45,7 @@ export default function VendorManager({ event }) {
   const [editId, setEditId] = useState(null);
   const [expanded, setExpanded] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [paymentHistoryVendor, setPaymentHistoryVendor] = useState(null);
 
   useEffect(() => {
     load();
