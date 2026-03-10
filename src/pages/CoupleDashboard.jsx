@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, HandHeart, BarChart2, Smartphone } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, HandHeart, BarChart2, Smartphone, MailCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -18,12 +18,14 @@ import WeddingChecklistManager from "@/components/couple/WeddingChecklistManager
 import ThankYouManager from "@/components/couple/ThankYouManager";
 import StatsPanel from "@/components/couple/StatsPanel";
 import MobilePreview from "@/components/couple/MobilePreview";
+import ScheduledEmailsManager from "@/components/couple/ScheduledEmailsManager";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
   { key: "guests", label: "Mes invités", icon: Users },
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
   { key: "reminders", label: "Relances", icon: BellRing },
+  { key: "campaigns", label: "Campagnes email", icon: MailCheck },
   { key: "programme", label: "Programme", icon: CalendarDays },
   { key: "seating", label: "Plan de table", icon: LayoutGrid },
   { key: "photos", label: "Photos", icon: Camera },
@@ -122,7 +124,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
