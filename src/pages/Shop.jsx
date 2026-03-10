@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
+import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepKitOptions from "@/components/shop/StepKitOptions";
 import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
@@ -8,7 +9,7 @@ import StepOrderSummary from "@/components/shop/StepOrderSummary";
 import { createPageUrl } from "@/utils";
 import { Sparkles, Star, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Kit & options", "Pack invités", "Vos informations", "Récapitulatif"];
+const STEPS = ["Authentification", "Kit & options", "Pack invités", "Vos informations", "Récapitulatif"];
 
 export const PRICING = {
   KIT_COMPOSE: 2.50,
