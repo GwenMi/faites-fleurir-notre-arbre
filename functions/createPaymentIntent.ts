@@ -20,7 +20,6 @@ Deno.serve(async (req) => {
         orderId,
         customerEmail,
         customerName,
-        userId: user.id,
       },
       receipt_email: customerEmail,
     });
