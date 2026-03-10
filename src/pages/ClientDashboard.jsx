@@ -244,6 +244,9 @@ export default function ClientDashboard() {
 
       {/* Footer */}
       <footer className="mt-12 py-10 px-6 border-t border-gray-100 text-center">
+        <a href={createPageUrl("CoupleDashboard")} className="font-sans-clean text-sm text-rose-500 hover:text-rose-600 font-semibold block mb-4">
+          💍 Accéder à l'espace mariés (invités & RSVP) →
+        </a>
         <p className="font-sans-clean text-xs text-gray-400 mb-2">Besoin d'aide ?</p>
         <a href={createPageUrl("Contact")} className="font-sans-clean text-sm text-rose-500 hover:text-rose-600">
           Contactez-nous →
