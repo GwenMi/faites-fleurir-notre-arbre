@@ -95,6 +95,10 @@ export default function VendorManager({ event }) {
     setSaving(false);
   };
 
+  const handlePaymentTotalChange = (vendorId, newTotal) => {
+    setVendors(prev => prev.map(v => v.id === vendorId ? { ...v, deposit_paid: newTotal } : v));
+  };
+
   const totalContract = vendors.reduce((s, v) => s + (v.contract_amount || 0), 0);
   const totalPaid = vendors.reduce((s, v) => s + (v.deposit_paid || 0), 0);
   const totalRemaining = totalContract - totalPaid;
