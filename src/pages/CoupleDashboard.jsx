@@ -16,8 +16,10 @@ import BudgetManager from "@/components/admin/BudgetManager";
 import ThemeEditor from "@/components/couple/ThemeEditor";
 import WeddingChecklistManager from "@/components/couple/WeddingChecklistManager";
 import ThankYouManager from "@/components/couple/ThankYouManager";
+import StatsPanel from "@/components/couple/StatsPanel";
 
 const TABS = [
+  { key: "stats", label: "Statistiques", icon: BarChart2 },
   { key: "guests", label: "Mes invités", icon: Users },
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
   { key: "reminders", label: "Relances", icon: BellRing },
@@ -118,7 +120,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
