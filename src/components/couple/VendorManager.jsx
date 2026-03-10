@@ -303,7 +303,10 @@ export default function VendorManager({ event }) {
 
                     {v.notes && <p className="text-xs text-gray-500 italic">{v.notes}</p>}
 
-                    <div className="flex gap-2 pt-1">
+                    <div className="flex gap-2 pt-1 flex-wrap">
+                      <Button size="sm" variant="outline" onClick={() => setPaymentHistoryVendor(v)} className="rounded-lg gap-1 text-xs text-rose-500 hover:text-rose-600 hover:border-rose-200">
+                        <History className="w-3 h-3" /> Paiements
+                      </Button>
                       <Button size="sm" variant="outline" onClick={() => handleEdit(v)} className="rounded-lg gap-1 text-xs">
                         <Pencil className="w-3 h-3" /> Modifier
                       </Button>
