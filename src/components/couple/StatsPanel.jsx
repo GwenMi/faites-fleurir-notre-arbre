@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Users, CheckCircle, Clock, XCircle, HelpCircle, TrendingUp, Eye, Baby, UserCheck } from "lucide-react";
+import { Loader2, Users, CheckCircle, Clock, XCircle, HelpCircle, TrendingUp, Eye, Baby, UserCheck, CalendarCheck } from "lucide-react";
+import { format, parseISO, isFuture, isToday } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export default function StatsPanel({ event }) {
   const [guests, setGuests] = useState([]);
