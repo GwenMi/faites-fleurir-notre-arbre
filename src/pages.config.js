@@ -70,6 +70,7 @@ import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
 import Products from './pages/Products';
+import AccountSettings from './pages/AccountSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -97,6 +98,7 @@ export const PAGES = {
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
     "Products": Products,
+    "AccountSettings": AccountSettings,
 }
 
 export const pagesConfig = {
