@@ -151,7 +151,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <a href={createPageUrl("AdminDashboard")}
+            <a href={createPageUrl("Boutique")}
               className="block text-center py-3.5 rounded-full font-sans-clean font-semibold text-sm border-2 border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-500 transition">
               Commencer gratuitement
             </a>
