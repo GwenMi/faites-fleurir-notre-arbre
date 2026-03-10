@@ -21,6 +21,7 @@ import MobilePreview from "@/components/couple/MobilePreview";
 import ScheduledEmailsManager from "@/components/couple/ScheduledEmailsManager";
 import GuestbookManager from "@/components/couple/GuestbookManager";
 import VendorManager from "@/components/couple/VendorManager";
+import AgendaManager from "@/components/couple/AgendaManager";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
