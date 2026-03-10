@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, MapPin, Clock, Pencil, X, Users } from "lucide-react";
+import { Plus, Trash2, MapPin, Clock, Pencil, X, Users, Send, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 const PRESETS = [
