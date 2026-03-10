@@ -185,6 +185,44 @@ export default function StatsPanel({ event }) {
         </div>
       </div>
 
+      {/* Prochains RDV prestataires */}
+      {(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const upcoming = appointments
+          .filter(a => a.date && new Date(a.date) >= today)
+          .sort((a, b) => `${a.date}${a.time || ""}`.localeCompare(`${b.date}${b.time || ""}`))
+          .slice(0, 3);
+        if (upcoming.length === 0) return null;
+        return (
+          <div className="bg-purple-50 border border-purple-100 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <CalendarCheck className="w-5 h-5 text-purple-400" />
+              <h3 className="font-semibold text-gray-800 text-sm">Prochains RDV prestataires</h3>
+            </div>
+            <div className="space-y-2">
+              {upcoming.map(appt => (
+                <div key={appt.id} className="flex items-center gap-3 bg-white rounded-xl px-4 py-2.5 border border-purple-100">
+                  <div className="text-center min-w-[44px]">
+                    <p className="text-xs font-bold text-purple-500 leading-tight">
+                      {format(parseISO(appt.date), "d MMM", { locale: fr })}
+                    </p>
+                    {appt.time && <p className="text-[10px] text-gray-400">{appt.time}</p>}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-800 truncate">{appt.title}</p>
+                    {appt.vendor_name && <p className="text-xs text-rose-400 truncate">{appt.vendor_name}</p>}
+                  </div>
+                  {isToday(parseISO(appt.date)) && (
+                    <span className="text-[10px] bg-purple-100 text-purple-600 font-semibold px-2 py-0.5 rounded-full flex-shrink-0">Aujourd'hui</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Régimes alimentaires */}
       {confirmed.some(g => g.dietary_notes) && (
         <div className="bg-orange-50 border border-orange-100 rounded-2xl p-5">
