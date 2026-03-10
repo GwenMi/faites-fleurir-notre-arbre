@@ -6,7 +6,9 @@ import { AlertCircle, Loader2, CheckCircle2, ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
+  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
+  : Promise.reject(new Error("Stripe key not configured"));
 
 function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
   const stripe = useStripe();
