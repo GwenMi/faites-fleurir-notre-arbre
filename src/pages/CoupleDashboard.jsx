@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -10,10 +10,12 @@ import PhotoModerationPanel from "@/components/couple/PhotoModerationPanel";
 import WishlistManager from "@/components/couple/WishlistManager";
 import FAQManager from "@/components/couple/FAQManager";
 import SeatingManager from "@/components/admin/SeatingManager";
+import ScheduleManager from "@/components/admin/ScheduleManager";
 
 const TABS = [
   { key: "guests", label: "Mes invités", icon: Users },
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
+  { key: "programme", label: "Programme", icon: CalendarDays },
   { key: "seating", label: "Plan de table", icon: LayoutGrid },
   { key: "photos", label: "Photos", icon: Camera },
   { key: "wishlist", label: "Liste cadeaux", icon: Gift },
@@ -101,7 +103,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, seating: SeatingManager, photos: PhotoModerationPanel, wishlist: WishlistManager, faq: FAQManager };
+  const tabMap = { guests: GuestListManager, rsvp: RSVPTracker, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, wishlist: WishlistManager, faq: FAQManager };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
