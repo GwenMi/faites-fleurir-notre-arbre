@@ -38,6 +38,7 @@ export default function GuestbookSection({ event, guest }) {
       pseudo: guest.pseudo,
       email: guest.email,
       message: message.trim(),
+      approved: false,
     });
     setMessage("");
     toast.success("Votre message a été ajouté au livre d'or 💌");
