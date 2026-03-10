@@ -38,6 +38,22 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           discount: pricing.discount,
         }
       });
+
+      // Generate and send PDF quote
+      try {
+        await base44.functions.invoke('generateQuotePDF', {
+          orderId: order.id,
+          customerInfo,
+          selection,
+          pricing,
+          PRICING
+        });
+        toast.success('Devis généré et envoyé par email');
+      } catch (pdfError) {
+        console.log('PDF generation warning:', pdfError.message);
+        toast.info('Commande créée, devis en cours d\'envoi...');
+      }
+
       window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${order.id}`;
     } catch (e) {
       toast.error("Erreur lors de la commande");
