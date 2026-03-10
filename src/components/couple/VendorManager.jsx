@@ -322,5 +322,14 @@ export default function VendorManager({ event }) {
         </div>
       )}
     </div>
+
+    {paymentHistoryVendor && (
+      <VendorPaymentHistory
+        vendor={paymentHistoryVendor}
+        contractAmount={paymentHistoryVendor.contract_amount}
+        onTotalChange={handlePaymentTotalChange}
+        onClose={() => setPaymentHistoryVendor(null)}
+      />
+    )}
   );
 }
