@@ -193,6 +193,8 @@ export default function Shop() {
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
+  if (step === 0) return <ShopHomePage onStart={() => setStep(1)} />;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
       <ShopBanner />
