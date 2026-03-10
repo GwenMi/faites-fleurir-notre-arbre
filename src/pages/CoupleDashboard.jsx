@@ -32,6 +32,7 @@ const TABS = [
   { key: "programme", label: "Programme", icon: CalendarDays },
   { key: "seating", label: "Plan de table", icon: LayoutGrid },
   { key: "photos", label: "Photos", icon: Camera },
+  { key: "vendors", label: "Prestataires", icon: Handshake },
   { key: "budget", label: "Budget", icon: PiggyBank },
   { key: "wishlist", label: "Liste cadeaux", icon: Gift },
   { key: "faq", label: "FAQ", icon: HelpCircle },
