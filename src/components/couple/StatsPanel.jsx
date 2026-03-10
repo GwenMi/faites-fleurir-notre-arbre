@@ -9,6 +9,7 @@ export default function StatsPanel({ event }) {
   const [guestbook, setGuestbook] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,16 +20,18 @@ export default function StatsPanel({ event }) {
 
   const loadData = async () => {
     setLoading(true);
-    const [g, gb, p, w] = await Promise.all([
+    const [g, gb, p, w, appts] = await Promise.all([
       base44.entities.GuestInvitation.filter({ event_id: event.id }),
       base44.entities.GuestbookEntry.filter({ event_id: event.id }),
       base44.entities.Photo.filter({ event_id: event.id }),
       base44.entities.WishlistItem.filter({ event_id: event.id }),
+      base44.entities.VendorAppointment.filter({ event_id: event.id }),
     ]);
     setGuests(g || []);
     setGuestbook(gb || []);
     setPhotos(p || []);
     setWishlist(w || []);
+    setAppointments(appts || []);
     setLoading(false);
   };
 
