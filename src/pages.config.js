@@ -68,6 +68,7 @@ import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
 import CreateMyEvent from './pages/CreateMyEvent';
+import CoupleDashboard from './pages/CoupleDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +94,7 @@ export const PAGES = {
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
     "CreateMyEvent": CreateMyEvent,
+    "CoupleDashboard": CoupleDashboard,
 }
 
 export const pagesConfig = {
