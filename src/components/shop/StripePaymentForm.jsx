@@ -145,6 +145,16 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
 }
 
 export default function StripePaymentForm({ customerInfo, total, onSuccess, onBack }) {
+  if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
+    return (
+      <div className="px-6 py-10 text-center">
+        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+        <p className="text-red-600 font-semibold">Erreur de configuration</p>
+        <p className="text-sm text-gray-500">Stripe n'est pas correctement configuré. Contactez l'administrateur.</p>
+      </div>
+    );
+  }
+
   return (
     <Elements stripe={stripePromise}>
       <PaymentForm
