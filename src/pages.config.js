@@ -47,14 +47,56 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminDashboard from './pages/AdminDashboard';
+import AdminOrders from './pages/AdminOrders';
+import AdminOrdersDetail from './pages/AdminOrdersDetail';
+import Boutique from './pages/Boutique';
+import CGU from './pages/CGU';
+import CGV from './pages/CGV';
+import CRM from './pages/CRM';
+import CalendarView from './pages/CalendarView';
+import ClientDashboard from './pages/ClientDashboard';
+import Contact from './pages/Contact';
+import EventPublic from './pages/EventPublic';
+import Home from './pages/Home';
+import MentionsLegales from './pages/MentionsLegales';
+import OrderConfirmation from './pages/OrderConfirmation';
+import OrderTracking from './pages/OrderTracking';
+import Quotes from './pages/Quotes';
+import ReviewOrder from './pages/ReviewOrder';
 import Shop from './pages/Shop';
+import Stats from './pages/Stats';
+import SupplierOrders from './pages/SupplierOrders';
+import CreateMyEvent from './pages/CreateMyEvent';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminDashboard": AdminDashboard,
+    "AdminOrders": AdminOrders,
+    "AdminOrdersDetail": AdminOrdersDetail,
+    "Boutique": Boutique,
+    "CGU": CGU,
+    "CGV": CGV,
+    "CRM": CRM,
+    "CalendarView": CalendarView,
+    "ClientDashboard": ClientDashboard,
+    "Contact": Contact,
+    "EventPublic": EventPublic,
+    "Home": Home,
+    "MentionsLegales": MentionsLegales,
+    "OrderConfirmation": OrderConfirmation,
+    "OrderTracking": OrderTracking,
+    "Quotes": Quotes,
+    "ReviewOrder": ReviewOrder,
     "Shop": Shop,
+    "Stats": Stats,
+    "SupplierOrders": SupplierOrders,
+    "CreateMyEvent": CreateMyEvent,
 }
 
 export const pagesConfig = {
     mainPage: "Shop",
     Pages: PAGES,
+    Layout: __Layout,
 };
