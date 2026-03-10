@@ -10,6 +10,7 @@ import PhotoGallery from "@/components/public/PhotoGallery";
 import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection";
 import WishlistSection from "@/components/public/WishlistSection";
 import FAQSection from "@/components/public/FAQSection";
+import SeatingPlanSection from "@/components/public/SeatingPlanSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
@@ -127,6 +128,11 @@ export default function EventPublic() {
       {/* Wishlist Section */}
       <div className="max-w-2xl mx-auto">
         <WishlistSection event={event} primaryColor={primaryColor} />
+      </div>
+
+      {/* Seating Plan Section */}
+      <div className="max-w-2xl mx-auto">
+        <SeatingPlanSection event={event} primaryColor={primaryColor} />
       </div>
 
       {/* FAQ Section */}
