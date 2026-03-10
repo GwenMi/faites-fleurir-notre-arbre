@@ -26,11 +26,8 @@ export default function ShopBanner() {
           <Gift className="w-5 h-5" />
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
+          <div className="mb-1">
             <h2 className="font-bold text-sm sm:text-base">🚚 Offre de lancement — Livraison offerte</h2>
-            <span className="text-white/90 text-xs sm:text-sm font-semibold flex-shrink-0 ml-2">
-              {remaining} place{remaining > 1 ? "s" : ""} restante{remaining > 1 ? "s" : ""}
-            </span>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-white/25 rounded-full h-2 overflow-hidden">
