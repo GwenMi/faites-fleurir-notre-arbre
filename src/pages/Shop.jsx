@@ -321,26 +321,34 @@ export default function Shop() {
             />
           )}
           {step === 4 && (
-            <StepAuthentication
+            <StepCustomization
+              selection={selection}
+              onUpdate={updateSelection}
               onNext={() => setStep(5)}
               onBack={() => setStep(3)}
             />
           )}
           {step === 5 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepAuthentication
               onNext={() => setStep(6)}
               onBack={() => setStep(4)}
             />
           )}
           {step === 6 && (
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
+              onNext={() => setStep(7)}
+              onBack={() => setStep(5)}
+            />
+          )}
+          {step === 7 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
-              onBack={() => setStep(5)}
+              onBack={() => setStep(6)}
             />
           )}
         </div>
