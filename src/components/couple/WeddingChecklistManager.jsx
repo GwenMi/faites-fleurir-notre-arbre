@@ -195,6 +195,22 @@ export default function WeddingChecklistManager({ event }) {
           />
         </div>
         <p className="text-xs text-gray-400 mt-2">{done} tâche{done !== 1 ? "s" : ""} sur {TOTAL} complétée{done !== 1 ? "s" : ""}</p>
+        {event.event_date && (
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs text-rose-500">
+              <Clock className="w-3.5 h-3.5" />
+              <span>Mariage : {new Date(event.event_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>
+            </div>
+            <button
+              onClick={sendReminderEmail}
+              disabled={sendingReminder}
+              className="flex items-center gap-1.5 text-xs font-semibold text-rose-500 border border-rose-200 rounded-full px-3 py-1 hover:bg-rose-50 transition disabled:opacity-50"
+            >
+              <Bell className="w-3.5 h-3.5" />
+              {sendingReminder ? "Envoi…" : "Rappel par email"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Steps */}
