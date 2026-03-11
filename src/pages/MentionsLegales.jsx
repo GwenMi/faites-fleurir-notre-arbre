@@ -35,7 +35,7 @@ export default function MentionsLegales() {
           <p>
             <strong>Papin Gwenaëlle</strong><br />
             Enseigne : Fleurs en fête<br />
-            E-mail : <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a><br />
+            E-mail : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a><br />
             Téléphone : 06 30 77 80 36
           </p>
 
@@ -49,7 +49,7 @@ export default function MentionsLegales() {
           <p>Conformément au <strong>Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679)</strong> et à la loi Informatique et Libertés modifiée, Fleurs en fête s'engage à protéger vos données personnelles.</p>
 
           <h3>4.1 Responsable du traitement</h3>
-          <p>Papin Gwenaëlle — contact@fleursenfete.com — 06 30 77 80 36</p>
+          <p>Papin Gwenaëlle — contact@fleursdefete.fr — 06 30 77 80 36</p>
 
           <h3>4.2 Données collectées</h3>
           <p>Nous collectons les données suivantes :</p>
@@ -94,7 +94,7 @@ export default function MentionsLegales() {
             <li><strong>Droit d'opposition</strong> au traitement</li>
             <li><strong>Droit de retirer votre consentement</strong> à tout moment</li>
           </ul>
-          <p>Pour exercer ces droits : <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a> ou par téléphone au 06 30 77 80 36. En cas de désaccord, vous pouvez saisir la <strong>CNIL</strong> : <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a> — 3 Place de Fontenoy, 75007 Paris.</p>
+          <p>Pour exercer ces droits : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a> ou par téléphone au 06 30 77 80 36. En cas de désaccord, vous pouvez saisir la <strong>CNIL</strong> : <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a> — 3 Place de Fontenoy, 75007 Paris.</p>
 
           <h2>5. Cookies</h2>
           <p>Ce site utilise uniquement des cookies strictement nécessaires au fonctionnement technique de la plateforme (session utilisateur, préférences). Aucun cookie publicitaire ou de profilage n'est utilisé. Vous pouvez paramétrer votre navigateur pour refuser les cookies, ce qui peut affecter certaines fonctionnalités du site.</p>

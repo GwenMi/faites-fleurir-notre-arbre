@@ -33,7 +33,7 @@ export default function Contact() {
 
     // Send to the owner
     await base44.integrations.Core.SendEmail({
-      to: "contact@fleursenfete.com",
+      to: "contact@fleursdefete.fr",
       from_name: form.name || form.email,
       subject: `[Contact] ${form.subject}`,
       body: `Nouveau message via le formulaire de contact Fleurs en fête.\n\nNom : ${form.name || "(non renseigné)"}\nEmail : ${form.email}\nObjet : ${form.subject}\n\nMessage :\n${form.message}`,
@@ -44,7 +44,7 @@ export default function Contact() {
       to: form.email,
       from_name: "Fleurs en fête",
       subject: "Nous avons bien reçu votre message 🌸",
-      body: `Bonjour ${form.name || ""},\n\nMerci de nous avoir contactés ! Nous avons bien reçu votre message concernant : "${form.subject}".\n\nNous vous répondrons dans les meilleurs délais.\n\nÀ très bientôt,\nGwenaëlle — Fleurs en fête\ncontact@fleursenfete.com\n06 30 77 80 36`,
+      body: `Bonjour ${form.name || ""},\n\nMerci de nous avoir contactés ! Nous avons bien reçu votre message concernant : "${form.subject}".\n\nNous vous répondrons dans les meilleurs délais.\n\nÀ très bientôt,\nGwenaëlle — Fleurs en fête\ncontact@fleursdefete.fr\n06 30 77 80 36`,
     });
 
     setSending(false);
@@ -75,9 +75,9 @@ export default function Contact() {
 
         {/* Contact info */}
         <div className="flex flex-col sm:flex-row gap-3 mb-10 justify-center">
-          <a href="mailto:contact@fleursenfete.com"
+          <a href="mailto:contact@fleursdefete.fr"
             className="flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-rose-100 bg-rose-50 text-rose-500 font-sans-clean text-sm font-semibold hover:bg-rose-100 transition">
-            <Mail className="w-4 h-4" /> contact@fleursenfete.com
+            <Mail className="w-4 h-4" /> contact@fleursdefete.fr
           </a>
           <a href="tel:+33630778036"
             className="flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-gray-100 bg-gray-50 text-gray-600 font-sans-clean text-sm font-semibold hover:bg-gray-100 transition">
