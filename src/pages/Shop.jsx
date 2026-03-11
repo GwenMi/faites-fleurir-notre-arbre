@@ -113,6 +113,31 @@ function ShopHomePage({ onStart }) {
         </div>
       </div>
 
+      {/* Cas d'usage */}
+      <div className="px-6 md:px-12 py-16 max-w-4xl mx-auto">
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Parfait pour chaque occasion</p>
+        <h2 className="font-serif-shop text-4xl font-bold text-gray-800 mb-12 text-center">Plus qu'un cadeau, un souvenir vivant</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Entreprises */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 border border-blue-200">
+            <div className="w-12 h-12 rounded-full bg-blue-400 text-white flex items-center justify-center mb-4 text-xl">🏢</div>
+            <h3 className="font-serif-shop text-2xl font-bold text-gray-800 mb-3">Pour les Entreprises</h3>
+            <p className="font-sans-shop text-sm text-gray-700 leading-relaxed">
+              Renforcez l'esprit d'équipe avec un cadeau original. Quand chaque collaborateur voit sa fleur s'épanouir sur son bureau, c'est un moment partagé de fierté collective. Un geste qui renforce la cohésion interne et montre que vous pensez à vos équipes.
+            </p>
+          </div>
+
+          {/* Chambres d'hôtes */}
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-3xl p-8 border border-amber-200">
+            <div className="w-12 h-12 rounded-full bg-amber-400 text-white flex items-center justify-center mb-4 text-xl">🏡</div>
+            <h3 className="font-serif-shop text-2xl font-bold text-gray-800 mb-3">Pour les Chambres d'Hôtes</h3>
+            <p className="font-sans-shop text-sm text-gray-700 leading-relaxed">
+              Offrez à vos hôtes un petit pot de fleurs personnalisé avec votre logo. Un souvenir tangible qui grandit chez eux. Chaque fois qu'ils verront cette fleur s'épanouir, ils penseront à votre maison et auront envie de revenir.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Avis */}
       <ReviewCarousel />
 
