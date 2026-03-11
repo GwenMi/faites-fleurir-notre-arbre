@@ -29,6 +29,7 @@ const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
   { key: "guests", label: "Mes invités", icon: Users },
   { key: "rsvp", label: "Suivi RSVP", icon: CheckCircle },
+  { key: "rsvp_responses", label: "Réponses RSVP", icon: Users },
   { key: "reminders", label: "Relances", icon: BellRing },
   { key: "campaigns", label: "Campagnes email", icon: MailCheck },
   { key: "guestbook", label: "Livre d'or", icon: BookOpen },
