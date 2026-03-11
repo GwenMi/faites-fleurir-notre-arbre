@@ -13,12 +13,23 @@ export default function RSVPManager({ event }) {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { loadData(); }, [event?.id]);
+  useEffect(() => {
+    loadData();
+
+    // Mise à jour en temps réel
+    const unsub = base44.entities.RSVPResponse.subscribe((ev) => {
+      if (ev.data?.event_id !== event.id) return;
+      if (ev.type === "create") setResponses(prev => [ev.data, ...prev]);
+      else if (ev.type === "update") setResponses(prev => prev.map(r => r.id === ev.id ? ev.data : r));
+      else if (ev.type === "delete") setResponses(prev => prev.filter(r => r.id !== ev.id));
+    });
+    return unsub;
+  }, [event?.id]);
 
   const loadData = async () => {
     setLoading(true);
     const [r, q, g] = await Promise.all([
-      base44.entities.RSVPResponse.filter({ event_id: event.id }),
+      base44.entities.RSVPResponse.filter({ event_id: event.id }, "-created_date", 200),
       base44.entities.RSVPQuestion.filter({ event_id: event.id }),
       base44.entities.SeatingGuest.filter({ event_id: event.id }),
     ]);
