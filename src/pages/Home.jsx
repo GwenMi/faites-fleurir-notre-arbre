@@ -152,8 +152,8 @@ export default function Home() {
           <div className="border border-gray-200 rounded-3xl p-8 bg-white shadow-sm">
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-gray-400 mb-3">Essentiel</p>
             <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">Gratuit</p>
-            <p className="font-sans-clean text-sm text-gray-400 mb-1">Pour commencer</p>
-            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Site disponible uniquement avec une commande de pots</p>
+            <p className="font-sans-clean text-sm text-gray-400 mb-1">Défi fleur simple</p>
+            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Parfait pour les clients qui ne veulent qu'une galerie partagée</p>
             <ul className="space-y-3 mb-8">
               {FEATURES_BASIC.map(f => (
                 <li key={f} className="flex items-center gap-3 font-sans-clean text-sm text-gray-600">
