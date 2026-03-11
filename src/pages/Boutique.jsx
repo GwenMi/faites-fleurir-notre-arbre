@@ -36,6 +36,32 @@ export default function Boutique() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedPack, setSelectedPack] = useState(null);
 
+  // Panier
+  const [cart, setCart] = useState([]); // [{ id: uid, product, quantity }]
+  const [showCart, setShowCart] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+
+  const addToCart = (product) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.product.id === product.id);
+      if (existing) {
+        return prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { id: `${product.id}-${Date.now()}`, product, quantity: 1 }];
+    });
+  };
+
+  const updateQty = (itemId, delta) => {
+    setCart(prev => prev
+      .map(i => i.id === itemId ? { ...i, quantity: i.quantity + delta } : i)
+      .filter(i => i.quantity > 0)
+    );
+  };
+
+  const removeItem = (itemId) => setCart(prev => prev.filter(i => i.id !== itemId));
+
+  const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
+
   useEffect(() => {
     loadProducts();
   }, []);
