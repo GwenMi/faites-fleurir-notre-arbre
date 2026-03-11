@@ -317,46 +317,120 @@ export default function VendorManager({ event }) {
                 </div>
 
                 {isOpen && (
-                  <div className="border-t border-gray-50 px-4 pb-4 pt-3 space-y-3">
-                    {/* Progress bar */}
-                    {v.contract_amount > 0 && (
-                      <div>
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>Versé : {(v.deposit_paid || 0).toLocaleString("fr-FR")} €</span>
-                          <span>{paidPct}%</span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2">
-                          <div className="bg-green-400 h-2 rounded-full transition-all" style={{ width: `${Math.min(paidPct, 100)}%` }} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contact info */}
-                    <div className="flex flex-wrap gap-3 text-xs text-gray-500">
-                      {v.phone && <a href={`tel:${v.phone}`} className="flex items-center gap-1 hover:text-rose-500"><Phone className="w-3 h-3" />{v.phone}</a>}
-                      {v.email && <a href={`mailto:${v.email}`} className="flex items-center gap-1 hover:text-rose-500"><Mail className="w-3 h-3" />{v.email}</a>}
-                      {v.website && <a href={v.website} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-rose-500"><Globe className="w-3 h-3" />Site web</a>}
+                  <div className="border-t border-gray-50">
+                    {/* Sub-tabs */}
+                    <div className="flex border-b border-gray-100 px-4">
+                      {[
+                        { key: "info", label: "Infos", icon: Phone },
+                        { key: "messages", label: "Messages", icon: MessageSquare },
+                        { key: "documents", label: "Documents", icon: FolderOpen },
+                      ].map(tab => {
+                        const Icon = tab.icon;
+                        const active = getVendorTab(v.id) === tab.key;
+                        return (
+                          <button key={tab.key}
+                            onClick={() => {
+                              setVendorTab(v.id, tab.key);
+                              if (tab.key === "documents") loadVendorDocs(v.id);
+                            }}
+                            className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold border-b-2 transition ${active ? "border-rose-400 text-rose-600" : "border-transparent text-gray-400 hover:text-gray-600"}`}>
+                            <Icon className="w-3.5 h-3.5" />{tab.label}
+                          </button>
+                        );
+                      })}
                     </div>
 
-                    {/* Next payment */}
-                    {v.next_payment_date && (
-                      <div className="bg-amber-50 rounded-xl px-3 py-2 text-xs text-amber-700">
-                        📅 Prochaine échéance : <strong>{v.next_payment_amount ? `${Number(v.next_payment_amount).toLocaleString("fr-FR")} €` : "?"}</strong> le {new Date(v.next_payment_date).toLocaleDateString("fr-FR")}
-                      </div>
-                    )}
+                    <div className="px-4 pb-4 pt-3">
+                      {/* INFO TAB */}
+                      {getVendorTab(v.id) === "info" && (
+                        <div className="space-y-3">
+                          {v.contract_amount > 0 && (
+                            <div>
+                              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>Versé : {(v.deposit_paid || 0).toLocaleString("fr-FR")} €</span>
+                                <span>{paidPct}%</span>
+                              </div>
+                              <div className="w-full bg-gray-100 rounded-full h-2">
+                                <div className="bg-green-400 h-2 rounded-full transition-all" style={{ width: `${Math.min(paidPct, 100)}%` }} />
+                              </div>
+                            </div>
+                          )}
+                          <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                            {v.phone && <a href={`tel:${v.phone}`} className="flex items-center gap-1 hover:text-rose-500"><Phone className="w-3 h-3" />{v.phone}</a>}
+                            {v.email && <a href={`mailto:${v.email}`} className="flex items-center gap-1 hover:text-rose-500"><Mail className="w-3 h-3" />{v.email}</a>}
+                            {v.website && <a href={v.website} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-rose-500"><Globe className="w-3 h-3" />Site web</a>}
+                          </div>
+                          {v.next_payment_date && (
+                            <div className="bg-amber-50 rounded-xl px-3 py-2 text-xs text-amber-700">
+                              📅 Prochaine échéance : <strong>{v.next_payment_amount ? `${Number(v.next_payment_amount).toLocaleString("fr-FR")} €` : "?"}</strong> le {new Date(v.next_payment_date).toLocaleDateString("fr-FR")}
+                            </div>
+                          )}
+                          {v.notes && <p className="text-xs text-gray-500 italic">{v.notes}</p>}
+                          <div className="flex gap-2 pt-1 flex-wrap">
+                            <Button size="sm" variant="outline" onClick={() => setPaymentHistoryVendor(v)} className="rounded-lg gap-1 text-xs text-rose-500 hover:text-rose-600 hover:border-rose-200">
+                              <History className="w-3 h-3" /> Paiements
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleEdit(v)} className="rounded-lg gap-1 text-xs">
+                              <Pencil className="w-3 h-3" /> Modifier
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleDelete(v.id)} className="rounded-lg gap-1 text-xs text-red-500 hover:text-red-600 hover:border-red-200">
+                              <Trash2 className="w-3 h-3" /> Supprimer
+                            </Button>
+                          </div>
+                        </div>
+                      )}
 
-                    {v.notes && <p className="text-xs text-gray-500 italic">{v.notes}</p>}
+                      {/* MESSAGES TAB */}
+                      {getVendorTab(v.id) === "messages" && (
+                        <VendorMessagesPanel vendor={v} event={event} />
+                      )}
 
-                    <div className="flex gap-2 pt-1 flex-wrap">
-                      <Button size="sm" variant="outline" onClick={() => setPaymentHistoryVendor(v)} className="rounded-lg gap-1 text-xs text-rose-500 hover:text-rose-600 hover:border-rose-200">
-                        <History className="w-3 h-3" /> Paiements
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(v)} className="rounded-lg gap-1 text-xs">
-                        <Pencil className="w-3 h-3" /> Modifier
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleDelete(v.id)} className="rounded-lg gap-1 text-xs text-red-500 hover:text-red-600 hover:border-red-200">
-                        <Trash2 className="w-3 h-3" /> Supprimer
-                      </Button>
+                      {/* DOCUMENTS TAB */}
+                      {getVendorTab(v.id) === "documents" && (
+                        <div className="space-y-3">
+                          {/* Upload inline */}
+                          <div className="bg-indigo-50 rounded-xl p-3 space-y-2">
+                            <p className="text-xs font-semibold text-indigo-700">📎 Ajouter un document</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Input value={docTitle} onChange={e => setDocTitle(e.target.value)} placeholder="Titre *" className="rounded-lg text-xs bg-white" />
+                              <select value={docType} onChange={e => setDocType(e.target.value)} className="rounded-lg border border-input px-2 text-xs bg-white">
+                                <option value="contrat">📋 Contrat</option>
+                                <option value="devis">💶 Devis</option>
+                                <option value="facture">🧾 Facture</option>
+                                <option value="plan">🗺️ Plan</option>
+                                <option value="autre">📎 Autre</option>
+                              </select>
+                            </div>
+                            <Input type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" onChange={e => setDocFile(e.target.files[0])} className="rounded-lg text-xs bg-white" />
+                            <Button size="sm" disabled={uploadingFor === v.id || !docFile || !docTitle.trim()} onClick={() => handleUploadDoc(v.id)} className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg gap-1 text-xs">
+                              <Upload className="w-3.5 h-3.5" /> {uploadingFor === v.id ? "Envoi…" : "Enregistrer"}
+                            </Button>
+                          </div>
+                          {/* Doc list */}
+                          {(vendorDocs[v.id] || []).length === 0 ? (
+                            <p className="text-xs text-gray-400 text-center py-3">Aucun document pour l'instant</p>
+                          ) : (
+                            <div className="space-y-1.5">
+                              {(vendorDocs[v.id] || []).map(doc => (
+                                <div key={doc.id} className="flex items-center justify-between bg-white border border-gray-100 rounded-xl px-3 py-2">
+                                  <div className="min-w-0">
+                                    <p className="text-xs font-semibold text-gray-800 truncate">{doc.title}</p>
+                                    <p className="text-xs text-gray-400">{doc.type}</p>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                                    <a href={doc.file_url} target="_blank" rel="noreferrer" className="p-1 rounded hover:bg-indigo-50 text-gray-400 hover:text-indigo-500">
+                                      <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                    <button onClick={() => handleDeleteDoc(v.id, doc.id)} className="p-1 rounded hover:bg-red-50 text-gray-300 hover:text-red-400">
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
