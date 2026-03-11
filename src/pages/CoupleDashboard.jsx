@@ -188,6 +188,7 @@ export default function CoupleDashboard() {
           <div className="flex gap-1 border-t border-gray-100 overflow-x-auto no-scrollbar">
             {TABS.map(tab => {
               const Icon = tab.icon;
+              const locked = tab.premium && !isPremium;
               return (
                 <button
                   key={tab.key}
@@ -195,11 +196,14 @@ export default function CoupleDashboard() {
                   className={`flex-shrink-0 flex items-center gap-2 px-5 py-3.5 text-sm font-sans-clean font-semibold border-b-2 transition ${
                     activeTab === tab.key
                       ? "border-rose-400 text-rose-600"
+                      : locked
+                      ? "border-transparent text-gray-300"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
                   {tab.label}
+                  {locked && <Lock className="w-3 h-3 text-gray-300" />}
                 </button>
               );
             })}
