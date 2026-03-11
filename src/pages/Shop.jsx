@@ -294,6 +294,14 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-8">
           {step === 1 && (
+            <StepEventType
+              selection={selection}
+              onUpdate={updateSelection}
+              onNext={() => setStep(2)}
+              onBack={() => setStep(0)}
+            />
+          )}
+          {step === 2 && (
             <StepKitOptions
               selection={selection}
               onUpdate={updateSelection}
