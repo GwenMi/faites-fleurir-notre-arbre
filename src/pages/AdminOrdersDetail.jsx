@@ -487,5 +487,6 @@ Fleurs en fête`;
         </div>
       </div>
     </div>
+    </AdminGuard>
   );
 }
