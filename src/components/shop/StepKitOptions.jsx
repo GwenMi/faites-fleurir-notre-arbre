@@ -6,15 +6,32 @@ const KITS = {
   compose: {
     emoji: "🌱",
     name: "Kit à composer",
-    desc: "Envoyé séparément pour préparer vous-mêmes les cadeaux invités",
-    features: ["Pot avec graines", "Pastille de semis", "Notice", "Étiquette personnalisée", "QR code événement"],
+    desc: "Un souvenir original pour vos invités : chacun reçoit une petite graine à faire pousser en souvenir de votre mariage. Les éléments sont envoyés séparément afin que vous puissiez préparer facilement vos cadeaux invités.",
+    features: [
+      "Petit pot en verre",
+      "Graines de fleur",
+      "Pastille de semis",
+      "Notice de plantation",
+      "Étiquette personnalisée (prénoms & date)",
+      "QR code pour partager les photos des fleurs",
+    ],
+    badge: null,
     priceKey: "KIT_COMPOSE",
   },
   pret: {
     emoji: "🎁",
     name: "Kit prêt à offrir",
-    desc: "Souvenir préparé, prêt à poser sur la table des invités",
-    features: ["Pot avec graines", "Pastille de semis", "Notice", "Étiquette personnalisée", "QR code événement", "Préparé & prêt à offrir ✓"],
+    desc: "Le souvenir est entièrement préparé et prêt à être posé sur la table des invités le jour du mariage. Chaque invité repart avec une graine à planter et pourra partager la photo de sa fleur.",
+    features: [
+      "Petit pot en verre",
+      "Graines de fleur",
+      "Pastille de semis",
+      "Notice",
+      "Étiquette personnalisée (prénoms & date)",
+      "QR code pour partager les photos des fleurs",
+      "Préparé & prêt à offrir ✓",
+    ],
+    badge: "Le plus choisi",
     priceKey: "KIT_PRET",
   },
 };
@@ -41,21 +58,26 @@ export default function StepKitOptions({ selection, onUpdate, onNext, PRICING })
             <button
               key={key}
               onClick={() => onUpdate({ kitType: key })}
-              className={`text-left rounded-2xl border-2 p-6 transition-all ${
+              className={`text-left rounded-2xl border-2 p-6 transition-all relative ${
                 selected ? "border-rose-400 bg-rose-50 shadow-md" : "border-gray-200 bg-white hover:border-rose-200"
               }`}
             >
+              {kit.badge && (
+                <span className="absolute top-3 right-3 bg-rose-400 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                  {kit.badge} ✨
+                </span>
+              )}
               <div className="flex items-start justify-between mb-3">
                 <span className="text-3xl">{kit.emoji}</span>
                 {selected && <div className="w-6 h-6 bg-rose-400 rounded-full flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-1">{kit.name}</h3>
-              <p className="text-2xl font-bold text-rose-600 mb-3">{price.toFixed(2)}€<span className="text-sm font-normal text-gray-500">/pot</span></p>
-              <p className="text-sm text-gray-600 mb-4">{kit.desc}</p>
-              <ul className="space-y-1">
+              <p className="text-2xl font-bold text-rose-600 mb-3">{price.toFixed(2)}€<span className="text-sm font-normal text-gray-500"> / invité</span></p>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">{kit.desc}</p>
+              <ul className="space-y-1.5">
                 {kit.features.map(f => (
                   <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
-                    <span className="text-green-400 text-xs">✓</span> {f}
+                    <span className="text-green-400 text-xs flex-shrink-0">✓</span> {f}
                   </li>
                 ))}
               </ul>
@@ -64,44 +86,21 @@ export default function StepKitOptions({ selection, onUpdate, onNext, PRICING })
         })}
       </div>
 
-      {/* Pot options — shown once kit is selected */}
-      {selection.kitType && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Choisissez votre pot</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { key: "verre", emoji: "🫙", label: "Pot en verre", sub: "Inclus" },
-              { key: "blanc", emoji: "🤍", label: "Pot blanc", sub: `+${PRICING.POT_BLANC_EXTRA.toFixed(2)}€/pot`, highlight: true },
-            ].map(pot => (
-              <button
-                key={pot.key}
-                onClick={() => onUpdate({ potType: pot.key })}
-                className={`rounded-xl border-2 p-4 text-center transition-all ${
-                  selection.potType === pot.key ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-gray-300"
-                }`}
-              >
-                <span className="text-2xl block mb-2">{pot.emoji}</span>
-                <p className="font-semibold text-gray-900 text-sm">{pot.label}</p>
-                <p className={`text-xs mt-0.5 ${pot.highlight ? "text-rose-600 font-semibold" : "text-gray-500"}`}>{pot.sub}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Sac cadeau — shown once kit is selected */}
+      {/* Sac cadeau */}
       {selection.kitType && (
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🎀</span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl mt-0.5">🎀</span>
               <div>
-                <p className="font-semibold text-gray-900">Sac cadeau mariage</p>
-                <p className="text-sm text-gray-500">Petit sac élégant avec poignée corde</p>
+                <p className="font-semibold text-gray-900">Sac cadeau</p>
+                <p className="text-sm text-gray-500 mt-0.5 leading-relaxed">
+                  Petit sac cadeau élégant avec poignée. Le pot est placé dans le sac pour créer un véritable souvenir prêt à offrir à vos invités.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-rose-600 font-semibold">+{PRICING.SAC_CADEAU.toFixed(2)}€/pot</span>
+            <div className="flex flex-col items-end gap-2 flex-shrink-0">
+              <span className="text-sm text-rose-600 font-semibold">+{PRICING.SAC_CADEAU.toFixed(2)}€/invité</span>
               <button
                 onClick={() => onUpdate({ sacCadeau: !selection.sacCadeau })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${

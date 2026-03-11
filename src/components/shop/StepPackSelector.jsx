@@ -90,9 +90,11 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
       {/* Delivery info */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
         <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-sm text-blue-800">
-          Chaque commande est préparée avec soin. Nous recommandons de commander <strong>au moins 21 jours</strong> avant votre événement.
-        </p>
+        <div className="text-sm text-blue-800 space-y-1">
+          <p>Chaque commande est préparée avec soin.</p>
+          <p>Afin de garantir la préparation et la livraison dans les délais, nous vous recommandons de passer commande <strong>jusqu'à 21 jours avant votre événement</strong>.</p>
+          <p className="text-blue-600">Les commandes passées moins de 14 jours avant la date de l'événement peuvent être acceptées, mais la livraison dans les délais ne peut pas être garantie.</p>
+        </div>
       </div>
 
       <div className="flex gap-3">

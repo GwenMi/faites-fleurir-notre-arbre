@@ -11,7 +11,6 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
   const [paymentStarted, setPaymentStarted] = useState(false);
 
   const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
-  const potLabel = selection.potType === "blanc" ? "Pot blanc" : "Pot en verre";
   const basePrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
 
   const handlePaymentSuccess = async () => {
@@ -78,13 +77,9 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <span>{kitLabel}</span>
             <span>{basePrice.toFixed(2)}€/pot</span>
           </div>
-          <div className="flex justify-between text-gray-700">
-            <span>{potLabel}</span>
-            <span>{selection.potType === "blanc" ? `+${PRICING.POT_BLANC_EXTRA.toFixed(2)}€/pot` : "Inclus"}</span>
-          </div>
-          <div className="flex justify-between text-gray-700">
+          <div className="flex justify-between text-sm text-gray-700">
             <span>Sac cadeau</span>
-            <span>{selection.sacCadeau ? `+${PRICING.SAC_CADEAU.toFixed(2)}€/pot` : "Non"}</span>
+            <span>{selection.sacCadeau ? `+${PRICING.SAC_CADEAU.toFixed(2)}€/invité` : "Non"}</span>
           </div>
           <div className="flex justify-between font-bold text-gray-900 border-t border-gray-100 pt-3">
             <span>Prix par pot</span>

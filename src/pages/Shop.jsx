@@ -13,9 +13,8 @@ import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react"
 const STEPS = ["Authentification", "Kit & options", "Pack invités", "Vos informations", "Récapitulatif"];
 
 export const PRICING = {
-  KIT_COMPOSE: 2.50,
-  KIT_PRET: 4.50,
-  POT_BLANC_EXTRA: 0.50,
+  KIT_COMPOSE: 2.90,
+  KIT_PRET: 4.90,
   SAC_CADEAU: 0.40,
 };
 
@@ -28,6 +27,11 @@ function ShopHomePage({ onStart }) {
         .font-sans-shop { font-family: 'Lato', system-ui, sans-serif; }
         .gold-line-shop { background: linear-gradient(90deg, transparent, #c9a96e, transparent); height: 1px; }
       `}</style>
+
+      {/* Bandeau offre de lancement */}
+      <div className="bg-gradient-to-r from-rose-400 to-pink-500 text-white text-center py-2.5 px-4">
+        <p className="font-sans-shop text-sm font-semibold">🎉 Offre de lancement — Les 20 premières commandes bénéficient de la livraison offerte</p>
+      </div>
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-gray-100">
@@ -62,7 +66,7 @@ function ShopHomePage({ onStart }) {
           className="inline-flex items-center gap-2 py-4 px-8 rounded-full font-sans-shop font-bold text-white shadow-lg bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
           <Sparkles className="w-4 h-4" /> Créer mon kit de pots
         </button>
-        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 2,50 € / pot · Livraison offerte (offre lancement)</p>
+        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 2,90 € / invité · Pot en verre · Étiquette personnalisée</p>
       </div>
 
 
@@ -156,9 +160,8 @@ export default function Shop() {
   });
 
   const baseKitPrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
-  const potExtra = selection.potType === "blanc" ? PRICING.POT_BLANC_EXTRA : 0;
   const sacExtra = selection.sacCadeau ? PRICING.SAC_CADEAU : 0;
-  const pricePerPot = baseKitPrice + potExtra + sacExtra;
+  const pricePerPot = baseKitPrice + sacExtra;
   const totalPots = (selection.packSize || 0) * selection.packQty;
   const subtotal = pricePerPot * totalPots;
   const discount = selection.packQty >= 2 ? subtotal * 0.1 : 0;
