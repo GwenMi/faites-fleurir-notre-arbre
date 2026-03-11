@@ -175,6 +175,14 @@ export default function BudgetManager({ event }) {
     }))
     .filter(d => d.value > 0);
 
+  const pieDataActual = CATEGORIES
+    .map(cat => ({
+      name: cat.label,
+      value: items.filter(i => i.category === cat.value).reduce((s, i) => s + (i.actual_amount || 0), 0),
+      color: cat.color,
+    }))
+    .filter(d => d.value > 0);
+
   if (loading) return <div className="py-10 text-center text-gray-400 text-sm">Chargement...</div>;
 
   return (
