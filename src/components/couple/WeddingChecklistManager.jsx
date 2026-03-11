@@ -99,10 +99,25 @@ const STEPS = [
 
 const TOTAL = STEPS.reduce((s, step) => s + step.tasks.length, 0);
 
+// Returns the month offset in months before the wedding for each step
+const STEP_MONTHS_BEFORE = [12, 9, 6, 3, 1, 0];
+
+function getStepStatus(monthsBefore, eventDate) {
+  if (!eventDate) return "upcoming";
+  const now = new Date();
+  const wedding = new Date(eventDate);
+  const msInMonth = 1000 * 60 * 60 * 24 * 30.5;
+  const monthsLeft = (wedding - now) / msInMonth;
+  if (monthsBefore > monthsLeft + 0.5) return "current"; // this phase is now active
+  if (monthsBefore > monthsLeft - 1) return "upcoming";
+  return "past"; // shouldn't lock but show as overdue
+}
+
 export default function WeddingChecklistManager({ event }) {
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(null);
+  const [sendingReminder, setSendingReminder] = useState(false);
 
   useEffect(() => { loadChecklist(); }, [event?.id]);
 
