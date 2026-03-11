@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail, Lock, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
