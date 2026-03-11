@@ -217,9 +217,54 @@ function ShopHomePage({ onStart }) {
   );
 }
 
+function StepEventType({ selection, onUpdate, onNext, onBack }) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="text-3xl font-bold text-gray-800 mb-2">Quel type d'événement ?</h2>
+        <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-gray-500">Sélectionnez votre type d'événement pour une expérience adaptée.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {EVENT_TYPES.map(event => (
+          <button
+            key={event.id}
+            onClick={() => onUpdate({ eventType: event.id })}
+            className={`p-4 rounded-2xl border-2 transition text-left ${
+              selection.eventType === event.id
+                ? 'border-rose-400 bg-rose-50'
+                : 'border-gray-200 bg-white hover:border-rose-200'
+            }`}
+          >
+            <p style={{ fontFamily: "'Lato', sans-serif" }} className="font-semibold text-gray-800">{event.label}</p>
+            {event.hasSite && <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-xs text-rose-400 mt-1">✓ Site personnalisé possible</p>}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex gap-3 pt-6">
+        <button onClick={onBack}
+          className="flex-1 py-3 rounded-full font-sans-shop font-semibold text-gray-600 border-2 border-gray-200 hover:border-gray-300 transition text-sm">
+          Retour
+        </button>
+        <button onClick={onNext}
+          disabled={!selection.eventType}
+          className={`flex-1 py-3 rounded-full font-sans-shop font-semibold text-white transition text-sm ${
+            selection.eventType 
+              ? 'bg-rose-400 hover:bg-rose-500' 
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}>
+          Suivant
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Shop() {
   const [step, setStep] = useState(0);
   const [selection, setSelection] = useState({
+    eventType: null,
     kitType: null,
     sacCadeau: false,
     packSize: null,
