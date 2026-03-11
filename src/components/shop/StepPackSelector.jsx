@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, CheckCircle2, Info } from "lucide-react";
 import { toast } from "sonner";
 
 const PACK_SIZES = [30, 50, 70, 100, 120];
+const PRICING = { SAC_CADEAU: 0.50 };
 
 export default function StepPackSelector({ selection, onUpdate, pricing, onNext, onBack }) {
   const handleNext = () => {
