@@ -11,6 +11,8 @@ import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection
 import WishlistSection from "@/components/public/WishlistSection";
 import FAQSection from "@/components/public/FAQSection";
 import SeatingPlanSection from "@/components/public/SeatingPlanSection";
+import CoupleStorySection from "@/components/public/CoupleStorySection";
+import MapSection from "@/components/public/MapSection";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
@@ -108,6 +110,13 @@ export default function EventPublic() {
         </div>
       </div>
 
+      {/* Couple Story */}
+      {event.show_couple_story && event.couple_story && (
+        <div className="max-w-2xl mx-auto px-4">
+          <CoupleStorySection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
+
       {/* Day Schedule Section */}
       <div className="max-w-2xl mx-auto px-4">
         <DayScheduleSection event={event} primaryColor={primaryColor} />
@@ -139,9 +148,18 @@ export default function EventPublic() {
       </div>
 
       {/* FAQ Section */}
-      <div className="max-w-2xl mx-auto">
-        <FAQSection event={event} primaryColor={primaryColor} />
-      </div>
+      {event.show_faq !== false && (
+        <div className="max-w-2xl mx-auto">
+          <FAQSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
+
+      {/* Map Section */}
+      {event.show_map && event.map_address && (
+        <div className="max-w-2xl mx-auto px-4">
+          <MapSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
       {/* Guest Photos Section */}
       <div className="max-w-2xl mx-auto">
