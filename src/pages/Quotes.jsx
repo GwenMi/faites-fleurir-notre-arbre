@@ -206,7 +206,6 @@ function QuoteForm({ quote, products, onSave, onCancel }) {
         </div>
       </div>
     </div>
-    </AdminGuard>
   );
 }
 
