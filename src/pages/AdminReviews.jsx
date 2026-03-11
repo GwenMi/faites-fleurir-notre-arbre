@@ -235,5 +235,6 @@ export default function AdminReviews() {
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }
