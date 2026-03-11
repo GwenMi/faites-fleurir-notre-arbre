@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { CheckCircle2, Circle, Loader2, ClipboardList } from "lucide-react";
+import { CheckCircle2, Circle, Loader2, ClipboardList, Bell, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 const STEPS = [
