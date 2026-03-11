@@ -251,6 +251,9 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* User Management */}
+        <UserManagementPanel />
+
         {/* Gestion Promos */}
         <div className="bg-white rounded-lg p-6 border border-gray-200 space-y-6">
           <div className="flex items-center justify-between">
