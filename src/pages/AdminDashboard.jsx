@@ -175,8 +175,15 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800">📊 Dashboard Commercial</h1>
-          <p className="text-gray-500 mt-1">Suivi de vos ventes et gestion des promos</p>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">📊 Dashboard Commercial</h1>
+              <p className="text-gray-500 mt-1">Suivi de vos ventes et gestion des promos</p>
+            </div>
+            <a href={createPageUrl("Forecast")} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
+              <TrendingUp className="w-4 h-4" /> Prévisions & Stock
+            </a>
+          </div>
         </div>
       </div>
 
