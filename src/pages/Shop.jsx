@@ -10,7 +10,7 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Authentification", "Kit & options", "Pack invités", "Vos informations", "Récapitulatif"];
+const STEPS = ["Kit & options", "Pack invités", "Votre compte", "Vos informations", "Récapitulatif"];
 
 export const PRICING = {
   KIT_COMPOSE: 2.90,
