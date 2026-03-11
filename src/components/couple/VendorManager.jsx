@@ -47,6 +47,12 @@ export default function VendorManager({ event }) {
   const [expanded, setExpanded] = useState(null);
   const [saving, setSaving] = useState(false);
   const [paymentHistoryVendor, setPaymentHistoryVendor] = useState(null);
+  const [activeVendorTab, setActiveVendorTab] = useState({}); // vendorId -> "info"|"messages"|"documents"
+  const [vendorDocs, setVendorDocs] = useState({}); // vendorId -> docs[]
+  const [uploadingFor, setUploadingFor] = useState(null);
+  const [docFile, setDocFile] = useState(null);
+  const [docTitle, setDocTitle] = useState("");
+  const [docType, setDocType] = useState("contrat");
 
   useEffect(() => {
     load();
