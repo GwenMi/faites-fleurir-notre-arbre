@@ -150,7 +150,6 @@ export default function Shop() {
   const [step, setStep] = useState(0);
   const [selection, setSelection] = useState({
     kitType: null,
-    potType: "verre",
     sacCadeau: false,
     packSize: null,
     packQty: 1,
