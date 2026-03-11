@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -26,6 +26,9 @@ import AgendaManager from "@/components/couple/AgendaManager";
 import MenuEditor from "@/components/couple/MenuEditor";
 import TaskManager from "@/components/couple/TaskManager";
 import VendorDocumentManager from "@/components/couple/VendorDocumentManager";
+import SiteEditorManager from "@/components/couple/SiteEditorManager";
+import CoupleCalendar from "@/components/couple/CoupleCalendar";
+import ThankYouCardGenerator from "@/components/couple/ThankYouCardGenerator";
 
 const TABS = [
   { key: "stats", label: "Statistiques", icon: BarChart2 },
@@ -48,8 +51,11 @@ const TABS = [
   { key: "tasks", label: "Tâches", icon: ClipboardList },
   { key: "checklist", label: "Checklist", icon: ClipboardCheck },
   { key: "thankyou", label: "Remerciements", icon: HandHeart },
+  { key: "site_editor", label: "Sections du site", icon: Layers },
   { key: "theme", label: "Thème", icon: Paintbrush },
   { key: "preview", label: "Aperçu mobile", icon: Smartphone },
+  { key: "calendar", label: "Calendrier", icon: CalendarRange },
+  { key: "thankyou_cards", label: "Cartes mercis", icon: Mail },
 ];
 
 // Wrapper to adapt ScheduleManager (takes eventId) to the tab interface (receives event)
@@ -138,7 +144,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, site_editor: SiteEditorManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager, calendar: CoupleCalendar, thankyou_cards: ThankYouCardGenerator };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
