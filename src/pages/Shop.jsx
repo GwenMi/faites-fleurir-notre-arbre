@@ -10,7 +10,7 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Votre compte", "Vos informations", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Votre compte", "Vos informations", "Récapitulatif"];
 
 const EVENT_TYPES = [
   { id: "mariage", label: "💍 Mariage", hasSite: true },
