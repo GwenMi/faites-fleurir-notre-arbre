@@ -409,5 +409,6 @@ export default function Quotes() {
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }
