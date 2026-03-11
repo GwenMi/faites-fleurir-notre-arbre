@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
-import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepKitOptions from "@/components/shop/StepKitOptions";
 import StepPackSelector from "@/components/shop/StepPackSelector";
+import StepCustomization from "@/components/shop/StepCustomization";
+import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
 import ReviewCarousel from "@/components/shop/ReviewCarousel";
