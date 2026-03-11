@@ -5,8 +5,10 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle } from "lucide-react";
+import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users } from "lucide-react";
 import { toast } from "sonner";
+import AdminGuard from "@/components/admin/AdminGuard";
+import UserManagementPanel from "@/components/admin/UserManagementPanel";
 
 const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
