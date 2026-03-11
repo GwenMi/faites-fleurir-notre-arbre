@@ -144,7 +144,10 @@ export default function CoupleDashboard() {
     );
   }
 
+  const isPremium = event.plan === "premium";
   const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, site_editor: SiteEditorManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager, calendar: CoupleCalendar, thankyou_cards: ThankYouCardGenerator };
+  const currentTab = TABS.find(t => t.key === activeTab);
+  const isTabLocked = currentTab?.premium && !isPremium;
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
