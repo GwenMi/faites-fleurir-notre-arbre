@@ -251,6 +251,7 @@ Fleurs en fête`;
   const paymentCfg = PAYMENT_CONFIG[order.payment_status] || PAYMENT_CONFIG.unpaid;
 
   return (
+    <AdminGuard allowedRoles={["admin", "manager"]}>
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
