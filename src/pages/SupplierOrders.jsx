@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import AdminGuard from "@/components/admin/AdminGuard";
 
 const ORDER_STATUS = {
   draft:     { label: "Brouillon",       className: "bg-gray-100 text-gray-600" },
@@ -180,6 +181,7 @@ export default function SupplierOrders() {
 
   /* ---- Render ---- */
   return (
+    <AdminGuard allowedRoles={["admin", "manager"]}>
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
       <style>{`
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
