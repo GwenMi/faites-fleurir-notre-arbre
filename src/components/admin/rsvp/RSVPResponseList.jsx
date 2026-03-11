@@ -100,6 +100,7 @@ export default function RSVPResponseList({ responses, questions, guests, eventId
                         ) : null)}
                       </div>
                     )}
+                    {r.allergies && <p className="text-xs text-amber-600 mt-1">⚠️ {r.allergies}</p>}
                     {r.notes && <p className="text-xs text-gray-400 mt-1 italic">"{r.notes}"</p>}
                   </div>
                   {!alreadyInList && r.attending && (
