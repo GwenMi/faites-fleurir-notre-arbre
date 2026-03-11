@@ -638,5 +638,6 @@ export default function SupplierOrders() {
         </div>
       )}
     </div>
+    </AdminGuard>
   );
 }
