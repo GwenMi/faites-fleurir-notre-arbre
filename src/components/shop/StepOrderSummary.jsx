@@ -73,9 +73,9 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           <h3 className="font-bold text-gray-800">Votre commande</h3>
         </div>
         <div className="p-6 space-y-3 text-sm">
-          <div className="flex justify-between text-gray-700">
-            <span>{kitLabel}</span>
-            <span>{basePrice.toFixed(2)}€/pot</span>
+          <div className="flex justify-between text-sm text-gray-700">
+            <span>{kitLabel} (pot en verre)</span>
+            <span>{basePrice.toFixed(2)}€/invité</span>
           </div>
           <div className="flex justify-between text-sm text-gray-700">
             <span>Sac cadeau</span>
