@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
-export default function StepCustomization({ selection, onUpdate, onNext, onBack }) {
+export default function StepCustomization({ selection, onUpdate, onNext, onBack, seeds }) {
   const handleNext = () => {
     // Validation basée sur le type d'événement
     if (selection.eventType === "entreprise") {
@@ -49,6 +49,29 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack 
           {isAccommodationEvent && "Ajoutez votre logo et nom d'établissement"}
         </p>
       </div>
+
+      {/* Choix de la graine */}
+      {seeds && (
+        <div>
+          <label className="block text-sm font-semibold text-gray-900 mb-3">Type de graine</label>
+          <div className="grid grid-cols-2 gap-3">
+            {seeds.map(seed => (
+              <button
+                key={seed.id}
+                onClick={() => updateCustomization({ seedType: seed.id })}
+                className={`p-4 rounded-lg border-2 transition text-center ${
+                  selection.customization?.seedType === seed.id || (selection.seedType === seed.id)
+                    ? 'border-rose-400 bg-rose-50'
+                    : 'border-gray-200 bg-white hover:border-rose-200'
+                }`}
+              >
+                <p className="text-sm font-semibold text-gray-800">{seed.label}</p>
+                <p className="text-xs text-gray-500 mt-1">{seed.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Événements personnels */}
       {isPersonalEvent && (
