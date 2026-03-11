@@ -88,7 +88,7 @@ export default function Boutique() {
       `}</style>
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100">
+      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100 sticky top-0 bg-white z-30 shadow-sm">
         <a href={createPageUrl("Home")}>
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
@@ -101,6 +101,19 @@ export default function Boutique() {
             className="font-sans-clean text-sm font-semibold text-rose-500 border-b-2 border-rose-300 pb-0.5">
             Boutique
           </a>
+          {/* Bouton panier */}
+          <button
+            onClick={() => setShowCart(true)}
+            className="relative flex items-center gap-2 font-sans-clean text-sm font-semibold text-gray-700 border border-gray-200 hover:border-rose-300 hover:text-rose-500 transition px-4 py-2 rounded-full"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Panier
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-rose-400 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </button>
           <a href={createPageUrl("AdminDashboard")}
             className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
             Mon espace
