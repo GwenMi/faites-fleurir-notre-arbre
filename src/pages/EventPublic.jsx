@@ -11,8 +11,8 @@ import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection
 import WishlistSection from "@/components/public/WishlistSection";
 import FAQSection from "@/components/public/FAQSection";
 import SeatingPlanSection from "@/components/public/SeatingPlanSection";
-import CoupleStorySection from "@/components/public/CoupleStorySection";
-import MapSection from "@/components/public/MapSection";
+import CoupleStorySection from "@/components/public/CoupleStorySection.jsx";
+import MapSection from "@/components/public/MapSection.jsx";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
