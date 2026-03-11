@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import AdminGuard from "@/components/admin/AdminGuard";
 import { ChevronLeft, Loader2, Users, Plus, X, Phone, Mail, MessageSquare, Calendar, CheckCircle2, Clock, Search, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

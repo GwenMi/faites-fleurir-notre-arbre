@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import AdminGuard from "@/components/admin/AdminGuard";
 import { ChevronLeft, Loader2, TrendingUp, ShoppingBag, Euro, Package } from "lucide-react";
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend

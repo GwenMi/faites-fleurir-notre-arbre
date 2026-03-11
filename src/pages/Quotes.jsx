@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import AdminGuard from "@/components/admin/AdminGuard";
 import {
   ChevronLeft, Loader2, FileText, Plus, Trash2, Send, Download, Eye,
   X, CheckCircle2, Clock, XCircle, Edit3, Search, Package
