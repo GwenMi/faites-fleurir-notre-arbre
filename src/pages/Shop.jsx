@@ -305,41 +305,41 @@ export default function Shop() {
             <StepKitOptions
               selection={selection}
               onUpdate={updateSelection}
-              onNext={() => setStep(2)}
-              onBack={() => setStep(0)}
+              onNext={() => setStep(3)}
+              onBack={() => setStep(1)}
               PRICING={PRICING}
             />
           )}
-          {step === 2 && (
+          {step === 3 && (
             <StepPackSelector
               selection={selection}
               onUpdate={updateSelection}
               pricing={pricing}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <StepAuthentication
               onNext={() => setStep(4)}
               onBack={() => setStep(2)}
             />
           )}
           {step === 4 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepAuthentication
               onNext={() => setStep(5)}
               onBack={() => setStep(3)}
             />
           )}
           {step === 5 && (
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
+              onNext={() => setStep(6)}
+              onBack={() => setStep(4)}
+            />
+          )}
+          {step === 6 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
-              onBack={() => setStep(4)}
+              onBack={() => setStep(5)}
             />
           )}
         </div>
