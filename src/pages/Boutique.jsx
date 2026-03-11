@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, ShoppingBag, Truck } from "lucide-react";
+import { Loader2, ShoppingBag, Truck, ShoppingCart } from "lucide-react";
 import ProductCard from "@/components/shop/ProductCard";
 import OrderModal from "@/components/shop/OrderModal";
 import ProductReviews from "@/components/shop/ProductReviews";
 import GuestPacksSection from "@/components/shop/GuestPacksSection";
+import CartDrawer from "@/components/shop/CartDrawer";
+import CartCheckoutModal from "@/components/shop/CartCheckoutModal";
 
 const DEFAULT_PRODUCTS = [
   {

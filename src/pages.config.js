@@ -47,9 +47,11 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AccountSettings from './pages/AccountSettings';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import AdminOrdersDetail from './pages/AdminOrdersDetail';
+import AdminReviews from './pages/AdminReviews';
 import Boutique from './pages/Boutique';
 import CGU from './pages/CGU';
 import CGV from './pages/CGV';
@@ -62,24 +64,24 @@ import CreateMyEvent from './pages/CreateMyEvent';
 import EventPublic from './pages/EventPublic';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
+import MyOrders from './pages/MyOrders';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderTracking from './pages/OrderTracking';
+import Products from './pages/Products';
 import Quotes from './pages/Quotes';
 import ReviewOrder from './pages/ReviewOrder';
 import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
-import Products from './pages/Products';
-import AccountSettings from './pages/AccountSettings';
-import MyOrders from './pages/MyOrders';
-import AdminReviews from './pages/AdminReviews';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AccountSettings": AccountSettings,
     "AdminDashboard": AdminDashboard,
     "AdminOrders": AdminOrders,
     "AdminOrdersDetail": AdminOrdersDetail,
+    "AdminReviews": AdminReviews,
     "Boutique": Boutique,
     "CGU": CGU,
     "CGV": CGV,
@@ -92,17 +94,15 @@ export const PAGES = {
     "EventPublic": EventPublic,
     "Home": Home,
     "MentionsLegales": MentionsLegales,
+    "MyOrders": MyOrders,
     "OrderConfirmation": OrderConfirmation,
     "OrderTracking": OrderTracking,
+    "Products": Products,
     "Quotes": Quotes,
     "ReviewOrder": ReviewOrder,
     "Shop": Shop,
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
-    "Products": Products,
-    "AccountSettings": AccountSettings,
-    "MyOrders": MyOrders,
-    "AdminReviews": AdminReviews,
 }
 
 export const pagesConfig = {
