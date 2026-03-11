@@ -268,6 +268,9 @@ export default function OrderConfirmation() {
           </div>
         </div>
 
+        {/* Parrainage */}
+        <ReferralBlock />
+
         {/* CTA */}
         <div className="text-center">
           <p className="font-sans-clean text-gray-600 mb-4">Suivre votre commande :</p>
