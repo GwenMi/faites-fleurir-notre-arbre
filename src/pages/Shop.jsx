@@ -97,10 +97,10 @@ function ShopHomePage({ onStart }) {
           <h2 className="font-serif-shop text-3xl font-bold text-gray-800 text-center mb-10">Pourquoi choisir Fleurs de fête ?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              "🌱 Graines 100% françaises et naturelles",
+              "📦 Format léger avec pastille de terre compressée",
               "♻️ Emballage éco-responsable",
-              "✍️ Personnalisation avec vos prénoms & date",
-              "🚚 Livraison soignée à domicile",
+              "✍️ Personnalisation : prénoms, date & logo",
+              "🚚 Livraison soignée",
               "🌸 Compatible mariage, baptême, anniversaire…",
               "🤝 Service client disponible et réactif",
             ].map(item => (
