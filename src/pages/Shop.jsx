@@ -53,7 +53,7 @@ function ShopHomePage({ onStart }) {
 
       {/* Hero */}
       <div className="bg-gradient-to-b from-rose-50 to-white px-6 md:px-12 py-16 md:py-24 text-center">
-        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">Cadeaux d'invités naturels & poétiques</p>
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">Cadeaux naturels & poétiques</p>
         <h1 className="font-serif-shop text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
           Des pots de graines<br />
           <span className="text-rose-400">qui fleurissent</span>
