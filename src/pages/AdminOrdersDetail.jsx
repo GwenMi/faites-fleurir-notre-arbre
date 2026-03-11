@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
+import AdminGuard from "@/components/admin/AdminGuard";
 
 const CARRIERS = [
   "La Poste / Colissimo", "Chronopost", "DHL", "UPS", "DPD", "Mondial Relay"
