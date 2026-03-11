@@ -54,6 +54,11 @@ export default function RSVPResponseList({ responses, questions, guests, eventId
 
   return (
     <div>
+      {/* Badge temps réel */}
+      <div className="flex items-center gap-1.5 mb-3">
+        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+        <span className="text-xs text-gray-400">Mis à jour en temps réel</span>
+      </div>
       <div className="flex flex-wrap gap-2 mb-4">
         <div className="flex-1 min-w-[160px] relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
