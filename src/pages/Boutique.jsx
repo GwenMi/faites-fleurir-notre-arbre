@@ -114,7 +114,7 @@ export default function Boutique() {
               </span>
             )}
           </button>
-          <a href={createPageUrl("AdminDashboard")}
+          <a href={createPageUrl("ClientDashboard")}
             className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
             Mon espace
           </a>
