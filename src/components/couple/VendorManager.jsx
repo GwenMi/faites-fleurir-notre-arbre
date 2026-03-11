@@ -106,6 +106,42 @@ export default function VendorManager({ event }) {
     setVendors(prev => prev.map(v => v.id === vendorId ? { ...v, deposit_paid: newTotal } : v));
   };
 
+  const getVendorTab = (vendorId) => activeVendorTab[vendorId] || "info";
+  const setVendorTab = (vendorId, tab) => setActiveVendorTab(prev => ({ ...prev, [vendorId]: tab }));
+
+  const loadVendorDocs = async (vendorId) => {
+    if (vendorDocs[vendorId]) return;
+    const docs = await base44.entities.VendorDocument.filter({ vendor_id: vendorId }, "-created_date", 50);
+    setVendorDocs(prev => ({ ...prev, [vendorId]: docs || [] }));
+  };
+
+  const handleUploadDoc = async (vendorId) => {
+    if (!docFile || !docTitle.trim()) { toast.error("Titre et fichier requis"); return; }
+    setUploadingFor(vendorId);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file: docFile });
+    const vendor = vendors.find(v => v.id === vendorId);
+    await base44.entities.VendorDocument.create({
+      event_id: event.id,
+      vendor_id: vendorId,
+      vendor_name: vendor?.name || "",
+      type: docType,
+      title: docTitle.trim(),
+      file_url,
+      file_name: docFile.name,
+    });
+    toast.success("Document ajouté ✓");
+    setDocFile(null); setDocTitle(""); setDocType("contrat");
+    const docs = await base44.entities.VendorDocument.filter({ vendor_id: vendorId }, "-created_date", 50);
+    setVendorDocs(prev => ({ ...prev, [vendorId]: docs || [] }));
+    setUploadingFor(null);
+  };
+
+  const handleDeleteDoc = async (vendorId, docId) => {
+    await base44.entities.VendorDocument.delete(docId);
+    setVendorDocs(prev => ({ ...prev, [vendorId]: prev[vendorId].filter(d => d.id !== docId) }));
+    toast.success("Document supprimé");
+  };
+
   const totalContract = vendors.reduce((s, v) => s + (v.contract_amount || 0), 0);
   const totalPaid = vendors.reduce((s, v) => s + (v.deposit_paid || 0), 0);
   const totalRemaining = totalContract - totalPaid;
