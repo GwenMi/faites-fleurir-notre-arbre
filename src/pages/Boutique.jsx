@@ -149,6 +149,7 @@ export default function Boutique() {
                   <ProductCard
                     product={product}
                     onOrder={setSelectedProduct}
+                    onAdd={() => { addToCart(product); setShowCart(true); }}
                     reviews={reviews}
                   />
                   <div className="px-1">
