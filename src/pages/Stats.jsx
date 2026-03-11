@@ -190,5 +190,6 @@ export default function Stats() {
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }

@@ -648,5 +648,6 @@ contact@fleursenfete.com`,
         )}
       </div>
     </div>
+    </AdminGuard>
   );
 }
