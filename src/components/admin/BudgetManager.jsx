@@ -254,18 +254,37 @@ export default function BudgetManager({ event }) {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              {/* Pie chart : répartition par catégorie */}
+              {/* Pie charts : répartition par catégorie */}
               {pieData.length > 1 && (
-                <div>
-                  <p className="text-xs text-gray-400 mb-2">Répartition du budget par catégorie</p>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <PieChart>
-                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }) => `${name.split(" ")[0]} ${Math.round(percent * 100)}%`} labelLine={false}>
-                        {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                      </Pie>
-                      <Tooltip formatter={v => `${v.toLocaleString("fr-FR")} €`} />
-                    </PieChart>
-                  </ResponsiveContainer>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-xs text-gray-400 mb-2 text-center">Budget prévu par catégorie</p>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75}
+                          label={({ name, percent }) => percent > 0.04 ? `${name.split(" ")[0]} ${Math.round(percent * 100)}%` : null}
+                          labelLine={false}>
+                          {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                        </Pie>
+                        <Tooltip formatter={v => `${v.toLocaleString("fr-FR")} €`} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  {pieDataActual.length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-2 text-center">Dépenses réelles par catégorie</p>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <PieChart>
+                          <Pie data={pieDataActual} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75}
+                            label={({ name, percent }) => percent > 0.04 ? `${name.split(" ")[0]} ${Math.round(percent * 100)}%` : null}
+                            labelLine={false}>
+                            {pieDataActual.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                          </Pie>
+                          <Tooltip formatter={v => `${v.toLocaleString("fr-FR")} €`} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

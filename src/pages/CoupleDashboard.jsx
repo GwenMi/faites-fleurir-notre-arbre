@@ -43,6 +43,7 @@ const TABS = [
   { key: "budget", label: "Budget", icon: PiggyBank },
   { key: "wishlist", label: "Liste cadeaux", icon: Gift },
   { key: "faq", label: "FAQ", icon: HelpCircle },
+  { key: "tasks", label: "Tâches", icon: ClipboardList },
   { key: "checklist", label: "Checklist", icon: ClipboardCheck },
   { key: "thankyou", label: "Remerciements", icon: HandHeart },
   { key: "theme", label: "Thème", icon: Paintbrush },
@@ -135,7 +136,7 @@ export default function CoupleDashboard() {
     );
   }
 
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
