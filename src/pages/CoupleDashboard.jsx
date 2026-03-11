@@ -213,7 +213,23 @@ export default function CoupleDashboard() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ActiveTab event={event} />
+        {isTabLocked ? (
+          <div className="text-center py-20 px-6">
+            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-5">
+              <Lock className="w-7 h-7 text-rose-300" />
+            </div>
+            <h2 className="font-serif-elegant text-2xl font-bold text-gray-700 mb-2">Fonctionnalité Premium</h2>
+            <p className="font-sans-clean text-sm text-gray-500 mb-6 max-w-sm mx-auto">
+              <strong>{currentTab?.label}</strong> est disponible avec la formule <strong>Complète à 39,99 €</strong>. Passez à la version premium pour accéder à toutes les fonctionnalités.
+            </p>
+            <a href="mailto:contact@fleursdefete.fr?subject=Upgrade Premium"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-sans-clean font-semibold text-sm hover:opacity-90 transition shadow">
+              <Sparkles className="w-4 h-4" /> Passer à la formule Complète
+            </a>
+          </div>
+        ) : (
+          <ActiveTab event={event} />
+        )}
       </div>
     </div>
   );
