@@ -10,7 +10,17 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Kit & options", "Pack invités", "Votre compte", "Vos informations", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Votre compte", "Vos informations", "Récapitulatif"];
+
+const EVENT_TYPES = [
+  { id: "mariage", label: "💍 Mariage", hasSite: true },
+  { id: "bapteme", label: "👶 Baptême", hasSite: true },
+  { id: "communion", label: "✨ Communion", hasSite: true },
+  { id: "anniversaire", label: "🎂 Anniversaire", hasSite: true },
+  { id: "entreprise", label: "🏢 Entreprise", hasSite: false },
+  { id: "chambre_hotes", label: "🏡 Chambre d'hôtes", hasSite: false },
+  { id: "autre", label: "🎉 Autre", hasSite: false },
+];
 
 export const PRICING = {
   KIT_COMPOSE: 2.90,
