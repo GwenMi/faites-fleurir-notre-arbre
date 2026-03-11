@@ -111,61 +111,75 @@ export default function EventPublic() {
         </div>
       </div>
 
-      {/* Couple Story */}
-      {event.show_couple_story && event.couple_story && (
+      {/* Couple Story — Premium */}
+      {isPremium && event.show_couple_story && event.couple_story && (
         <div className="max-w-2xl mx-auto px-4">
           <CoupleStorySection event={event} primaryColor={primaryColor} />
         </div>
       )}
 
-      {/* Day Schedule Section */}
-      <div className="max-w-2xl mx-auto px-4">
-        <DayScheduleSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Day Schedule Section — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto px-4">
+          <DayScheduleSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* RSVP Section */}
-      <div className="max-w-2xl mx-auto px-4">
-        <RSVPSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* RSVP Section — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto px-4">
+          <RSVPSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* Best of Section */}
-      <div className="max-w-2xl mx-auto">
-        <BestOfSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Best of Section — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto">
+          <BestOfSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* Photo Gallery */}
-      <div className="max-w-2xl mx-auto">
-        <PhotoGallery event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Photo Gallery — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto">
+          <PhotoGallery event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* Wishlist Section */}
-      <div className="max-w-2xl mx-auto">
-        <WishlistSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Wishlist Section — Premium */}
+      {isPremium && event.show_wishlist !== false && (
+        <div className="max-w-2xl mx-auto">
+          <WishlistSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* Seating Plan Section */}
-      <div className="max-w-2xl mx-auto">
-        <SeatingPlanSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Seating Plan Section — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto">
+          <SeatingPlanSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
-      {/* FAQ Section */}
-      {event.show_faq !== false && (
+      {/* FAQ Section — Premium */}
+      {isPremium && event.show_faq !== false && (
         <div className="max-w-2xl mx-auto">
           <FAQSection event={event} primaryColor={primaryColor} />
         </div>
       )}
 
-      {/* Map Section */}
-      {event.show_map && event.map_address && (
+      {/* Map Section — Premium */}
+      {isPremium && event.show_map && event.map_address && (
         <div className="max-w-2xl mx-auto px-4">
           <MapSection event={event} primaryColor={primaryColor} />
         </div>
       )}
 
-      {/* Guest Photos Section */}
-      <div className="max-w-2xl mx-auto">
-        <GuestPhotoUploadSection event={event} primaryColor={primaryColor} />
-      </div>
+      {/* Guest Photos Section — Premium */}
+      {isPremium && (
+        <div className="max-w-2xl mx-auto">
+          <GuestPhotoUploadSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
 
       {/* Flower Challenge Section */}
       <div className="max-w-2xl mx-auto px-4 pb-16">
