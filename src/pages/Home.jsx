@@ -174,8 +174,8 @@ export default function Home() {
               Le plus choisi ✨
             </span>
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-rose-400 mb-3">Complet</p>
-            <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">19 €</p>
-            <p className="font-sans-clean text-sm text-gray-400 mb-1">Par événement</p>
+            <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">39,99 €</p>
+            <p className="font-sans-clean text-sm text-gray-400 mb-1">Par événement · paiement unique</p>
             <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Site disponible uniquement avec une commande de pots</p>
             <ul className="space-y-3 mb-8">
               {FEATURES_PREMIUM.map(f => (
