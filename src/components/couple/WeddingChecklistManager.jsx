@@ -146,6 +146,28 @@ export default function WeddingChecklistManager({ event }) {
     if (!current.includes(taskKey)) toast.success("Tâche validée ✓");
   };
 
+  const sendReminderEmail = async () => {
+    setSendingReminder(true);
+    const done = record?.completed_tasks?.length || 0;
+    const percent = Math.round((done / TOTAL) * 100);
+    const pending = STEPS.flatMap(s =>
+      s.tasks.filter(t => !record?.completed_tasks?.includes(t.key))
+              .map(t => `${s.emoji} [${s.label}] ${t.label}`)
+    ).slice(0, 15);
+
+    const weddingDate = event.event_date
+      ? new Date(event.event_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+      : "?";
+
+    await base44.integrations.Core.SendEmail({
+      to: event.created_by || "",
+      subject: `💍 Rappel checklist mariage — ${percent}% complété`,
+      body: `Bonjour,\n\nVoici un rappel de votre checklist mariage pour ${event.couple_names} (${weddingDate}).\n\nAvancement : ${done}/${TOTAL} tâches (${percent}%)\n\nTâches restantes :\n${pending.map(t => `• ${t}`).join("\n")}\n\nConnectez-vous à votre espace mariés pour mettre à jour vos tâches.\n\nÀ bientôt,\nL'équipe Fleurs de fête 💐`,
+    });
+    toast.success("Email de rappel envoyé ✓");
+    setSendingReminder(false);
+  };
+
   if (loading) return (
     <div className="flex justify-center py-20">
       <Loader2 className="w-6 h-6 animate-spin text-rose-400" />
