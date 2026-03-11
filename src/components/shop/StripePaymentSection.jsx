@@ -33,40 +33,50 @@ export default function StripePaymentSection({
     const cardElement = elements.getElement(CardElement);
 
     try {
-      // Créer un Payment Intent via l'API Stripe directement
-      // Note: En production, cela devrait passer par un backend sécurisé
-      // Pour cette démo, on utilise la méthode confirmCardPayment qui gère l'intent
-      const clientSecret = null;
-      const intentId = null;
+      // Créer le Payment Intent via le backend sécurisé
+      const response = await base44.functions.invoke("createPaymentIntent", {
+        amount: amountToPay,
+        orderId: order.id,
+        customerEmail: order.customer_email,
+        customerName: order.customer_name,
+      });
 
-      // Créer le Payment Method et traiter le paiement
-      const paymentMethodResult = await stripe.createPaymentMethod({
-        type: "card",
-        card: cardElement,
-        billing_details: {
-          email: order.customer_email,
-          name: order.customer_name,
+      const { clientSecret, paymentIntentId } = response.data;
+
+      // Confirmer le paiement avec Stripe
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            email: order.customer_email,
+            name: order.customer_name,
+          },
         },
       });
 
-      if (paymentMethodResult.error) {
-        setError(paymentMethodResult.error.message);
+      if (result.error) {
+        setError(result.error.message);
         setLoading(false);
         return;
       }
 
-      // Sauvegarder le paiement dans la DB avec un ID unique
-      const paymentId = `pi_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      if (result.paymentIntent.status !== "succeeded") {
+        setError("Le paiement n'a pas pu être finalisé. Veuillez réessayer.");
+        setLoading(false);
+        return;
+      }
+
+      // Sauvegarder le paiement dans la DB
       await base44.entities.StripePayment.create({
         order_id: order.id,
         customer_email: order.customer_email,
         customer_name: order.customer_name,
-        stripe_payment_intent_id: paymentId,
-        amount_cents: amountCents,
+        stripe_payment_intent_id: result.paymentIntent.id,
+        amount_cents: Math.round(amountToPay * 100),
         payment_type: paymentOption,
         status: "succeeded",
-        receipt_url: "",
-        charge_id: paymentMethodResult.paymentMethod.id,
+        receipt_url: result.paymentIntent.charges?.data?.[0]?.receipt_url || "",
+        charge_id: result.paymentIntent.charges?.data?.[0]?.id || "",
       });
 
       // Mettre à jour le statut de paiement de la commande
