@@ -285,6 +285,7 @@ export default function Quotes() {
   );
 
   return (
+    <AdminGuard allowedRoles={["admin", "manager"]}>
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-4 py-4 sticky top-0 z-10">

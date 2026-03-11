@@ -266,6 +266,7 @@ contact@fleursenfete.com`,
   };
 
   return (
+    <AdminGuard allowedRoles={["admin", "manager"]}>
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       <style>{`
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
