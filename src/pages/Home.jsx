@@ -14,11 +14,18 @@ const FEATURES_BASIC = [
 
 const FEATURES_PREMIUM = [
   "Tout ce qui est inclus dans Essentiel",
-  "Album photo du mariage",
-  "Likes & commentaires",
-  "Actualités des mariés",
-  "Sondages RSVP & menus",
-  "Templates premium & couleurs",
+  "RSVP complet avec choix de menus",
+  "Programme de la journée",
+  "Album photo & galerie mariage",
+  "Actualités & posts des mariés",
+  "Livre d'or avec photos",
+  "Liste de cadeaux / cagnotte",
+  "Plan de table interactif",
+  "Histoire du couple",
+  "Carte & plan d'accès",
+  "FAQ personnalisable",
+  "Thème, couleurs & polices personnalisés",
+  "Espace couple complet (budget, prestataires, tâches...)",
 ];
 
 export default function Home() {
