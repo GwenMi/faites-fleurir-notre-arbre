@@ -5,27 +5,26 @@ import { createPageUrl } from "@/utils";
 import { ChevronRight, Sparkles, Check } from "lucide-react";
 
 const FEATURES_BASIC = [
-  "Page événement personnalisée",
-  "Défi fleur & galerie photos",
-  "QR code téléchargeable",
-  "Templates gratuits",
-  "Compteur de fleurs",
+  "Défi fleur & galerie photos interactive",
+  "QR code sur vos pots de fleurs",
+  "Compteur de fleurs en temps réel",
+  "Accès gratuit (sans site personnalisé)",
 ];
 
 const FEATURES_PREMIUM = [
-  "Tout ce qui est inclus dans Essentiel",
-  "RSVP complet avec choix de menus",
-  "Programme de la journée",
-  "Album photo & galerie mariage",
-  "Actualités & posts des mariés",
+  "Tout ce qui est inclus dans Gratuit +",
+  "Site événement personnalisé complet",
+  "RSVP avec choix de menus (mariages, baptêmes, communions)",
+  "Programme de la journée & timeline",
+  "Album photo & galerie collaborative",
   "Livre d'or avec photos",
   "Liste de cadeaux / cagnotte",
   "Plan de table interactif",
-  "Histoire du couple",
+  "Histoire du couple (mariages)",
   "Carte & plan d'accès",
   "FAQ personnalisable",
   "Thème, couleurs & polices personnalisés",
-  "Espace couple complet (budget, prestataires, tâches...)",
+  "Espace admin complet (budget, prestataires, tâches...)",
 ];
 
 export default function Home() {
