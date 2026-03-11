@@ -4,6 +4,7 @@ import WizardProgress from "@/components/shop/WizardProgress";
 import StepKitOptions from "@/components/shop/StepKitOptions";
 import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomization from "@/components/shop/StepCustomization";
+import StepEventSlug from "@/components/shop/StepEventSlug";
 import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
@@ -11,7 +12,7 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Votre compte", "Vos informations", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Votre compte", "Vos informations", "Récapitulatif"];
 
 const EVENT_TYPES = [
   { id: "mariage", label: "💍 Mariage", hasSite: true },
@@ -28,6 +29,13 @@ export const PRICING = {
   KIT_PRET: 4.90,
   SAC_CADEAU: 0.40,
 };
+
+const SEEDS = [
+  { id: "tournesol_nain", label: "🌻 Tournesol nain", description: "Compact et joyeux" },
+  { id: "mignonnette", label: "🌸 Mignonnette", description: "Parfumé et délicat" },
+  { id: "coquelicot", label: "🌷 Coquelicot", description: "Rouge éclatant" },
+  { id: "bleuet", label: "💙 Bleuet", description: "Bleu profond" },
+];
 
 function ShopHomePage({ onStart }) {
   return (
@@ -267,6 +275,7 @@ export default function Shop() {
   const [selection, setSelection] = useState({
     eventType: null,
     kitType: null,
+    seedType: "tournesol_nain",
     sacCadeau: false,
     packSize: null,
     packQty: 1,
@@ -326,29 +335,38 @@ export default function Shop() {
               onUpdate={updateSelection}
               onNext={() => setStep(5)}
               onBack={() => setStep(3)}
+              seeds={SEEDS}
             />
           )}
           {step === 5 && (
-            <StepAuthentication
+            <StepEventSlug
+              selection={selection}
+              onUpdate={updateSelection}
               onNext={() => setStep(6)}
               onBack={() => setStep(4)}
             />
           )}
           {step === 6 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepAuthentication
               onNext={() => setStep(7)}
               onBack={() => setStep(5)}
             />
           )}
           {step === 7 && (
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
+              onNext={() => setStep(8)}
+              onBack={() => setStep(6)}
+            />
+          )}
+          {step === 8 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
-              onBack={() => setStep(6)}
+              onBack={() => setStep(7)}
             />
           )}
         </div>
