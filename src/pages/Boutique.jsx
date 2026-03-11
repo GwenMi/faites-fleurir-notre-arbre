@@ -8,6 +8,8 @@ import ProductReviews from "@/components/shop/ProductReviews";
 import GuestPacksSection from "@/components/shop/GuestPacksSection";
 import CartDrawer from "@/components/shop/CartDrawer";
 import CartCheckoutModal from "@/components/shop/CartCheckoutModal";
+import ReviewsList from "@/components/review/ReviewsList";
+import ReviewForm from "@/components/review/ReviewForm";
 
 const DEFAULT_PRODUCTS = [
   {
@@ -161,6 +163,28 @@ export default function Boutique() {
 
             {/* Guest Packs Section */}
             <GuestPacksSection onSelectPack={setSelectedPack} />
+
+            {/* Reviews Section */}
+            <div className="mt-12">
+              <h2 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">
+                Avis vérifiés
+              </h2>
+              <p className="font-sans-clean text-sm text-gray-500 mb-6">
+                Les clients partagent leur expérience après avoir reçu et planté leurs pots
+              </p>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                  <ReviewsList limit={10} />
+                </div>
+                <div className="bg-white rounded-3xl border-2 border-rose-100 shadow-sm p-6 h-fit">
+                  <h3 className="font-serif-elegant text-xl font-bold text-gray-800 mb-1">Partager votre avis</h3>
+                  <p className="font-sans-clean text-xs text-gray-500 mb-4">
+                    Vous avez reçu un kit ? Dites-nous ce que vous en pensez !
+                  </p>
+                  <ReviewForm productId={products[0]?.id} productName="Kit Fleurs" />
+                </div>
+              </div>
+            </div>
 
             {/* Livraison section */}
             <div className="mt-12 bg-white rounded-3xl border-2 border-rose-100 shadow-sm p-8">
