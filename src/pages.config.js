@@ -62,19 +62,19 @@ import Contact from './pages/Contact';
 import CoupleDashboard from './pages/CoupleDashboard';
 import CreateMyEvent from './pages/CreateMyEvent';
 import EventPublic from './pages/EventPublic';
+import Forecast from './pages/Forecast';
 import Home from './pages/Home';
 import MentionsLegales from './pages/MentionsLegales';
 import MyOrders from './pages/MyOrders';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderTracking from './pages/OrderTracking';
+import Picking from './pages/Picking';
 import Products from './pages/Products';
 import Quotes from './pages/Quotes';
 import ReviewOrder from './pages/ReviewOrder';
 import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
-import Picking from './pages/Picking';
-import Forecast from './pages/Forecast';
 import __Layout from './Layout.jsx';
 
 
@@ -94,19 +94,19 @@ export const PAGES = {
     "CoupleDashboard": CoupleDashboard,
     "CreateMyEvent": CreateMyEvent,
     "EventPublic": EventPublic,
+    "Forecast": Forecast,
     "Home": Home,
     "MentionsLegales": MentionsLegales,
     "MyOrders": MyOrders,
     "OrderConfirmation": OrderConfirmation,
     "OrderTracking": OrderTracking,
+    "Picking": Picking,
     "Products": Products,
     "Quotes": Quotes,
     "ReviewOrder": ReviewOrder,
     "Shop": Shop,
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
-    "Picking": Picking,
-    "Forecast": Forecast,
 }
 
 export const pagesConfig = {

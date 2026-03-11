@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { CheckCircle, Download, Eye, Package, Calendar, MapPin, ArrowRight } from "lucide-react";
+import { CheckCircle, Download, Eye, Package, Calendar, MapPin, ArrowRight, Copy, Check as CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
 
