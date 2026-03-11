@@ -9,9 +9,9 @@ import StripePaymentSection from "./StripePaymentSection";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
 import { notifyAdminNewOrder, notifyAdminPaymentReceived, notifyCustomerPaymentReminder } from "@/components/admin/AdminNotifier";
 
-const stripePromise = loadStripe(
-  process.env.REACT_APP_STRIPE_PUBLIC_KEY || "pk_test_placeholder"
-);
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
+  : null;
 
 const RIBBON_COLORS = ["Blanc", "Ivoire", "Rose poudré", "Bordeaux", "Vert sauge", "Bleu ardoise", "Doré", "Noir"];
 const SEED_TYPES = ["Lavande", "Tournesol", "Marguerite", "Coquelicot", "Bleuet", "Forget-me-not"];
