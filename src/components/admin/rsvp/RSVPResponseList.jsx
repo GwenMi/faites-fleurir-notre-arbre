@@ -15,15 +15,30 @@ export default function RSVPResponseList({ responses, questions, guests, eventId
   });
 
   const exportCSV = () => {
-    const headers = ["Nom", "Email", "Présent", "Nb personnes", "Notes", ...questions.map(q => q.question)];
-    const rows = responses.map(r => [
-      r.guest_name, r.email || "", r.attending ? "Oui" : "Non", r.party_size || 1, r.notes || "",
-      ...questions.map(q => (r.answers || {})[q.id] || "")
-    ]);
+    const headers = [
+      "Nom", "Email", "Présent", "Nb personnes", "Allergies / intolérances", "Notes",
+      "Entrée", "Plat", "Dessert",
+      ...questions.map(q => q.question)
+    ];
+    const rows = responses.map(r => {
+      const firstMeal = (r.meal_choices || [])[0] || {};
+      return [
+        r.guest_name,
+        r.email || "",
+        r.attending ? "Oui" : "Non",
+        r.party_size || 1,
+        r.allergies || "",
+        r.notes || "",
+        firstMeal.starter || "",
+        firstMeal.main || "",
+        firstMeal.dessert || "",
+        ...questions.map(q => (r.answers || {})[q.id] || "")
+      ];
+    });
     const csv = [headers, ...rows].map(row => row.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "invites-rsvp.csv"; a.click();
+    const a = document.createElement("a"); a.href = url; a.download = `rsvp-${new Date().toLocaleDateString("fr-FR").replace(/\//g, "-")}.csv`; a.click();
   };
 
   const addToGuestList = async (response) => {
