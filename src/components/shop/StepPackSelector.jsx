@@ -67,6 +67,39 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
         </div>
       )}
 
+      {/* Sac cadeau */}
+      {selection.packSize && (
+        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl mt-0.5">🎀</span>
+              <div>
+                <p className="font-semibold text-gray-900">Sac cadeau élégant</p>
+                <p className="text-sm text-gray-500 mt-0.5 leading-relaxed">
+                  Petit sac cadeau avec poignée. Le pot est placé dans le sac pour créer un véritable souvenir prêt à offrir.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-2 flex-shrink-0">
+              <span className="text-sm text-rose-600 font-semibold">+{(PRICING.SAC_CADEAU * selection.packSize).toFixed(2)}€</span>
+              <button
+                onClick={() => onUpdate({ sacCadeau: !selection.sacCadeau })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  selection.sacCadeau ? "bg-rose-400" : "bg-gray-200"
+                }`}
+              >
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  selection.sacCadeau ? "translate-x-6" : "translate-x-1"
+                }`} />
+              </button>
+            </div>
+          </div>
+          {selection.sacCadeau && (
+            <p className="text-xs text-gray-500 mt-3">Pour vos {selection.packSize} invités</p>
+          )}
+        </div>
+      )}
+
       {/* Price summary */}
       {selection.packSize && (
         <div className="bg-rose-50 rounded-2xl p-6 space-y-2">
