@@ -51,6 +51,7 @@ export default function EventPublic() {
     </div>
   );
 
+  const isPremium = event.plan === "premium";
   const primaryColor = event.primary_color || "#f43f5e";
   const secondaryColor = event.secondary_color || "#86efac";
   const fontHeading = event.font_heading || "Cormorant Garamond";
