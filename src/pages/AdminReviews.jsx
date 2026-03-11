@@ -66,20 +66,8 @@ export default function AdminReviews() {
     );
   }
 
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Accès réservé aux administrateurs.</p>
-          <a href={createPageUrl("Home")} className="text-rose-600 hover:text-rose-700">
-            Retourner à l'accueil
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   return (
+    <AdminGuard allowedRoles={["admin", "manager"]}>
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
