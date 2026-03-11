@@ -4,31 +4,18 @@ import { createPageUrl } from "@/utils";
 import { Star, Check, X, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AdminGuard from "@/components/admin/AdminGuard";
 
 export default function AdminReviews() {
-  const [user, setUser] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("pending"); // "pending" | "approved" | "all"
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        // Vérifier que l'utilisateur est admin
-        const currentUser = await base44.auth.me();
-        if (!currentUser || currentUser.role !== "admin") {
-          base44.auth.redirectToLogin(createPageUrl("Home"));
-          return;
-        }
-
-        setUser(currentUser);
-
-        // Charger tous les avis
-        const allReviews = await base44.entities.Review.list('-created_date', 100);
-        setReviews(allReviews);
-      } finally {
-        setLoading(false);
-      }
+      const allReviews = await base44.entities.Review.list('-created_date', 100);
+      setReviews(allReviews);
+      setLoading(false);
     };
     loadData();
 
