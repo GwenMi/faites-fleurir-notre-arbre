@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
 import RSVPTracker from "@/components/couple/RSVPTracker";
+import RSVPManager from "@/components/admin/rsvp/RSVPManager";
 import PhotoModerationPanel from "@/components/couple/PhotoModerationPanel";
 import WishlistManager from "@/components/couple/WishlistManager";
 import FAQManager from "@/components/couple/FAQManager";
