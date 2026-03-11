@@ -214,16 +214,20 @@ export default function WeddingChecklistManager({ event }) {
       </div>
 
       {/* Steps */}
-      {STEPS.map(step => {
+      {STEPS.map((step, stepIdx) => {
         const stepDone = step.tasks.filter(t => record?.completed_tasks?.includes(t.key)).length;
         const allDone = stepDone === step.tasks.length;
+        const status = getStepStatus(STEP_MONTHS_BEFORE[stepIdx], event.event_date);
+        const isActive = status === "current" && !allDone;
         return (
-          <div key={step.label} className={`rounded-2xl border ${step.border} ${step.bg} overflow-hidden`}>
+          <div key={step.label} className={`rounded-2xl border ${step.border} ${step.bg} overflow-hidden ${isActive ? "ring-2 ring-offset-1" : ""}`}
+            style={isActive ? { ringColor: step.color } : {}}>
             {/* Step header */}
             <div className="px-5 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-lg">{step.emoji}</span>
                 <h4 className="font-semibold text-sm text-gray-700">{step.label}</h4>
+                {isActive && <span className="text-xs px-2 py-0.5 rounded-full text-white font-semibold" style={{ background: step.color }}>En cours</span>}
               </div>
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white border"
                 style={{ color: step.color, borderColor: step.color + "44" }}>
