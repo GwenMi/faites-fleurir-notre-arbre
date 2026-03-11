@@ -52,6 +52,10 @@ export default function Home() {
             className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition hidden sm:block">
             Boutique 🌸
           </a>
+          <a href={createPageUrl("ClientDashboard")}
+            className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition hidden sm:block">
+            Mon espace
+          </a>
           <a href={createPageUrl("Boutique")}
             className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
             Créer mon événement
