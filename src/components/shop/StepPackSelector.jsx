@@ -107,6 +107,12 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
             <span>{pricing.totalPots} pots × {pricing.pricePerPot.toFixed(2)}€</span>
             <span>{pricing.subtotal.toFixed(2)}€</span>
           </div>
+          {selection.sacCadeau && (
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Sacs cadeaux ({selection.packSize}) × {PRICING.SAC_CADEAU.toFixed(2)}€</span>
+              <span>{(PRICING.SAC_CADEAU * selection.packSize).toFixed(2)}€</span>
+            </div>
+          )}
           {pricing.discount > 0 && (
             <div className="flex justify-between text-sm text-green-600">
               <span>Réduction 10%</span>
@@ -115,7 +121,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
           )}
           <div className="flex justify-between font-bold text-lg border-t border-rose-200 pt-3 mt-1">
             <span>Total</span>
-            <span className="text-rose-600">{pricing.total.toFixed(2)}€</span>
+            <span className="text-rose-600">{(pricing.total + (selection.sacCadeau ? PRICING.SAC_CADEAU * selection.packSize : 0)).toFixed(2)}€</span>
           </div>
         </div>
       )}
