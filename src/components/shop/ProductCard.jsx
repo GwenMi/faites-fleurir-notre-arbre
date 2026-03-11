@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-export default function ProductCard({ product, onAdd, compact = false }) {
+export default function ProductCard({ product, onAdd, onOrder, compact = false }) {
   if (compact) {
     return (
       <div className="bg-white rounded-lg p-4 border border-gray-200 space-y-3">
