@@ -212,6 +212,26 @@ export default function Boutique() {
       {selectedPack && (
         <OrderModal guestPack={selectedPack} onClose={() => setSelectedPack(null)} />
       )}
+
+      {/* Cart drawer */}
+      {showCart && (
+        <CartDrawer
+          cart={cart}
+          onUpdateQty={updateQty}
+          onRemove={removeItem}
+          onClose={() => setShowCart(false)}
+          onCheckout={() => { setShowCart(false); setShowCheckout(true); }}
+        />
+      )}
+
+      {/* Checkout modal */}
+      {showCheckout && (
+        <CartCheckoutModal
+          cart={cart}
+          onClose={() => setShowCheckout(false)}
+          onOrderComplete={() => setCart([])}
+        />
+      )}
     </div>
   );
 }
