@@ -79,7 +79,7 @@ function ShopHomePage({ onStart }) {
         </h1>
         <div className="gold-line-shop max-w-xs mx-auto mb-6" />
         <p className="font-sans-shop text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Offrez à vos invités un souvenir vivant : un petit pot de fleurs à faire pousser chez eux. Personnalisé, éco-responsable, inoubliable. Faites durée la fête.
+          Offrez à vos invités un souvenir vivant : un petit pot de fleurs à faire pousser chez eux. Personnalisé, éco-responsable, inoubliable.
         </p>
         <button onClick={onStart}
           className="inline-flex items-center gap-2 py-4 px-8 rounded-full font-sans-shop font-bold text-white shadow-lg bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
