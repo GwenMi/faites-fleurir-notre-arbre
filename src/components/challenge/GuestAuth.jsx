@@ -47,7 +47,6 @@ export default function GuestAuth({ eventId, onAuthenticated }) {
       return;
     }
     setLoading(true);
-    // Check if email already exists for this event
     const existing = await base44.entities.GuestSession.filter({ event_id: eventId, email: form.email.trim().toLowerCase() });
     if (existing && existing.length > 0) {
       toast.error("Cet email est déjà utilisé. Connectez-vous.");
@@ -56,15 +55,14 @@ export default function GuestAuth({ eventId, onAuthenticated }) {
       return;
     }
     const hash = simpleHash(form.password);
-    const guest = await base44.entities.GuestSession.create({
+    await base44.entities.GuestSession.create({
       event_id: eventId,
       pseudo: form.pseudo.trim(),
       email: form.email.trim().toLowerCase(),
       password_hash: hash,
+      status: "pending",
     });
-    setGuestSession({ id: guest.id, pseudo: guest.pseudo, email: guest.email, event_id: eventId });
-    toast.success(`Bienvenue ${guest.pseudo} ! 🌸`);
-    onAuthenticated({ id: guest.id, pseudo: guest.pseudo, email: guest.email });
+    setMode("pending");
     setLoading(false);
   };
 
@@ -88,11 +86,54 @@ export default function GuestAuth({ eventId, onAuthenticated }) {
       setLoading(false);
       return;
     }
+    const status = guest.status || "approved"; // rétrocompat anciens comptes
+    if (status === "pending") {
+      setMode("pending");
+      setLoading(false);
+      return;
+    }
+    if (status === "rejected") {
+      setMode("rejected");
+      setLoading(false);
+      return;
+    }
     setGuestSession({ id: guest.id, pseudo: guest.pseudo, email: guest.email, event_id: eventId });
     toast.success(`Ravi de vous revoir, ${guest.pseudo} ! 🌸`);
     onAuthenticated({ id: guest.id, pseudo: guest.pseudo, email: guest.email });
     setLoading(false);
   };
+
+  if (mode === "pending") {
+    return (
+      <div className="bg-white rounded-3xl shadow-lg border border-amber-100 p-8 max-w-sm mx-auto text-center">
+        <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Flower2 className="w-8 h-8 text-amber-400" />
+        </div>
+        <h3 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Demande envoyée 🌸</h3>
+        <p className="text-sm text-gray-500 leading-relaxed">
+          Votre demande d'accès est en attente de validation par les organisateurs.<br />
+          Revenez ici une fois qu'ils auront approuvé votre compte.
+        </p>
+        <button onClick={() => setMode("login")} className="mt-5 text-xs text-gray-400 hover:text-rose-400 underline transition">
+          Déjà approuvé ? Se connecter
+        </button>
+      </div>
+    );
+  }
+
+  if (mode === "rejected") {
+    return (
+      <div className="bg-white rounded-3xl shadow-lg border border-red-100 p-8 max-w-sm mx-auto text-center">
+        <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Lock className="w-8 h-8 text-red-300" />
+        </div>
+        <h3 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-2">Accès refusé</h3>
+        <p className="text-sm text-gray-500">
+          Votre demande d'accès n'a pas été acceptée par les organisateurs.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-3xl shadow-lg border border-rose-100 p-8 max-w-sm mx-auto text-center">
@@ -101,7 +142,7 @@ export default function GuestAuth({ eventId, onAuthenticated }) {
       </div>
       <h3 className="font-serif-elegant text-2xl font-bold text-gray-800 mb-1">Défi des fleurs</h3>
       <p className="text-sm text-gray-500 mb-6">
-        {mode === "login" ? "Connectez-vous pour participer" : "Créez votre compte pour participer"}
+        {mode === "login" ? "Connectez-vous pour participer" : "Demandez l'accès pour participer"}
       </p>
 
       <div className="space-y-3 text-left">

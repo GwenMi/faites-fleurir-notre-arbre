@@ -389,14 +389,25 @@ export default function OrderConfirmation() {
         <ReferralBlock />
 
         {/* CTA */}
-        <div className="text-center">
-          <p className="font-sans-clean text-gray-600 mb-4">Suivre votre commande :</p>
-          <a
-            href={createPageUrl("ClientDashboard")}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-sans-clean font-semibold transition"
-          >
-            Accéder à mon espace client <ArrowRight className="w-4 h-4" />
-          </a>
+        <div className="bg-white rounded-2xl border border-indigo-100 p-6 text-center space-y-3">
+          <p className="font-serif-elegant text-lg font-bold text-gray-800">Créez votre espace organisateur</p>
+          <p className="font-sans-clean text-sm text-gray-500">
+            Accédez à votre tableau de bord, gérez vos commandes et suivez les accès invités.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-1">
+            <button
+              onClick={() => base44.auth.redirectToLogin(createPageUrl("ClientDashboard"))}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-sans-clean font-semibold transition"
+            >
+              Créer / Se connecter <ArrowRight className="w-4 h-4" />
+            </button>
+            <a
+              href={createPageUrl("ClientDashboard")}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-600 rounded-xl font-sans-clean font-semibold hover:bg-gray-50 transition"
+            >
+              Accéder à mon espace
+            </a>
+          </div>
         </div>
       </div>
     </div>

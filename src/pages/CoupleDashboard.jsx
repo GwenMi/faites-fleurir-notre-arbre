@@ -29,10 +29,12 @@ import VendorDocumentManager from "@/components/couple/VendorDocumentManager";
 import SiteEditorManager from "@/components/couple/SiteEditorManager";
 import CoupleCalendar from "@/components/couple/CoupleCalendar";
 import ThankYouCardGenerator from "@/components/couple/ThankYouCardGenerator";
+import GuestAccessManager from "@/components/couple/GuestAccessManager";
 
 const TABS = [
   { key: "stats",          label: "Statistiques",    icon: BarChart2,        premium: false },
   { key: "guests",         label: "Mes invités",      icon: Users,            premium: false },
+  { key: "access",         label: "Accès invités",    icon: Lock,             premium: false },
   { key: "rsvp",           label: "Suivi RSVP",       icon: CheckCircle,      premium: true  },
   { key: "rsvp_responses", label: "Réponses RSVP",    icon: Users,            premium: true  },
   { key: "reminders",      label: "Relances",          icon: BellRing,         premium: true  },
@@ -146,7 +148,7 @@ export default function CoupleDashboard() {
   }
 
   const isPremium = event.plan === "premium";
-  const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, site_editor: SiteEditorManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager, calendar: CoupleCalendar, thankyou_cards: ThankYouCardGenerator };
+  const tabMap = { stats: StatsPanel, guests: GuestListManager, access: GuestAccessManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, site_editor: SiteEditorManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager, calendar: CoupleCalendar, thankyou_cards: ThankYouCardGenerator };
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
