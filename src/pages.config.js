@@ -76,6 +76,8 @@ import Shop from './pages/Shop';
 import Stats from './pages/Stats';
 import SupplierOrders from './pages/SupplierOrders';
 import CustomerPortal from './pages/CustomerPortal';
+import AdminSuperPanel from './pages/AdminSuperPanel';
+import FAQ from './pages/FAQ';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +111,8 @@ export const PAGES = {
     "Stats": Stats,
     "SupplierOrders": SupplierOrders,
     "CustomerPortal": CustomerPortal,
+    "AdminSuperPanel": AdminSuperPanel,
+    "FAQ": FAQ,
 }
 
 export const pagesConfig = {

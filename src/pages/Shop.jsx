@@ -214,6 +214,10 @@ function ShopHomePage({ onStart }) {
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-gray-400 font-sans-shop">
           <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
           <span className="text-gray-200">·</span>
+          <a href={createPageUrl("FAQ")} className="hover:text-rose-400 transition">FAQ</a>
+          <span className="text-gray-200">·</span>
+          <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
+          <span className="text-gray-200">·</span>
           <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("MentionsLegales")} className="hover:text-rose-400 transition">Mentions légales</a>
