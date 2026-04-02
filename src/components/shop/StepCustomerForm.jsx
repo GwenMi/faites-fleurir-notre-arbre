@@ -56,7 +56,7 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
             Date de votre événement * <span className="font-normal text-gray-400">(pour la planification)</span>
           </Label>
           <Input type="date" value={customerInfo.eventDate} onChange={e => set("eventDate", e.target.value)} className="h-11 rounded-xl w-full sm:w-64" />
-          {days !== null && days >= 0 && days <= 21 && days >= 14 && (
+          {days !== null && days >= 0 && days < 14 && (
             <p className="text-amber-600 text-sm mt-2 flex items-center gap-1.5">
               <AlertCircle className="w-4 h-4" /> Commande tardive — livraison à confirmer
             </p>

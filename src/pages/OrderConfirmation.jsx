@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { CheckCircle, Download, Eye, Package, Calendar, MapPin, ArrowRight, Copy, Check as CheckIcon } from "lucide-react";
+import { CheckCircle, Download, Eye, Package, Calendar, MapPin, ArrowRight, Copy, Check as CheckIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
+import StripePaymentForm from "@/components/shop/StripePaymentForm";
 
 const SHOP_URL = "https://fleursdefete.fr" + createPageUrl("Shop");
 const SHARE_TEXT = "J'ai commandé mes cadeaux d'invités ici, c'est top ! Des petits pots de fleurs à planter 🌸 Utilise ce lien pour -10% :";
@@ -79,6 +80,7 @@ const STATUS_MAP = {
 export default function OrderConfirmation() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [siteChoice, setSiteChoice] = useState(null); // null | "premium_pay" | "dismissed"
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -278,7 +280,7 @@ export default function OrderConfirmation() {
             <Download className="w-4 h-4 mr-2" />
             Télécharger facture PDF
           </Button>
-          {order.options_selected?.site_public_url ? (
+          {order.options_selected?.site_public_url && (
             <a
               href={order.options_selected.site_public_url}
               target="_blank"
@@ -288,15 +290,66 @@ export default function OrderConfirmation() {
               <Eye className="w-4 h-4" />
               Voir votre espace événement
             </a>
-          ) : isFullPayment ? (
-            <a
-              href={createPageUrl("CreateMyEvent") + `?order_id=${order.id}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl h-11 bg-purple-500 hover:bg-purple-600 text-white font-sans-clean font-semibold transition"
-            >
-              🌸 Créer mon site de mariage
-            </a>
-          ) : null}
+          )}
         </div>
+
+        {/* Création du site événement */}
+        {!order.options_selected?.site_public_url && siteChoice !== "dismissed" && (
+          <div className="bg-white rounded-3xl border border-rose-100 shadow-sm p-6 mb-8">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="font-serif-elegant text-xl font-bold text-gray-800">
+                🌸 Créer votre site événement
+              </h3>
+              <button onClick={() => setSiteChoice("dismissed")} className="text-gray-300 hover:text-gray-500 transition">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="font-sans-clean text-sm text-gray-500 mb-5">
+              Partagez votre histoire, gérez vos invités et dévoilez les détails de votre grand jour. Choisissez la formule qui vous convient.
+            </p>
+
+            {siteChoice !== "premium_pay" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Gratuit */}
+                <a
+                  href={createPageUrl("CreateMyEvent") + `?order_id=${order.id}&plan=basic`}
+                  className="flex flex-col gap-1 p-4 rounded-2xl border-2 border-gray-200 hover:border-rose-200 bg-white transition text-left"
+                >
+                  <p className="font-sans-clean font-bold text-gray-800 text-sm">Site gratuit</p>
+                  <p className="font-sans-clean text-xs text-gray-500">Présentation + QR code photos des fleurs</p>
+                  <p className="font-sans-clean font-bold text-green-600 text-sm mt-2">Gratuit</p>
+                </a>
+                {/* Complet */}
+                <button
+                  onClick={() => setSiteChoice("premium_pay")}
+                  className="flex flex-col gap-1 p-4 rounded-2xl border-2 border-rose-200 bg-rose-50 hover:border-rose-400 transition text-left relative"
+                >
+                  <span className="absolute top-2 right-2 text-xs bg-rose-400 text-white px-2 py-0.5 rounded-full font-semibold">Recommandé</span>
+                  <p className="font-sans-clean font-bold text-gray-800 text-sm">Site complet</p>
+                  <p className="font-sans-clean text-xs text-gray-500">RSVP, photos, plan de table, budget…</p>
+                  <p className="font-sans-clean font-bold text-rose-600 text-sm mt-2">39,99€ <span className="font-normal text-gray-400">paiement unique</span></p>
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={() => setSiteChoice(null)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 mb-4 transition"
+                >
+                  ← Retour au choix
+                </button>
+                <StripePaymentForm
+                  customerInfo={{ name: order.customer_name, email: order.customer_email }}
+                  total={39.99}
+                  onSuccess={() => {
+                    window.location.href = createPageUrl("CreateMyEvent") + `?order_id=${order.id}&plan=premium`;
+                  }}
+                  onBack={() => setSiteChoice(null)}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Next Steps */}
         <div className="bg-white rounded-2xl p-6 mb-8">

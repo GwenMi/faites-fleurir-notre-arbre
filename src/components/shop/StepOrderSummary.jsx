@@ -1,42 +1,48 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import StripePaymentForm from "./StripePaymentForm";
 
-export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, onBack }) {
-  const [loading, setLoading] = useState(false);
+export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onBack }) {
   const [paymentStarted, setPaymentStarted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
   const basePrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
+  const containerLabel = selection.containerType === "rond_clip" ? "Pot rond fermoir" : selection.containerType === "carre_liege" ? "Pot carré liège" : null;
+  const packs = selection.packs || [];
 
   const handlePaymentSuccess = async () => {
     setLoading(true);
     try {
+      const packsLabel = packs.map(p => `Pack ${p.size} × ${p.qty}`).join(", ");
       const order = await base44.entities.Order.create({
         customer_name: customerInfo.name,
         customer_email: customerInfo.email,
-        product_id: `pack_${selection.packSize}`,
-        product_name: `Pack ${selection.packSize} invités × ${selection.packQty} — ${kitLabel}`,
+        product_id: `multi_pack`,
+        product_name: `${packsLabel} — ${kitLabel}`,
         quantity: pricing.totalPots,
         total_price: pricing.total,
         status: "confirmed",
         payment_status: "paid",
         options_selected: {
           kitType: selection.kitType,
-          potType: selection.potType,
+          containerType: selection.containerType,
           sacCadeau: selection.sacCadeau,
-          packSize: selection.packSize,
-          packQty: selection.packQty,
+          packs: packs,
           pricePerPot: pricing.pricePerPot,
           event_date: customerInfo.eventDate,
           phone: customerInfo.phone,
           delivery_address: customerInfo.address,
           subtotal: pricing.subtotal,
           discount: pricing.discount,
+          shipping_method_id: shippingMethod?.id ?? null,
+          shipping_method_name: shippingMethod?.name ?? null,
+          shipping_carrier: shippingMethod?.carrier ?? null,
+          shipping_cost: pricing.shippingCost,
         }
       });
 
@@ -74,9 +80,15 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         </div>
         <div className="p-6 space-y-3 text-sm">
           <div className="flex justify-between text-sm text-gray-700">
-            <span>{kitLabel} (pot en verre)</span>
+            <span>{kitLabel}</span>
             <span>{basePrice.toFixed(2)}€/invité</span>
           </div>
+          {containerLabel && (
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Contenant</span>
+              <span>{containerLabel}</span>
+            </div>
+          )}
           <div className="flex justify-between text-sm text-gray-700">
             <span>Sac cadeau</span>
             <span>{selection.sacCadeau ? `+${PRICING.SAC_CADEAU.toFixed(2)}€/invité` : "Non"}</span>
@@ -85,10 +97,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <span>Prix par pot</span>
             <span>{pricing.pricePerPot.toFixed(2)}€</span>
           </div>
-          <div className="flex justify-between text-gray-700 mt-2">
-            <span>Pack {selection.packSize} invités × {selection.packQty}</span>
-            <span>{pricing.totalPots} pots</span>
-          </div>
+          {packs.map(p => (
+            <div key={p.size} className="flex justify-between text-sm text-gray-700">
+              <span>Pack {p.size} invités × {p.qty}</span>
+              <span>{p.size * p.qty} pots</span>
+            </div>
+          ))}
         </div>
         <div className="border-t border-gray-100 px-6 py-4 space-y-2">
           <div className="flex justify-between text-sm text-gray-700">
@@ -97,8 +111,18 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           </div>
           {pricing.discount > 0 && (
             <div className="flex justify-between text-sm text-green-600">
-              <span>Réduction 10% (2 packs)</span>
+              <span>Réduction 10% multi-packs</span>
               <span>−{pricing.discount.toFixed(2)}€</span>
+            </div>
+          )}
+          {shippingMethod && (
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Livraison — {shippingMethod.name}</span>
+              <span>
+                {shippingMethod.price !== null
+                  ? `${shippingMethod.price.toFixed(2)}€`
+                  : "Variable"}
+              </span>
             </div>
           )}
           <div className="flex justify-between text-lg font-bold text-rose-600 border-t border-gray-100 pt-3">

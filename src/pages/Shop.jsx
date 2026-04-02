@@ -7,12 +7,13 @@ import StepCustomization from "@/components/shop/StepCustomization";
 import StepEventSlug from "@/components/shop/StepEventSlug";
 import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
+import StepShipping from "@/components/shop/StepShipping";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
 import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Votre compte", "Vos informations", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Votre compte", "Vos informations", "Livraison", "Récapitulatif"];
 
 const EVENT_TYPES = [
   { id: "mariage", label: "💍 Mariage", hasSite: true },
@@ -277,21 +278,24 @@ export default function Shop() {
     kitType: null,
     seedType: "tournesol_nain",
     sacCadeau: false,
-    packSize: null,
-    packQty: 1,
+    packs: [],
+    containerType: null,
   });
   const [customerInfo, setCustomerInfo] = useState({
     name: "", email: "", phone: "", address: "", eventDate: ""
   });
+  const [shippingMethod, setShippingMethod] = useState(null);
 
   const baseKitPrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
   const sacExtra = selection.sacCadeau ? PRICING.SAC_CADEAU : 0;
   const pricePerPot = baseKitPrice + sacExtra;
-  const totalPots = (selection.packSize || 0) * selection.packQty;
+  const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
+  const totalPackCount = (selection.packs || []).reduce((sum, p) => sum + p.qty, 0);
   const subtotal = pricePerPot * totalPots;
-  const discount = selection.packQty >= 2 ? subtotal * 0.1 : 0;
-  const total = subtotal - discount;
-  const pricing = { pricePerPot, totalPots, subtotal, discount, total };
+  const discount = totalPackCount >= 2 ? subtotal * 0.1 : 0;
+  const shippingCost = shippingMethod?.price ?? 0;
+  const total = subtotal - discount + shippingCost;
+  const pricing = { pricePerPot, totalPots, subtotal, discount, shippingCost, total };
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
@@ -361,12 +365,22 @@ export default function Shop() {
             />
           )}
           {step === 8 && (
+            <StepShipping
+              totalPots={pricing.totalPots}
+              shippingMethod={shippingMethod}
+              onSelect={setShippingMethod}
+              onNext={() => setStep(9)}
+              onBack={() => setStep(7)}
+            />
+          )}
+          {step === 9 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
-              onBack={() => setStep(7)}
+              shippingMethod={shippingMethod}
+              onBack={() => setStep(8)}
             />
           )}
         </div>

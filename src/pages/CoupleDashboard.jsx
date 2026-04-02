@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { createPageUrl } from "@/utils";
-import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail, Lock, Sparkles } from "lucide-react";
+import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail, Lock } from "lucide-react";
+import UpgradeModal from "@/components/UpgradeModal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -70,6 +70,7 @@ export default function CoupleDashboard() {
   const [event, setEvent] = useState(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("guests");
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -146,8 +147,6 @@ export default function CoupleDashboard() {
 
   const isPremium = event.plan === "premium";
   const tabMap = { stats: StatsPanel, guests: GuestListManager, rsvp: RSVPTracker, rsvp_responses: RSVPManager, reminders: RSVPReminderPanel, programme: ScheduleManagerWrapper, seating: SeatingManager, photos: PhotoModerationPanel, vendors: VendorManager, documents: VendorDocumentManager, agenda: AgendaManager, menu: MenuEditor, budget: BudgetManager, wishlist: WishlistManager, faq: FAQManager, tasks: TaskManager, checklist: WeddingChecklistManager, thankyou: ThankYouManager, site_editor: SiteEditorManager, theme: ThemeEditor, preview: MobilePreview, campaigns: ScheduledEmailsManager, guestbook: GuestbookManager, calendar: CoupleCalendar, thankyou_cards: ThankYouCardGenerator };
-  const currentTab = TABS.find(t => t.key === activeTab);
-  const isTabLocked = currentTab?.premium && !isPremium;
   const ActiveTab = tabMap[activeTab] || GuestListManager;
 
   return (
@@ -192,12 +191,16 @@ export default function CoupleDashboard() {
               return (
                 <button
                   key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => {
+                    if (locked) { setUpgradeModalOpen(true); return; }
+                    setActiveTab(tab.key);
+                  }}
+                  title={locked ? "Fonctionnalité Premium — cliquez pour débloquer" : undefined}
                   className={`flex-shrink-0 flex items-center gap-2 px-5 py-3.5 text-sm font-sans-clean font-semibold border-b-2 transition ${
                     activeTab === tab.key
                       ? "border-rose-400 text-rose-600"
                       : locked
-                      ? "border-transparent text-gray-300"
+                      ? "border-transparent text-gray-300 hover:text-rose-300 cursor-pointer"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
@@ -213,24 +216,17 @@ export default function CoupleDashboard() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {isTabLocked ? (
-          <div className="text-center py-20 px-6">
-            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-5">
-              <Lock className="w-7 h-7 text-rose-300" />
-            </div>
-            <h2 className="font-serif-elegant text-2xl font-bold text-gray-700 mb-2">Fonctionnalité Premium</h2>
-            <p className="font-sans-clean text-sm text-gray-500 mb-6 max-w-sm mx-auto">
-              <strong>{currentTab?.label}</strong> est disponible avec la formule <strong>Complète à 39,99 €</strong>. Passez à la version premium pour accéder à toutes les fonctionnalités.
-            </p>
-            <a href="mailto:contact@fleursdefete.fr?subject=Upgrade Premium"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 text-white font-sans-clean font-semibold text-sm hover:opacity-90 transition shadow">
-              <Sparkles className="w-4 h-4" /> Passer à la formule Complète
-            </a>
-          </div>
-        ) : (
-          <ActiveTab event={event} />
-        )}
+        <ActiveTab event={event} />
       </div>
+
+      {upgradeModalOpen && (
+        <UpgradeModal
+          event={event}
+          customerEmail={email}
+          onClose={() => setUpgradeModalOpen(false)}
+          onUpgraded={() => setEvent(e => ({ ...e, plan: "premium" }))}
+        />
+      )}
     </div>
   );
 }

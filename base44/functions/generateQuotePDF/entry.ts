@@ -80,10 +80,12 @@ Deno.serve(async (req) => {
     // Items
     doc.setTextColor(0);
     const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
-    const potLabel = selection.potType === "blanc" ? "Pot blanc" : "Pot en verre";
-    
+    const containerLabel = selection.containerType === "rond_clip" ? "Pot rond fermoir"
+      : selection.containerType === "carre_liege" ? "Pot carré liège"
+      : "Pot";
+
     const items = [
-      { desc: `${kitLabel} (${potLabel})`, price: pricing.pricePerPot, qty: pricing.totalPots }
+      { desc: `${kitLabel} — ${containerLabel}`, price: pricing.pricePerPot, qty: pricing.totalPots }
     ];
 
     items.forEach(item => {
@@ -147,7 +149,7 @@ Deno.serve(async (req) => {
       await base44.integrations.Core.SendEmail({
         to: 'contact@fleursenfete.com',
         subject: `Nouvelle commande : ${customerInfo.name} - ${pricing.total.toFixed(2)}€`,
-        body: `Nouvelle commande reçue !\n\nClient : ${customerInfo.name}\nEmail : ${customerInfo.email}\nTéléphone : ${customerInfo.phone || 'N/A'}\n\nProduit : ${selection.packSize} invités × ${selection.packQty}\nQuantité : ${pricing.totalPots} pots\nMontant : ${pricing.total.toFixed(2)}€\n\nAdresse de livraison : ${customerInfo.address}`
+        body: `Nouvelle commande reçue !\n\nClient : ${customerInfo.name}\nEmail : ${customerInfo.email}\nTéléphone : ${customerInfo.phone || 'N/A'}\n\nProduit : ${(selection.packs || []).map((p: {size: number, qty: number}) => `Pack ${p.size} × ${p.qty}`).join(', ')}\nQuantité : ${pricing.totalPots} pots\nMontant : ${pricing.total.toFixed(2)}€\n\nAdresse de livraison : ${customerInfo.address}`
       });
     } catch (emailError) {
       console.log('Email sending failed:', emailError.message);
