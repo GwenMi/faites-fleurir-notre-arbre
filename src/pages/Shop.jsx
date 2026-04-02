@@ -5,7 +5,6 @@ import StepKitOptions from "@/components/shop/StepKitOptions";
 import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomization from "@/components/shop/StepCustomization";
 import StepEventSlug from "@/components/shop/StepEventSlug";
-import StepAuthentication from "@/components/shop/StepAuthentication";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
 import StepShipping from "@/components/shop/StepShipping";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
@@ -13,7 +12,7 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Votre compte", "Vos informations", "Livraison", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
 
 const EVENT_TYPES = [
   { id: "mariage", label: "💍 Mariage", hasSite: true },
@@ -351,36 +350,30 @@ export default function Shop() {
             />
           )}
           {step === 6 && (
-            <StepAuthentication
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
               onNext={() => setStep(7)}
               onBack={() => setStep(5)}
             />
           )}
           {step === 7 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepShipping
+              totalPots={pricing.totalPots}
+              shippingMethod={shippingMethod}
+              onSelect={setShippingMethod}
               onNext={() => setStep(8)}
               onBack={() => setStep(6)}
             />
           )}
           {step === 8 && (
-            <StepShipping
-              totalPots={pricing.totalPots}
-              shippingMethod={shippingMethod}
-              onSelect={setShippingMethod}
-              onNext={() => setStep(9)}
-              onBack={() => setStep(7)}
-            />
-          )}
-          {step === 9 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
               shippingMethod={shippingMethod}
-              onBack={() => setStep(8)}
+              onBack={() => setStep(7)}
             />
           )}
         </div>
