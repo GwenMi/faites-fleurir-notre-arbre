@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash2, Mail, CheckCircle2, Clock, X, Loader2, Users } from "lucide-react";
+import { Plus, Trash2, Mail, CheckCircle2, Clock, X, Loader2, Users, Upload, Download, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 
 const RSVP_BADGE = {
   pending:   { label: "En attente", cls: "bg-gray-100 text-gray-600" },
@@ -11,6 +12,30 @@ const RSVP_BADGE = {
   declined:  { label: "Décliné",    cls: "bg-red-100 text-red-600" },
   maybe:     { label: "Peut-être",  cls: "bg-amber-100 text-amber-700" },
 };
+
+// Normalise un header de colonne pour la détection
+function normalizeHeader(h) {
+  return String(h || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+}
+
+// Mappe les colonnes du fichier vers nos champs
+function mapRow(row, headers) {
+  const get = (...keys) => {
+    for (const k of keys) {
+      const found = headers.find(h => normalizeHeader(h) === k);
+      if (found && row[found] != null && String(row[found]).trim() !== "") return String(row[found]).trim();
+    }
+    return "";
+  };
+  const prenom = get("prenom", "firstname", "first name", "prénom");
+  const nom = get("nom", "lastname", "last name", "name");
+  const nomComplet = get("nom complet", "prénom nom", "full name", "invité", "invite", "invites");
+  const guest_name = nomComplet || (prenom && nom ? `${prenom} ${nom}` : prenom || nom);
+  const guest_email = get("email", "e-mail", "mail", "courriel");
+  const phone = get("telephone", "tel", "mobile", "gsm", "phone");
+  const table_note = get("table", "note", "notes", "remarque", "remarques", "regime", "régime", "menu");
+  return { guest_name, guest_email, phone, table_note };
+}
 
 export default function GuestListManager({ event }) {
   const [guests, setGuests] = useState([]);
@@ -20,6 +45,10 @@ export default function GuestListManager({ event }) {
   const [saving, setSaving] = useState(false);
   const [sendingAll, setSendingAll] = useState(false);
   const [sendingId, setSendingId] = useState(null);
+  const [importPreview, setImportPreview] = useState(null); // { rows, errors }
+  const [importing, setImporting] = useState(false);
+  const [sendAfterImport, setSendAfterImport] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchGuests();
@@ -99,6 +128,58 @@ export default function GuestListManager({ event }) {
     toast.success(`${toSend.length} invitation(s) envoyée(s)`);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const wb = XLSX.read(ev.target.result, { type: "array" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const raw = XLSX.utils.sheet_to_json(ws, { defval: "" });
+        if (!raw.length) { toast.error("Fichier vide ou format non reconnu"); return; }
+        const headers = Object.keys(raw[0]);
+        const rows = raw.map(r => mapRow(r, headers)).filter(r => r.guest_name);
+        const errors = raw.map(r => mapRow(r, headers)).filter(r => !r.guest_name);
+        if (!rows.length) { toast.error("Aucun nom trouvé — vérifiez les colonnes (voir format attendu)"); return; }
+        setImportPreview({ rows, skipped: errors.length });
+        setSendAfterImport(false);
+      } catch {
+        toast.error("Impossible de lire ce fichier. Utilisez .xlsx ou .csv");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  const downloadTemplate = () => {
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["Prénom", "Nom", "Email", "Téléphone", "Table / Note"],
+      ["Sophie", "Martin", "sophie.martin@email.com", "06 12 34 56 78", "Table 1"],
+      ["Marc", "Dupont", "marc.dupont@email.com", "", "Végétarien"],
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Invités");
+    XLSX.writeFile(wb, "modele-liste-invites.xlsx");
+  };
+
+  const confirmImport = async () => {
+    if (!importPreview?.rows?.length) return;
+    setImporting(true);
+    let created = 0;
+    const existingEmails = new Set(guests.map(g => g.guest_email?.toLowerCase()).filter(Boolean));
+    for (const row of importPreview.rows) {
+      const isDuplicate = row.guest_email && existingEmails.has(row.guest_email.toLowerCase());
+      if (isDuplicate) continue;
+      const g = await base44.entities.GuestInvitation.create({ ...row, event_id: event.id });
+      created++;
+      if (sendAfterImport && row.guest_email) await sendInvitation(g);
+    }
+    toast.success(`${created} invité(s) importé(s)${sendAfterImport ? " et invité(s) par email" : ""}`);
+    setImportPreview(null);
+    setImporting(false);
+  };
+
   const stats = {
     total: guests.length,
     sent: guests.filter(g => g.invitation_sent).length,
@@ -130,6 +211,12 @@ export default function GuestListManager({ event }) {
         <Button onClick={() => setShowForm(v => !v)} className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-10">
           <Plus className="w-4 h-4 mr-2" /> Ajouter un invité
         </Button>
+        <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="rounded-xl h-10 border-indigo-200 text-indigo-600 hover:bg-indigo-50">
+          <Upload className="w-4 h-4 mr-2" /> Importer Excel / CSV
+        </Button>
+        <Button onClick={downloadTemplate} variant="outline" className="rounded-xl h-10 text-gray-500">
+          <Download className="w-4 h-4 mr-2" /> Modèle à télécharger
+        </Button>
         {stats.total > 0 && (
           <Button onClick={sendAllPending} disabled={sendingAll} variant="outline" className="rounded-xl h-10">
             {sendingAll ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
@@ -137,6 +224,15 @@ export default function GuestListManager({ event }) {
           </Button>
         )}
       </div>
+
+      {/* Input fichier caché */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        onChange={handleFileChange}
+        className="hidden"
+      />
 
       {/* Add form */}
       {showForm && (
@@ -201,6 +297,84 @@ export default function GuestListManager({ event }) {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+      {/* Modal prévisualisation import */}
+      {importPreview && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg">Prévisualisation de l'import</h3>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {importPreview.rows.length} invité(s) détecté(s)
+                  {importPreview.skipped > 0 && ` · ${importPreview.skipped} ligne(s) ignorée(s) (sans nom)`}
+                </p>
+              </div>
+              <button onClick={() => setImportPreview(null)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Format accepté */}
+            <div className="px-6 pt-4 pb-2">
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-blue-700">
+                <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>Colonnes reconnues : <strong>Prénom</strong>, <strong>Nom</strong>, <strong>Email</strong>, <strong>Téléphone</strong>, <strong>Table / Note</strong>. Les lignes sans nom sont ignorées.</span>
+              </div>
+            </div>
+
+            {/* Table preview */}
+            <div className="overflow-y-auto flex-1 px-6 py-3">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left border-b border-gray-100">
+                    <th className="pb-2 font-semibold text-gray-600">Nom</th>
+                    <th className="pb-2 font-semibold text-gray-600">Email</th>
+                    <th className="pb-2 font-semibold text-gray-600">Tél</th>
+                    <th className="pb-2 font-semibold text-gray-600">Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {importPreview.rows.slice(0, 50).map((r, i) => (
+                    <tr key={i} className="border-b border-gray-50">
+                      <td className="py-2 text-gray-800">{r.guest_name}</td>
+                      <td className="py-2 text-gray-500 text-xs">{r.guest_email || <span className="text-gray-300">—</span>}</td>
+                      <td className="py-2 text-gray-500 text-xs">{r.phone || <span className="text-gray-300">—</span>}</td>
+                      <td className="py-2 text-gray-500 text-xs">{r.table_note || <span className="text-gray-300">—</span>}</td>
+                    </tr>
+                  ))}
+                  {importPreview.rows.length > 50 && (
+                    <tr><td colSpan={4} className="py-2 text-xs text-gray-400 italic">… et {importPreview.rows.length - 50} autres</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Options + confirmation */}
+            <div className="p-6 border-t border-gray-100 space-y-4">
+              {importPreview.rows.some(r => r.guest_email) && (
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => setSendAfterImport(v => !v)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${sendAfterImport ? "bg-rose-400" : "bg-gray-200"}`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${sendAfterImport ? "translate-x-6" : "translate-x-1"}`} />
+                  </button>
+                  <span className="text-sm text-gray-700">Envoyer les invitations par email immédiatement après l'import</span>
+                </label>
+              )}
+              <div className="flex gap-3">
+                <Button onClick={() => setImportPreview(null)} variant="outline" className="flex-1 rounded-xl h-11">
+                  Annuler
+                </Button>
+                <Button onClick={confirmImport} disabled={importing} className="flex-1 h-11 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-semibold">
+                  {importing ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Import en cours…</> : `Importer ${importPreview.rows.length} invité(s)`}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}
