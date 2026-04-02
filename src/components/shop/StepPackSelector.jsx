@@ -11,13 +11,13 @@ const CONTAINERS = [
     id: "rond_clip",
     name: "Pot rond fermoir",
     desc: "Couvercle hermétique avec fermoir en métal",
-    image: "REMPLACER_PAR_URL_SUPABASE_POT_ROND",
+    image: "https://i.postimg.cc/66mZn3DV/fermeture_metalique.png",
   },
   {
     id: "carre_liege",
     name: "Pot carré liège",
     desc: "Bouchon en liège naturel",
-    image: "REMPLACER_PAR_URL_SUPABASE_POT_CARRE",
+    image: "https://i.postimg.cc/2yMBDcQC/bouchon-lie-ge.png",
   },
 ];
 
