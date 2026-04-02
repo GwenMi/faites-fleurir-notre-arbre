@@ -355,16 +355,30 @@ export default function GuestListManager({ event }) {
             {/* Options + confirmation */}
             <div className="p-6 border-t border-gray-100 space-y-4">
               {importPreview.rows.some(r => r.guest_email) && (
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <button
-                    type="button"
-                    onClick={() => setSendAfterImport(v => !v)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${sendAfterImport ? "bg-rose-400" : "bg-gray-200"}`}
-                  >
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${sendAfterImport ? "translate-x-6" : "translate-x-1"}`} />
-                  </button>
-                  <span className="text-sm text-gray-700">Envoyer les invitations par email immédiatement après l'import</span>
-                </label>
+                <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 space-y-3">
+                  <p className="text-sm font-semibold text-indigo-800">
+                    📧 Envoyer les invitations par email ?
+                  </p>
+                  <p className="text-xs text-indigo-600">
+                    {importPreview.rows.filter(r => r.guest_email).length} invité(s) ont une adresse email. Voulez-vous leur envoyer une invitation maintenant ?
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSendAfterImport(true)}
+                      className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition ${sendAfterImport ? "border-indigo-400 bg-indigo-500 text-white" : "border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50"}`}
+                    >
+                      Oui, envoyer maintenant
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSendAfterImport(false)}
+                      className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition ${!sendAfterImport ? "border-gray-400 bg-gray-100 text-gray-700" : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"}`}
+                    >
+                      Non, plus tard
+                    </button>
+                  </div>
+                </div>
               )}
               <div className="flex gap-3">
                 <Button onClick={() => setImportPreview(null)} variant="outline" className="flex-1 rounded-xl h-11">
