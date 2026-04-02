@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
     const { weightGrams = 500, toCountry = 'FR' } = await req.json();
 
     const publicKey = Deno.env.get('sencloud_publickey');
-    const secretKey = Deno.env.get('dsecret_sencloud');
+    const secretKey = Deno.env.get('sendcloud');
 
     if (!publicKey || !secretKey) {
       return Response.json(
