@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import {
   Loader2, Download, Package, Calendar, MapPin, ExternalLink,
   Truck, CheckCircle2, Clock, XCircle, AlertCircle, LogOut,
-  ShoppingBag, Flower2, User, ChevronRight, Eye
+  ShoppingBag, Flower2, User, ChevronRight, Eye, Link2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
@@ -64,6 +64,9 @@ export default function ClientDashboard() {
   const [events, setEvents] = useState([]);
   const [tab, setTab] = useState("orders");
   const [downloadingId, setDownloadingId] = useState(null);
+  const [linkingOrderId, setLinkingOrderId] = useState(null);
+  const [linkingEventId, setLinkingEventId] = useState(null);
+  const [linking, setLinking] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -96,6 +99,27 @@ export default function ClientDashboard() {
 
   const handleLogout = () => {
     base44.auth.logout(createPageUrl("Home"));
+  };
+
+  const handleLink = async () => {
+    if (!linkingOrderId || !linkingEventId) return;
+    setLinking(true);
+    const targetOrder = orders.find(o => o.id === linkingOrderId);
+    const targetEvent = events.find(e => e.id === linkingEventId);
+    if (targetOrder && targetEvent) {
+      await base44.entities.Order.update(targetOrder.id, {
+        event_id: targetEvent.id,
+        options_selected: {
+          ...(targetOrder.options_selected || {}),
+          site_public_url: targetEvent.public_url,
+        },
+      });
+      // refresh data
+      await loadData();
+    }
+    setLinkingOrderId(null);
+    setLinkingEventId(null);
+    setLinking(false);
   };
 
   if (loading) {
@@ -182,6 +206,66 @@ export default function ClientDashboard() {
             );
           })}
         </div>
+
+        {/* Linking banner — unlinked paid orders + existing events */}
+        {(() => {
+          const unlinkableOrders = orders.filter(o => !o.event_id && o.payment_status === "paid");
+          const linkableEvents = events.filter(e => e.public_url);
+          if (unlinkableOrders.length === 0 || linkableEvents.length === 0) return null;
+          return (
+            <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <Link2 className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-sans-clean font-semibold text-amber-900">Lier une commande à votre site</p>
+                  <p className="font-sans-clean text-sm text-amber-700 mt-0.5">
+                    Vous avez {unlinkableOrders.length === 1 ? "une commande non liée" : `${unlinkableOrders.length} commandes non liées`} à un site événementiel. Reliez-les pour accéder à votre site depuis votre commande.
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <div>
+                  <label className="font-sans-clean text-xs font-semibold text-amber-700 block mb-1">Commande</label>
+                  <select
+                    value={linkingOrderId || ""}
+                    onChange={e => setLinkingOrderId(e.target.value)}
+                    className="w-full rounded-xl border border-amber-300 bg-white px-3 py-2 font-sans-clean text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  >
+                    <option value="">— Choisir une commande —</option>
+                    {unlinkableOrders.map(o => (
+                      <option key={o.id} value={o.id}>
+                        {o.product_name || "Commande"} — FEF-{(o.id || "").slice(-8).toUpperCase()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="font-sans-clean text-xs font-semibold text-amber-700 block mb-1">Site événementiel</label>
+                  <select
+                    value={linkingEventId || ""}
+                    onChange={e => setLinkingEventId(e.target.value)}
+                    className="w-full rounded-xl border border-amber-300 bg-white px-3 py-2 font-sans-clean text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  >
+                    <option value="">— Choisir un site —</option>
+                    {linkableEvents.map(ev => (
+                      <option key={ev.id} value={ev.id}>
+                        {ev.couple_names || ev.event_name || ev.slug}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  onClick={handleLink}
+                  disabled={!linkingOrderId || !linkingEventId || linking}
+                  className="flex items-center justify-center gap-2 py-2 px-4 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-200 text-white rounded-xl font-sans-clean text-sm font-semibold transition"
+                >
+                  {linking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />}
+                  Lier
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* ORDERS TAB */}
         {tab === "orders" && (
