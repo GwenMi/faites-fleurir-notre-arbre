@@ -149,7 +149,7 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
         </Button>
         <Button
           onClick={handleNext}
-          disabled={!isPersonalEvent || !slug || slugAvailable !== true}
+          disabled={isPersonalEvent && (!slug || slugAvailable !== true)}
           className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold disabled:bg-gray-300"
         >
           Continuer <ChevronRight className="w-4 h-4 ml-2" />

@@ -14,6 +14,9 @@ export default function CreateMyEvent() {
   const [unlinkableOrders, setUnlinkableOrders] = useState([]);
   const [linkedOrderId, setLinkedOrderId] = useState("");
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const planFromUrl = urlParams.get("plan") || "basic";
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const orderId = params.get("order_id");
@@ -167,7 +170,7 @@ export default function CreateMyEvent() {
     primary_color: "#c084fc",
     secondary_color: "#86efac",
     template: "classique",
-    plan: "basic",
+    plan: planFromUrl === "premium" ? "premium" : "basic",
     welcome_message: "",
     seed_type: "",
     event_name: "",

@@ -290,15 +290,15 @@ export default function Shop() {
   const [shippingMethod, setShippingMethod] = useState(null);
 
   const baseKitPrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
-  const sacExtra = selection.sacCadeau ? PRICING.SAC_CADEAU : 0;
-  const pricePerPot = baseKitPrice + sacExtra;
+  const pricePerPot = baseKitPrice;
   const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
   const totalPackCount = (selection.packs || []).reduce((sum, p) => sum + p.qty, 0);
   const subtotal = pricePerPot * totalPots;
-  const discount = totalPackCount >= 2 ? subtotal * 0.1 : 0;
+  const sacCadeauTotal = selection.sacCadeau ? PRICING.SAC_CADEAU * totalPots : 0;
+  const discount = totalPackCount >= 2 ? (subtotal + sacCadeauTotal) * 0.1 : 0;
   const shippingCost = shippingMethod?.price ?? 0;
-  const total = subtotal - discount + shippingCost;
-  const pricing = { pricePerPot, totalPots, subtotal, discount, shippingCost, total };
+  const total = subtotal + sacCadeauTotal - discount + shippingCost;
+  const pricing = { pricePerPot, totalPots, subtotal, sacCadeauTotal, discount, shippingCost, total };
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 

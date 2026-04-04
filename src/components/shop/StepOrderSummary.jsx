@@ -89,10 +89,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
               <span>{containerLabel}</span>
             </div>
           )}
-          <div className="flex justify-between text-sm text-gray-700">
-            <span>Sac cadeau</span>
-            <span>{selection.sacCadeau ? `+${PRICING.SAC_CADEAU.toFixed(2)}€/invité` : "Non"}</span>
-          </div>
+          {selection.sacCadeau && (
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Sacs cadeaux ({pricing.totalPots} × {PRICING.SAC_CADEAU.toFixed(2)}€)</span>
+              <span>+{pricing.sacCadeauTotal?.toFixed(2)}€</span>
+            </div>
+          )}
           <div className="flex justify-between font-bold text-gray-900 border-t border-gray-100 pt-3">
             <span>Prix par pot</span>
             <span>{pricing.pricePerPot.toFixed(2)}€</span>

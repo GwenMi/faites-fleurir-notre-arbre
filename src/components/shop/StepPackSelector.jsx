@@ -149,7 +149,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
               </div>
             </div>
             <div className="flex flex-col items-end gap-2 flex-shrink-0">
-              <span className="text-sm text-rose-600 font-semibold">+{(SAC_CADEAU_PRICE * pricing.totalPots).toFixed(2)}€</span>
+              <span className="text-sm text-rose-600 font-semibold">+{(SAC_CADEAU_PRICE * (pricing.totalPots || 0)).toFixed(2)}€</span>
               <button
                 onClick={() => onUpdate({ sacCadeau: !selection.sacCadeau })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -174,10 +174,10 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
               <span>{(p.size * p.qty * pricing.pricePerPot).toFixed(2)}€</span>
             </div>
           ))}
-          {selection.sacCadeau && (
+          {selection.sacCadeau && pricing.sacCadeauTotal > 0 && (
             <div className="flex justify-between text-sm text-gray-700">
               <span>Sacs cadeaux ({pricing.totalPots} × {SAC_CADEAU_PRICE.toFixed(2)}€)</span>
-              <span>{(SAC_CADEAU_PRICE * pricing.totalPots).toFixed(2)}€</span>
+              <span>{pricing.sacCadeauTotal.toFixed(2)}€</span>
             </div>
           )}
           {pricing.discount > 0 && (
