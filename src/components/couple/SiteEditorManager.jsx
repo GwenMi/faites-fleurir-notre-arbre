@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Save, Loader2, Eye, EyeOff, ExternalLink, MapPin, Heart, Image, MessageSquare, HelpCircle, Gift, BookOpen, Check } from "lucide-react";
+import { Save, Loader2, ExternalLink, MapPin, Heart, Image, HelpCircle, Gift, BookOpen, Check, PiggyBank } from "lucide-react";
 import { toast } from "sonner";
 
 const SECTIONS = [
@@ -64,6 +64,24 @@ const SECTIONS = [
     desc: "Les invités laissent un message souvenir",
     color: "indigo",
   },
+  {
+    key: "show_cagnotte",
+    label: "Cagnotte",
+    icon: Gift,
+    desc: "Lien vers votre cagnotte (Leetchi, Lydia, PayPal…)",
+    color: "pink",
+    hasContent: true,
+    contentKey: "cagnotte_message",
+    contentLabel: "Message pour les invités (optionnel)",
+    placeholder: "Pour nous aider à réaliser notre voyage de noces…",
+    rows: 2,
+    extra: {
+      key: "cagnotte_url",
+      label: "Lien de votre cagnotte",
+      placeholder: "https://www.leetchi.com/c/votre-cagnotte",
+      help: "Copiez le lien de partage de votre cagnotte (Leetchi, Lydia, PayPal.me, Sumeria…)",
+    },
+  },
 ];
 
 const COLOR_MAP = {
@@ -73,6 +91,7 @@ const COLOR_MAP = {
   amber: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-600", toggle: "bg-amber-400" },
   green: { bg: "bg-green-50", border: "border-green-200", text: "text-green-600", toggle: "bg-green-400" },
   indigo: { bg: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-600", toggle: "bg-indigo-400" },
+  pink:   { bg: "bg-pink-50",   border: "border-pink-200",   text: "text-pink-600",   toggle: "bg-pink-400" },
 };
 
 export default function SiteEditorManager({ event }) {
@@ -86,6 +105,9 @@ export default function SiteEditorManager({ event }) {
     show_faq: event.show_faq ?? true,
     show_wishlist: event.show_wishlist ?? true,
     show_guestbook: event.show_guestbook ?? true,
+    show_cagnotte: event.show_cagnotte ?? false,
+    cagnotte_url: event.cagnotte_url || "",
+    cagnotte_message: event.cagnotte_message || "",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);

@@ -13,6 +13,8 @@ import FAQSection from "@/components/public/FAQSection";
 import SeatingPlanSection from "@/components/public/SeatingPlanSection";
 import CoupleStorySection from "@/components/public/CoupleStorySection.jsx";
 import MapSection from "@/components/public/MapSection.jsx";
+import GuestbookSection from "@/components/public/GuestbookSection.jsx";
+import CagnotteSection from "@/components/public/CagnotteSection.jsx";
 import ReviewsList from "@/components/review/ReviewsList";
 import ReviewForm from "@/components/review/ReviewForm";
 
@@ -180,6 +182,20 @@ export default function EventPublic() {
       {isPremium && (
         <div className="max-w-2xl mx-auto">
           <GuestPhotoUploadSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
+
+      {/* Guestbook Section — Premium */}
+      {isPremium && event.show_guestbook !== false && (
+        <div className="max-w-2xl mx-auto border-t border-gray-100">
+          <GuestbookSection event={event} primaryColor={primaryColor} />
+        </div>
+      )}
+
+      {/* Cagnotte Section — Premium */}
+      {isPremium && event.show_cagnotte && event.cagnotte_url && (
+        <div className="max-w-2xl mx-auto border-t border-gray-100">
+          <CagnotteSection event={event} primaryColor={primaryColor} />
         </div>
       )}
 
