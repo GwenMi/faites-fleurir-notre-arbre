@@ -7,6 +7,7 @@ import { Shield, Users, Eye, Loader2, UserPlus, RefreshCw, Info, AlertTriangle, 
 import { toast } from "sonner";
 
 const ADMIN_PASSPHRASE = "GwenAdmin2025!";
+const ADMIN_EMAIL = "contact@fleursdefete.fr";
 
 const ROLE_CONFIG = {
   admin:   { label: "Administrateur",  color: "bg-red-100 text-red-700",    icon: Shield,    desc: "Accès complet, gestion utilisateurs" },
@@ -16,15 +17,20 @@ const ROLE_CONFIG = {
 };
 
 function AdminConfirmModal({ onConfirm, onCancel }) {
-  const [input, setInput] = useState("");
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleConfirm = () => {
-    if (input === ADMIN_PASSPHRASE) {
-      onConfirm();
-    } else {
-      setError(true);
+    if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      setError("Email administrateur incorrect.");
+      return;
     }
+    if (password !== ADMIN_PASSPHRASE) {
+      setError("Mot de passe incorrect.");
+      return;
+    }
+    onConfirm();
   };
 
   return (
@@ -35,24 +41,36 @@ function AdminConfirmModal({ onConfirm, onCancel }) {
             <AlertTriangle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <h3 className="font-bold text-gray-800 text-sm">Confirmation requise</h3>
+            <h3 className="font-bold text-gray-800 text-sm">Double vérification requise</h3>
             <p className="text-xs text-gray-500">Attribution du rôle Administrateur</p>
           </div>
         </div>
-        <p className="text-sm text-gray-600">Cette action donne un accès complet à la plateforme. Saisissez le mot de passe administrateur pour confirmer.</p>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input
-            type="password"
-            placeholder="Mot de passe admin"
-            value={input}
-            onChange={e => { setInput(e.target.value); setError(false); }}
-            onKeyDown={e => e.key === "Enter" && handleConfirm()}
-            className={`pl-9 rounded-xl ${error ? "border-red-400 bg-red-50" : ""}`}
-            autoFocus
-          />
+        <p className="text-sm text-gray-600">Confirmez votre identité administrateur pour continuer.</p>
+        <div className="space-y-2">
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="email"
+              placeholder="Email administrateur"
+              value={email}
+              onChange={e => { setEmail(e.target.value); setError(""); }}
+              className="pl-9 rounded-xl"
+              autoFocus
+            />
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="password"
+              placeholder="Mot de passe admin"
+              value={password}
+              onChange={e => { setPassword(e.target.value); setError(""); }}
+              onKeyDown={e => e.key === "Enter" && handleConfirm()}
+              className="pl-9 rounded-xl"
+            />
+          </div>
         </div>
-        {error && <p className="text-xs text-red-500">Mot de passe incorrect.</p>}
+        {error && <p className="text-xs text-red-500">{error}</p>}
         <div className="flex gap-2">
           <Button variant="outline" onClick={onCancel} className="flex-1 rounded-xl">Annuler</Button>
           <Button onClick={handleConfirm} className="flex-1 rounded-xl bg-red-600 hover:bg-red-700">Confirmer</Button>
