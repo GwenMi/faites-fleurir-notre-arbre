@@ -5,22 +5,24 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
 
 Deno.serve(async (req) => {
   try {
-    const body = await req.json();
-    const eventType = body?.type;
-    const session = body?.data?.object;
+    const rawBody = await req.text();
+    const signature = req.headers.get('stripe-signature');
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
 
-    if (!eventType || !session) {
-      return Response.json({ error: 'Payload invalide' }, { status: 400 });
+    let event;
+    try {
+      event = await stripe.webhooks.constructEventAsync(rawBody, signature, webhookSecret);
+    } catch (err) {
+      return Response.json({ error: `Signature invalide: ${err.message}` }, { status: 400 });
     }
 
-    // Vérifier que la session existe vraiment côté Stripe
-    const verified = await stripe.checkout.sessions.retrieve(session.id);
+    const eventType = event.type;
+    const session = event.data?.object;
 
-    if (eventType === 'checkout.session.completed' && verified.payment_status === 'paid') {
+    if (eventType === 'checkout.session.completed' && session.payment_status === 'paid') {
       const base44 = createClientFromRequest(req);
 
-      // L'order_id est passé dans les metadata du lien de paiement
-      const orderId = verified.metadata?.order_id || verified.client_reference_id;
+      const orderId = session.metadata?.order_id || session.client_reference_id;
 
       if (orderId) {
         const orders = await base44.asServiceRole.entities.Order.filter({ id: orderId });
@@ -32,8 +34,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Mettre à jour StripePayment si elle existe
-      const paymentIntentId = verified.payment_intent;
+      const paymentIntentId = session.payment_intent;
       if (paymentIntentId) {
         const stripePayments = await base44.asServiceRole.entities.StripePayment.filter({
           stripe_payment_intent_id: paymentIntentId
