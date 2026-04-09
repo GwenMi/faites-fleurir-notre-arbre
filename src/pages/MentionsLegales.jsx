@@ -34,13 +34,17 @@ export default function MentionsLegales() {
           <h2>1. Éditeur du site</h2>
           <p>
             <strong>Papin Gwenaëlle</strong><br />
+            Statut : Micro-entreprise<br />
             Enseigne : Fleurs en fête<br />
+            Adresse : 2 Place Jean V, Bureau 3, 44000 Nantes<br />
             E-mail : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a><br />
-            Téléphone : 06 30 77 80 36
+            Téléphone : 06 30 77 80 36<br />
+            SIRET : en cours d'immatriculation<br />
+            TVA non applicable — article 293 B du CGI
           </p>
 
           <h2>2. Hébergement</h2>
-          <p>Le site est hébergé par <strong>Base44</strong> — infrastructure cloud sécurisée, données hébergées dans l'Union Européenne.</p>
+          <p>Le site est hébergé par <strong>Base44 Ltd</strong> — 30 Kalischer St, Tel Aviv, Israël — infrastructure cloud, données hébergées dans l'Union Européenne.</p>
 
           <h2>3. Propriété intellectuelle</h2>
           <p>L'ensemble du contenu de ce site (textes, images, logo, code) est protégé par le droit d'auteur français et les conventions internationales. Toute reproduction est interdite sans autorisation préalable écrite.</p>
@@ -100,7 +104,9 @@ export default function MentionsLegales() {
           <p>Ce site utilise uniquement des cookies strictement nécessaires au fonctionnement technique de la plateforme (session utilisateur, préférences). Aucun cookie publicitaire ou de profilage n'est utilisé. Vous pouvez paramétrer votre navigateur pour refuser les cookies, ce qui peut affecter certaines fonctionnalités du site.</p>
 
           <h2>6. Médiation et litiges en ligne</h2>
-          <p>En cas de litige non résolu, vous pouvez accéder à la plateforme européenne de médiation en ligne : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</p>
+          <p>En cas de litige non résolu amiablement, vous pouvez recourir à la médiation de la consommation (art. L616-1 Code de la consommation). Médiateur désigné : <strong>ANM Conso</strong> — <a href="https://www.anm-conso.com" target="_blank" rel="noopener noreferrer">www.anm-conso.com</a> — 2 rue de Colmar, 94300 Vincennes.<br />
+          Vous pouvez également utiliser la plateforme européenne de résolution des litiges en ligne : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</p>
+
         </div>
       </div>
 

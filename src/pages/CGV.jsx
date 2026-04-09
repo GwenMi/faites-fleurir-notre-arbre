@@ -43,21 +43,24 @@ export default function CGV() {
           <h2>1. Vendeur</h2>
           <p>
             <strong>Papin Gwenaëlle</strong> — Fleurs en fête<br />
-            E-mail : <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a><br />
-            Téléphone : 06 30 77 80 36
+            Micro-entreprise<br />
+            Adresse : 2 Place Jean V, Bureau 3, 44000 Nantes<br />
+            E-mail : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a><br />
+            Téléphone : 06 30 77 80 36<br />
+            SIRET : en cours d'immatriculation
           </p>
 
           <h2>2. Produits</h2>
           <p>Les produits proposés sont des kits de graines et objets personnalisés liés aux événements (mariages, anniversaires, etc.). Les photos et descriptions sont données à titre indicatif et ne sont pas contractuelles.</p>
 
           <h2>3. Prix</h2>
-          <p>Les prix sont indiqués en euros TTC. Fleurs en fête se réserve le droit de modifier ses prix à tout moment, mais les produits seront facturés sur la base des tarifs en vigueur au moment de la validation de la commande. Les frais de livraison sont indiqués avant la validation du paiement.</p>
+          <p>Les prix sont indiqués en euros. En tant que micro-entreprise bénéficiant de la franchise en base de TVA, <strong>TVA non applicable — article 293 B du CGI</strong>. Fleurs en fête se réserve le droit de modifier ses prix à tout moment, mais les produits seront facturés sur la base des tarifs en vigueur au moment de la validation de la commande. Les frais de livraison sont indiqués avant la validation du paiement.</p>
 
           <h2>4. Commande</h2>
           <p>Toute commande implique l'acceptation des présentes CGV. La commande est définitivement validée à réception du paiement. Un email de confirmation est envoyé à l'adresse fournie lors de la commande.</p>
 
           <h2>5. Paiement</h2>
-          <p>Le paiement est exigible immédiatement à la commande. Les moyens de paiement acceptés sont indiqués sur la page de paiement. La transaction est sécurisée.</p>
+          <p>Le paiement est exigible immédiatement à la commande. Les paiements sont traités de manière sécurisée par <strong>Stripe</strong> (Stripe Payments Europe Ltd — 1 Grand Canal Street Lower, Dublin 2, Irlande), prestataire certifié PCI-DSS. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
 
           <h2>6. Livraison</h2>
           <p>Les commandes sont expédiées en France métropolitaine et dans les pays de l'Union européenne. Les délais indicatifs sont précisés lors de la commande. En cas de dépassement de délai de 7 jours ouvrés, le client peut demander l'annulation par email.</p>
@@ -89,10 +92,10 @@ export default function CGV() {
           <p>Les produits personnalisés (au nom de l'événement) sont exclus du droit de rétractation conformément à l'article L221-28 4° du Code de la consommation, sauf défaut avéré.</p>
 
           <h2>9. Garanties légales</h2>
-          <p>Tous les produits bénéficient de la <strong>garantie légale de conformité</strong> (Art. L217-4 à L217-14 Code de la consommation) et de la <strong>garantie contre les vices cachés</strong> (Art. 1641 à 1649 Code civil). En cas de défaut constaté, contactez-nous à <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a>.</p>
+          <p>Tous les produits bénéficient de la <strong>garantie légale de conformité</strong> (Art. L217-3 à L217-20 Code de la consommation, modifiés par l'ordonnance 2021-1247) et de la <strong>garantie contre les vices cachés</strong> (Art. 1641 à 1649 Code civil). En cas de défaut constaté, contactez-nous à <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a>.</p>
 
           <h2>10. Service après-vente et litiges</h2>
-          <p>Pour tout litige, le client peut contacter Fleurs en fête à <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a>. En cas de litige non résolu, le client peut recourir gratuitement à la <strong>médiation de la consommation</strong>, conformément à la directive 2013/11/UE, via la plateforme européenne de règlement en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</p>
+          <p>Pour tout litige, le client peut contacter Fleurs en fête à <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a>. En cas de litige non résolu amiablement, le client peut recourir gratuitement à la <strong>médiation de la consommation</strong>, conformément à l'art. L616-1 du Code de la consommation et à la directive 2013/11/UE. Médiateur compétent : <strong>ANM Conso</strong> — <a href="https://www.anm-conso.com" target="_blank" rel="noopener noreferrer">www.anm-conso.com</a> — 2 rue de Colmar, 94300 Vincennes. Le client peut également utiliser la plateforme européenne de résolution en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.</p>
 
           <h2>11. Droit applicable et juridiction compétente</h2>
           <p>Les présentes CGV sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents. Pour les consommateurs de l'Union européenne, les dispositions plus favorables de la législation de leur pays de résidence peuvent s'appliquer.</p>
