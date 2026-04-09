@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Search, Loader2, Package, Truck, CheckCircle, AlertCircle, Download, Mail } from "lucide-react";
+import { Search, Loader2, Package, Truck, CheckCircle, AlertCircle, Download, Mail, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import jsPDF from "jspdf";
@@ -22,6 +22,7 @@ export default function OrderTracking() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState("");
+  const [trackingData, setTrackingData] = useState({}); // { [orderId]: { parcel, events, loading } }
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -47,6 +48,18 @@ export default function OrderTracking() {
         setError("Aucune commande trouvée avec ces coordonnées. Vérifiez votre numéro et email.");
       }
       setSearched(true);
+      // Fetch Sendcloud tracking for orders with tracking numbers
+      const ordersWithTracking = result?.filter(o => o.tracking_number) || [];
+      for (const o of ordersWithTracking) {
+        setTrackingData(prev => ({ ...prev, [o.id]: { loading: true } }));
+        base44.functions.invoke('getParcelTracking', { tracking_number: o.tracking_number })
+          .then(res => {
+            setTrackingData(prev => ({ ...prev, [o.id]: { loading: false, ...res.data } }));
+          })
+          .catch(() => {
+            setTrackingData(prev => ({ ...prev, [o.id]: { loading: false } }));
+          });
+      }
     } catch (e) {
       setError("Erreur lors de la recherche. Veuillez réessayer.");
       console.error(e);
@@ -244,19 +257,68 @@ export default function OrderTracking() {
                     {/* Tracking */}
                     {order.tracking_number ? (
                       <div className="mb-6 pb-6 border-b border-gray-100">
-                        <p className="font-sans-clean text-sm font-semibold text-gray-700 mb-3">📦 Suivi de votre colis</p>
-                        <div className="bg-purple-50 rounded-lg p-4">
-                          <p className="font-sans-clean text-xs text-purple-600 font-semibold mb-2">Transporteur</p>
-                          <p className="font-sans-clean font-bold text-gray-800 mb-3">{order.tracking_carrier?.toUpperCase() || "Transporteur"}</p>
-                          <a
-                            href={getTrackingUrl(order.tracking_carrier, order.tracking_number)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-block px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-sans-clean text-sm font-semibold transition"
-                          >
-                            Suivre votre colis → {order.tracking_number}
-                          </a>
-                        </div>
+                        <p className="font-sans-clean text-sm font-semibold text-gray-700 mb-3">📦 Suivi de votre colis en temps réel</p>
+                        {trackingData[order.id]?.loading ? (
+                          <div className="flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Récupération du suivi Sendcloud...
+                          </div>
+                        ) : trackingData[order.id]?.parcel ? (
+                          <div className="space-y-3">
+                            {/* Statut actuel */}
+                            <div className="bg-purple-50 rounded-xl p-4 flex items-center justify-between gap-3">
+                              <div>
+                                <p className="font-sans-clean text-xs text-purple-500 font-semibold uppercase mb-1">
+                                  {trackingData[order.id].parcel.carrier_name || order.tracking_carrier?.toUpperCase()}
+                                </p>
+                                <p className="font-sans-clean font-bold text-gray-800">
+                                  {trackingData[order.id].parcel.status}
+                                </p>
+                                <p className="font-sans-clean text-xs text-gray-400 mt-1">N° {order.tracking_number}</p>
+                              </div>
+                              <a
+                                href={trackingData[order.id].parcel.tracking_url || getTrackingUrl(order.tracking_carrier, order.tracking_number)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex-shrink-0 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-sans-clean text-sm font-semibold transition"
+                              >
+                                Suivre →
+                              </a>
+                            </div>
+                            {/* Événements */}
+                            {trackingData[order.id].events?.length > 0 && (
+                              <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+                                <p className="font-sans-clean text-xs font-semibold text-gray-500 uppercase px-4 pt-3 pb-2">Historique</p>
+                                <div className="divide-y divide-gray-50">
+                                  {trackingData[order.id].events.slice(0, 5).map((ev, i) => (
+                                    <div key={i} className="px-4 py-3 flex gap-3 items-start">
+                                      <Clock className="w-3.5 h-3.5 text-gray-300 flex-shrink-0 mt-0.5" />
+                                      <div className="min-w-0">
+                                        <p className="font-sans-clean text-sm text-gray-700">{ev.message}</p>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                          {ev.location && <span className="font-sans-clean text-xs text-gray-400 flex items-center gap-1"><MapPin className="w-3 h-3" />{ev.location}</span>}
+                                          {ev.date && <span className="font-sans-clean text-xs text-gray-400">{new Date(ev.date).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="bg-purple-50 rounded-lg p-4">
+                            <p className="font-sans-clean font-bold text-gray-800 mb-2">{order.tracking_carrier?.toUpperCase() || 'Transporteur'} — {order.tracking_number}</p>
+                            <a
+                              href={getTrackingUrl(order.tracking_carrier, order.tracking_number)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-block px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-sans-clean text-sm font-semibold transition"
+                            >
+                              Suivre votre colis →
+                            </a>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="mb-6 pb-6 border-b border-gray-100">
@@ -314,7 +376,7 @@ export default function OrderTracking() {
 
       {/* Footer */}
       <footer className="mt-12 py-10 px-6 border-t border-gray-200 text-center bg-white">
-        <p className="font-sans-clean text-xs text-gray-400">Besoin d'aide ? Contactez-nous à contact@fleursenfete.com</p>
+        <p className="font-sans-clean text-xs text-gray-400">Besoin d'aide ? Contactez-nous à <a href="mailto:contact@fleursdefete.fr" className="hover:text-rose-400">contact@fleursdefete.fr</a></p>
       </footer>
     </div>
   );
