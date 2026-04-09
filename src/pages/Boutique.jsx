@@ -103,6 +103,10 @@ export default function Boutique() {
             className="font-sans-clean text-sm font-semibold text-rose-500 border-b-2 border-rose-300 pb-0.5">
             Boutique
           </a>
+          <a href={createPageUrl("KitFocusOrganisation")}
+            className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition hidden sm:block">
+            Cadeaux entreprise
+          </a>
           {/* Bouton panier */}
           <button
             onClick={() => setShowCart(true)}

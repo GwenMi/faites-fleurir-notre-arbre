@@ -78,6 +78,7 @@ import SupplierOrders from './pages/SupplierOrders';
 import CustomerPortal from './pages/CustomerPortal';
 import AdminSuperPanel from './pages/AdminSuperPanel';
 import FAQ from './pages/FAQ';
+import KitFocusOrganisation from './pages/KitFocusOrganisation';
 import __Layout from './Layout.jsx';
 
 
@@ -113,6 +114,7 @@ export const PAGES = {
     "CustomerPortal": CustomerPortal,
     "AdminSuperPanel": AdminSuperPanel,
     "FAQ": FAQ,
+    "KitFocusOrganisation": KitFocusOrganisation,
 }
 
 export const pagesConfig = {
