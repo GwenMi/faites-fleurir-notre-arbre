@@ -119,10 +119,10 @@ function ShopHomePage({ onStart }) {
         <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-8 text-center">De votre table à leur fenêtre</h2>
         <div className="flex flex-col sm:flex-row items-start gap-0">
           {[
-            { time: "Jour J", icon: "🌿", desc: "Le pot est posé sur la table, personnalisé à votre image." },
-            { time: "J+7", icon: "🏡", desc: "Votre invité le ramène chez lui et le plante." },
-            { time: "J+30", icon: "🌱", desc: "Les premières pousses apparaissent." },
-            { time: "J+60", icon: "🌸", desc: "La fleur s'épanouit — il scanne le QR code et partage la photo." },
+            { time: "Jour J", icon: "🌿", desc: "Le pot est posé sur chaque table, personnalisé à votre image." },
+            { time: "Le soir même", icon: "🏡", desc: "Vos invités repartent avec leur petit pot — prêt à planter dès le lendemain." },
+            { time: "J+14 à J+30", icon: "🌱", desc: "Les premières pousses apparaissent selon la graine et les conditions." },
+            { time: "J+45 à J+60", icon: "🌸", desc: "La fleur s'épanouit — il scanne le QR code et partage la photo." },
             { time: "1 an après", icon: "💛", desc: "La fleur refleurit. Il pense encore à votre mariage." },
           ].map((step, i) => (
             <div key={i} className="flex sm:flex-col items-start sm:items-center flex-1 gap-3 sm:gap-2 relative mb-6 sm:mb-0">
