@@ -25,8 +25,8 @@ const EVENT_TYPES = [
 ];
 
 export const PRICING = {
-  KIT_COMPOSE: 2.90,
-  KIT_PRET: 4.90,
+  KIT_COMPOSE: 3.90,
+  KIT_PRET: 5.90,
   SAC_CADEAU: 0.40,
 };
 
@@ -82,7 +82,7 @@ function ShopHomePage({ onStart }) {
           className="inline-flex items-center gap-2 py-4 px-8 rounded-full font-sans-shop font-bold text-white shadow-lg bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
           <Sparkles className="w-4 h-4" /> Créer mon kit de pots
         </button>
-        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 2,90 € / invité · Pot en verre · Étiquette personnalisée</p>
+        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 3,90 € / invité · Pot en verre · Étiquette personnalisée</p>
       </div>
 
 
