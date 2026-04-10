@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
@@ -38,6 +39,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Cadeaux de mariage, baptême & événements — Pots de graines personnalisés"
+        description="Offrez un souvenir vivant à vos invités : petits pots de graines personnalisés avec vos prénoms, la date et un QR code galerie photos. À partir de 3,90 € / invité."
+        url="https://fleursdefete.fr"
+      />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }

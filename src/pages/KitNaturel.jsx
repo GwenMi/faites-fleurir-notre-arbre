@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEOHead from "@/components/SEOHead";
 import { createPageUrl } from "@/utils";
 import { Check, Leaf, Star } from "lucide-react";
 
@@ -72,6 +73,22 @@ export default function KitNaturel() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Kit Naturel — Galet de cire d'abeille personnalisé pour maisons d'hôtes & mariages"
+        description="Un galet de cire d'abeille française gravé à votre logo, dans une coupelle hexagonale en bois. 6 usages du quotidien. Idéal pour maisons d'hôtes, gîtes et mariages champêtres."
+        url="https://fleursdefete.fr/KitNaturel"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "Kit Naturel — Galet de cire d'abeille personnalisé",
+          "description": "Galet de cire d'abeille française avec logo en relief, coupelle hexagonale en bois découpée laser et carte kraft 6 usages. Idéal pour maisons d'hôtes et mariages champêtres.",
+          "brand": { "@type": "Brand", "name": "Fleurs de Fête" },
+          "offers": [
+            { "@type": "Offer", "name": "Pack Essentiel", "price": "5.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" },
+            { "@type": "Offer", "name": "Pack Complet", "price": "11.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" }
+          ]
+        }}
+      />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
         .font-serif-nat { font-family: 'Cormorant Garamond', Georgia, serif; }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEOHead from "@/components/SEOHead";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
 import StepKitOptions from "@/components/shop/StepKitOptions";
@@ -131,6 +132,22 @@ function ShopHomePage({ onStart }) {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Boutique — Kits de graines personnalisés pour mariages, baptêmes & entreprises"
+        description="Commandez votre kit de graines personnalisé : étiquette à vos prénoms, QR code galerie photos, graine au choix. Kit à composer 3,90 € ou prêt à offrir 5,90 € par invité."
+        url="https://fleursdefete.fr/Shop"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Kits de graines personnalisés — Fleurs de Fête",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Kit à composer", "url": "https://fleursdefete.fr/Shop" },
+            { "@type": "ListItem", "position": 2, "name": "Kit prêt à offrir", "url": "https://fleursdefete.fr/Shop" },
+            { "@type": "ListItem", "position": 3, "name": "Kit Naturel Cire d'Abeille", "url": "https://fleursdefete.fr/KitNaturel" },
+            { "@type": "ListItem", "position": 4, "name": "Kit Focus & Organisation", "url": "https://fleursdefete.fr/KitFocusOrganisation" }
+          ]
+        }}
+      />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
         .font-serif-shop { font-family: 'Cormorant Garamond', Georgia, serif; }
@@ -474,7 +491,7 @@ export default function Shop() {
               shippingMethod={shippingMethod}
               onSelect={setShippingMethod}
               onNext={() => setStep(8)}
-              onBack={() => setStep(hasSite ? 6 : 5)}
+              onBack={() => setStep(6)}
             />
           )}
           {step === 8 && (
