@@ -51,7 +51,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
       </div>
 
       {/* Choix de la graine */}
-      {seeds && (
+      {seeds && seeds.length > 1 && (
         <div>
           <label className="block text-sm font-semibold text-gray-900 mb-3">Type de graine</label>
           <div className="grid grid-cols-2 gap-3">
@@ -69,6 +69,15 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
                 <p className="text-xs text-gray-500 mt-1">{seed.description}</p>
               </button>
             ))}
+          </div>
+        </div>
+      )}
+      {seeds && seeds.length === 1 && (
+        <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3">
+          <span className="text-xl">{seeds[0].label.split(' ')[0]}</span>
+          <div>
+            <p className="text-sm font-semibold text-gray-800">{seeds[0].label}</p>
+            <p className="text-xs text-gray-500">{seeds[0].description}</p>
           </div>
         </div>
       )}

@@ -32,9 +32,6 @@ export const PRICING = {
 
 const SEEDS = [
   { id: "tournesol_nain", label: "🌻 Tournesol nain", description: "Compact et joyeux" },
-  { id: "mignonnette", label: "🌸 Mignonnette", description: "Parfumé et délicat" },
-  { id: "coquelicot", label: "🌷 Coquelicot", description: "Rouge éclatant" },
-  { id: "bleuet", label: "💙 Bleuet", description: "Bleu profond" },
 ];
 
 function ShopHomePage({ onStart }) {
