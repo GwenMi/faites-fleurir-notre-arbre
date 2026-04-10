@@ -8,6 +8,7 @@ import FlowerGallery from "./FlowerGallery";
 import PostUploadModal from "./PostUploadModal";
 import FlowerTree from "./FlowerTree";
 import GuestbookSection from "./GuestbookSection";
+import PlantTimelineSection from "./PlantTimelineSection";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -258,6 +259,9 @@ export default function FlowerChallengeSection({ event }) {
           <FlowerGallery posts={challengePosts} type="challenge" />
         </div>
       )}
+
+      {/* Timeline évolution des plantes — cloisonnée par event_id + derrière auth */}
+      <PlantTimelineSection eventId={eventId} guest={guest} />
 
       {/* Guestbook */}
       <GuestbookSection event={event} guest={guest} />
