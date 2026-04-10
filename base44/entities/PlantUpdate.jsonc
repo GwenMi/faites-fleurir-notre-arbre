@@ -1,0 +1,37 @@
+{
+  "name": "PlantUpdate",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string",
+      "description": "Pr\u00e9nom ou pseudo de l'invit\u00e9"
+    },
+    "guest_identifier": {
+      "type": "string",
+      "description": "Cl\u00e9 unique pour identifier l'invit\u00e9 (ex: slug-prenom)"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note ou commentaire optionnel"
+    },
+    "week_number": {
+      "type": "number",
+      "description": "Semaine de pousse (calcul\u00e9e ou saisie)"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "event_id",
+    "guest_name",
+    "photo_url"
+  ]
+}
