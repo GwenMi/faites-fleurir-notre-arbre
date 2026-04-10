@@ -34,7 +34,7 @@ const KITS = {
   },
 };
 
-export default function StepKitOptions({ selection, onUpdate, onNext, PRICING }) {
+export default function StepKitOptions({ selection, onUpdate, onNext, onBack, PRICING }) {
   const handleNext = () => {
     if (!selection.kitType) { toast.error("Veuillez choisir un kit"); return; }
     onNext();
@@ -86,13 +86,18 @@ export default function StepKitOptions({ selection, onUpdate, onNext, PRICING })
 
 
 
-      <Button
-        onClick={handleNext}
-        disabled={!selection.kitType}
-        className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl"
-      >
-        Continuer <ChevronRight className="w-4 h-4 ml-2" />
-      </Button>
+      <div className="flex gap-3">
+        <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
+          ← Retour
+        </Button>
+        <Button
+          onClick={handleNext}
+          disabled={!selection.kitType}
+          className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl"
+        >
+          Continuer <ChevronRight className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
     </div>
   );
 }

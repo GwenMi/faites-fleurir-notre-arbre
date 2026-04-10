@@ -250,27 +250,6 @@ export default function OrderConfirmation() {
           )}
         </div>
 
-        {/* Payment Details */}
-        {!isFullPayment && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8">
-            <h3 className="font-serif-elegant text-lg font-bold text-amber-900 mb-3">📋 Prochaines étapes</h3>
-            <ul className="space-y-2 font-sans-clean text-sm text-amber-900">
-              <li className="flex items-start gap-2">
-                <span className="text-amber-600 font-bold mt-0.5">1.</span>
-                <span>Acompte de <strong>{(order.deposit_amount?.toFixed(2))}€</strong> reçu ✓</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-600 font-bold mt-0.5">2.</span>
-                <span>Solde de <strong>{(order.total_price - order.deposit_amount).toFixed(2)}€</strong> à régler à la livraison</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-600 font-bold mt-0.5">3.</span>
-                <span>Nous vous enverrons le numéro de suivi par email</span>
-              </li>
-            </ul>
-          </div>
-        )}
-
         {/* Action Buttons */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <Button

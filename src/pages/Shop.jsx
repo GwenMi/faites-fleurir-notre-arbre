@@ -374,7 +374,7 @@ export default function Shop() {
               shippingMethod={shippingMethod}
               onSelect={setShippingMethod}
               onNext={() => setStep(8)}
-              onBack={() => setStep(6)}
+              onBack={() => setStep(hasSite ? 6 : 5)}
             />
           )}
           {step === 8 && (

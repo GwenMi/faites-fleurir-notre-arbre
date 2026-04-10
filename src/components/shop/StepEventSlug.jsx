@@ -101,7 +101,7 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">Permalien</label>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm text-gray-500">fleursen.fete/</span>
+              <span className="text-sm text-gray-500">fleursdefete.fr/</span>
               <Input
                 type="text"
                 placeholder="sophie-et-marc"
@@ -129,7 +129,7 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              Votre site sera accessible à: <strong>fleursen.fete/{slug || "votre-slug"}</strong>
+              Votre site sera accessible à: <strong>fleursdefete.fr/{slug || "votre-slug"}</strong>
             </p>
           </div>
         </div>
