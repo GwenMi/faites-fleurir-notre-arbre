@@ -24,6 +24,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
   const [potType, setPotType] = useState("Verre");
   const [customText, setCustomText] = useState("");
   const [name, setName] = useState("");
+  const [eventName, setEventName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -53,7 +54,8 @@ export default function OrderModal({ product, guestPack, onClose }) {
 
   const createOrder = async () => {
     // 1. Créer automatiquement le site événement gratuit
-    const baseSlug = name.trim().toLowerCase()
+    const displayName = eventName.trim() || name.trim();
+    const baseSlug = displayName.toLowerCase()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 28);
     const slug = `${baseSlug}-${Date.now().toString(36)}`;
@@ -61,7 +63,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(publicUrl)}`;
 
     const eventRecord = await base44.entities.Event.create({
-      couple_names: name.trim(),
+      couple_names: displayName,
       event_date: eventDate,
       event_type: "mariage",
       slug,
@@ -349,6 +351,10 @@ export default function OrderModal({ product, guestPack, onClose }) {
             <div className="pt-2 border-t border-gray-100 space-y-3">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Vos coordonnées</p>
               <Input placeholder="Votre prénom & nom *" value={name} onChange={e => setName(e.target.value)} required className="rounded-xl h-11" />
+              <div>
+                <Input placeholder="Prénoms pour l'étiquette (ex: Sophie & Thomas)" value={eventName} onChange={e => setEventName(e.target.value)} className="rounded-xl h-11" />
+                <p className="text-xs text-gray-400 mt-1">Ces prénoms apparaîtront sur l'étiquette et le site événement. Laissez vide pour utiliser votre nom.</p>
+              </div>
               <Input type="email" placeholder="Votre email *" value={email} onChange={e => setEmail(e.target.value)} required className="rounded-xl h-11" />
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">

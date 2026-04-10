@@ -139,6 +139,10 @@ export default function Boutique() {
           Des kits soigneusement préparés pour offrir à chaque invité un souvenir qui fleurit.
           Commandez directement en ligne.
         </p>
+        <a href={createPageUrl("Shop")}
+          className="inline-flex items-center gap-2 mt-6 px-7 py-3.5 rounded-full font-sans-clean font-bold text-white bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm shadow-md">
+          🌸 Composer mon kit personnalisé
+        </a>
       </div>
 
       {/* Products */}

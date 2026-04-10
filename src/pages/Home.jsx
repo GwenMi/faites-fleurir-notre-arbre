@@ -66,7 +66,7 @@ export default function Home() {
             className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition hidden sm:block">
             Mon espace
           </a>
-          <a href={createPageUrl("Boutique")}
+          <a href={createPageUrl("Shop")}
             className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
             Créer mon événement
           </a>
@@ -88,7 +88,7 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-10">
-          <a href={createPageUrl("Boutique")}
+          <a href={createPageUrl("Shop")}
             className="flex-1 py-4 rounded-full font-sans-clean font-bold text-white shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
             <Sparkles className="w-4 h-4" /> Créer mon événement
           </a>
@@ -165,7 +165,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <a href={createPageUrl("Boutique")}
+            <a href={createPageUrl("Shop")}
               className="block text-center py-3.5 rounded-full font-sans-clean font-semibold text-sm border-2 border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-500 transition">
               Commencer gratuitement
             </a>
@@ -187,7 +187,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <a href={createPageUrl("Boutique")}
+            <a href={createPageUrl("Shop")}
               className="block text-center py-3.5 rounded-full font-sans-clean font-semibold text-sm bg-gradient-to-r from-rose-400 to-pink-500 text-white hover:opacity-90 transition shadow-sm">
               Choisir la formule Complète
             </a>
