@@ -76,22 +76,36 @@ export default function Home() {
       {/* Hero */}
       <div className="hero-bg px-6 md:px-12 py-20 md:py-28 text-center">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">
-          Mariages · Anniversaires · Baptêmes · Fêtes d'entreprise · Maisons d'hôte
+          Cadeaux de mariage · Baptêmes · Anniversaires
         </p>
         <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
-          Faites fleurir<br />
-          <span className="text-rose-400">vos souvenirs</span>
+          Un souvenir vivant,<br />
+          <span className="text-rose-400">long après le mariage</span>
         </h1>
         <div className="gold-line max-w-xs mx-auto mb-6" />
         <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Offrez à vos invités un petit pot de graines. Quand leur fleur pousse, ils partagent leur photo — et votre amour fleurit à l'infini.
+          Des petits pots de graines personnalisés à poser sur les tables — chaque invité plante, chaque fleur raconte encore votre histoire.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-10">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-8">
           <a href={createPageUrl("Shop")}
             className="flex-1 py-4 rounded-full font-sans-clean font-bold text-white shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
-            <Sparkles className="w-4 h-4" /> Créer mon événement
+            <Sparkles className="w-4 h-4" /> Découvrir les formules
           </a>
+        </div>
+
+        {/* 3 arguments courts */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-2xl mx-auto mb-10">
+          {[
+            { icon: "✍️", text: "Personnalisé avec vos prénoms, la date et la graine de votre choix" },
+            { icon: "📱", text: "Un QR code sur chaque pot pour partager les photos des fleurs" },
+            { icon: "🌱", text: "Un cadeau vivant qui continue à pousser bien après la fête" },
+          ].map(a => (
+            <div key={a.icon} className="flex items-start gap-2 text-left max-w-[200px]">
+              <span className="text-lg mt-0.5 flex-shrink-0">{a.icon}</span>
+              <p className="font-sans-clean text-xs text-gray-500 leading-relaxed">{a.text}</p>
+            </div>
+          ))}
         </div>
 
         <div className="flex flex-col items-center gap-3 max-w-xs mx-auto">

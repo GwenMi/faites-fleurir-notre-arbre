@@ -69,60 +69,131 @@ function ShopHomePage({ onStart }) {
 
       {/* Hero */}
       <div className="bg-gradient-to-b from-rose-50 to-white px-6 md:px-12 py-16 md:py-24 text-center">
-        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">Cadeaux naturels & poétiques</p>
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">Cadeaux de mariage · Baptêmes · Anniversaires · Entreprises</p>
         <h1 className="font-serif-shop text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
-          Des pots de graines<br />
-          <span className="text-rose-400">qui fleurissent</span>
+          Un souvenir qui continue<br />
+          <span className="text-rose-400">à fleurir chez vos invités</span>
         </h1>
         <div className="gold-line-shop max-w-xs mx-auto mb-6" />
         <p className="font-sans-shop text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Offrez à vos invités un souvenir vivant : un petit pot de fleurs à faire pousser chez eux. Personnalisé, éco-responsable, inoubliable.
+          Un petit pot de graines personnalisé, posé sur chaque table. Lorsque la fleur pousse, vos invités pensent encore à votre mariage — et partagent la photo.
         </p>
         <button onClick={onStart}
           className="inline-flex items-center gap-2 py-4 px-8 rounded-full font-sans-shop font-bold text-white shadow-lg bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
-          <Sparkles className="w-4 h-4" /> Créer mon kit de pots
+          <Sparkles className="w-4 h-4" /> Composer mon kit
         </button>
-        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 3,90 € / invité · Pot en verre · Étiquette personnalisée</p>
+        <p className="font-sans-shop text-xs text-gray-400 mt-4">À partir de 3,90 € / invité · Prénoms & date gravés · Graine au choix</p>
       </div>
 
 
 
-      {/* Comment ça marche */}
-      <div className="px-6 md:px-12 py-16 max-w-4xl mx-auto text-center">
-        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Simple & magique</p>
-        <h2 className="font-serif-shop text-4xl font-bold text-gray-800 mb-12">Comment ça marche ?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {/* Deux formules */}
+      <div className="px-6 md:px-12 py-12 max-w-3xl mx-auto">
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 text-center">Deux formules, une seule promesse</p>
+        <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-8 text-center">Choisissez votre façon d'offrir</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="border-2 border-gray-200 rounded-3xl p-7 bg-white">
+            <p className="font-sans-shop text-xs tracking-widest uppercase text-gray-400 mb-1">Kit à composer</p>
+            <p className="font-serif-shop text-4xl font-bold text-gray-800 mb-1">3,90 €<span className="text-sm font-normal text-gray-400"> / invité</span></p>
+            <p className="font-sans-shop text-sm text-gray-500 mb-4 leading-relaxed">Vous assemblez vous-même les éléments à votre rythme — graines, pastille de terre, étiquette personnalisée — pour un résultat fait main et personnel.</p>
+            <ul className="space-y-2">{["Graines de fleur","Pastille de semis","Étiquette personnalisée","QR code galerie photos","Notice de plantation"].map(f => <li key={f} className="flex items-center gap-2 font-sans-shop text-sm text-gray-700"><span className="text-green-400 text-xs">✓</span>{f}</li>)}</ul>
+          </div>
+          <div className="border-2 border-rose-300 rounded-3xl p-7 bg-rose-50 relative">
+            <span className="absolute top-4 right-4 bg-rose-400 text-white text-xs font-bold px-2.5 py-1 rounded-full font-sans-shop">Le plus choisi ✨</span>
+            <p className="font-sans-shop text-xs tracking-widest uppercase text-rose-400 mb-1">Kit prêt à offrir</p>
+            <p className="font-serif-shop text-4xl font-bold text-gray-800 mb-1">5,90 €<span className="text-sm font-normal text-gray-400"> / invité</span></p>
+            <p className="font-sans-shop text-sm text-gray-600 mb-4 leading-relaxed">Tout arrive assemblé et emballé. Il suffit de poser les pots sur les tables le jour J — rien à préparer, rien à stresser.</p>
+            <ul className="space-y-2">{["Graines de fleur","Pastille de semis","Étiquette personnalisée","QR code galerie photos","Notice de plantation","Assemblé & prêt à poser ✓"].map(f => <li key={f} className="flex items-center gap-2 font-sans-shop text-sm text-gray-700"><span className="text-rose-400 text-xs">✓</span>{f}</li>)}</ul>
+          </div>
+        </div>
+        <div className="text-center mt-6">
+          <button onClick={onStart} className="inline-flex items-center gap-2 py-3.5 px-8 rounded-full font-sans-shop font-bold text-white bg-rose-400 hover:bg-rose-500 transition text-sm shadow-sm">
+            Composer mon kit <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Frise chronologique */}
+      <div className="px-6 md:px-12 py-12 max-w-3xl mx-auto">
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 text-center">Le voyage du cadeau</p>
+        <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-8 text-center">De votre table à leur fenêtre</h2>
+        <div className="flex flex-col sm:flex-row items-start gap-0">
           {[
-            { icon: <Package className="w-7 h-7" />, step: "01", title: "Composez votre kit", desc: "Choisissez le type de pot, la graine, les options d'emballage et la quantité." },
-            { icon: <Leaf className="w-7 h-7" />, step: "02", title: "Offrez à vos invités", desc: "Chaque invité reçoit son pot à planter. Simple, naturel, touchant." },
-            { icon: <Heart className="w-7 h-7" />, step: "03", title: "Ils partagent", desc: "Quand la fleur pousse, ils scannent le QR code et partagent leur photo." },
-          ].map(item => (
-            <div key={item.step} className="flex flex-col items-center">
-              <div className="w-14 h-14 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-400 mb-4">{item.icon}</div>
-              <p className="font-sans-shop text-xs tracking-widest text-gray-300 mb-2">{item.step}</p>
-              <h3 className="font-serif-shop text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
-              <p className="font-sans-shop text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+            { time: "Jour J", icon: "🌿", desc: "Le pot est posé sur la table, personnalisé à votre image." },
+            { time: "J+7", icon: "🏡", desc: "Votre invité le ramène chez lui et le plante." },
+            { time: "J+30", icon: "🌱", desc: "Les premières pousses apparaissent." },
+            { time: "J+60", icon: "🌸", desc: "La fleur s'épanouit — il scanne le QR code et partage la photo." },
+            { time: "1 an après", icon: "💛", desc: "La fleur refleurit. Il pense encore à votre mariage." },
+          ].map((step, i) => (
+            <div key={i} className="flex sm:flex-col items-start sm:items-center flex-1 gap-3 sm:gap-2 relative mb-6 sm:mb-0">
+              <div className="flex sm:flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-lg flex-shrink-0">{step.icon}</div>
+                {i < 4 && <div className="hidden sm:block w-full h-0.5 bg-rose-100 absolute top-5 left-1/2" style={{width:'100%', zIndex:0}}></div>}
+              </div>
+              <div className="sm:text-center">
+                <p className="font-sans-shop text-xs font-bold text-rose-400 uppercase tracking-wide mb-1">{step.time}</p>
+                <p className="font-sans-shop text-xs text-gray-500 leading-relaxed">{step.desc}</p>
+              </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Comment ça marche — par formule */}
+      <div className="px-6 md:px-12 py-12 max-w-4xl mx-auto">
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 text-center">Selon votre formule</p>
+        <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-10 text-center">Comment ça se passe ?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <p className="font-serif-shop text-xl font-bold text-gray-800 mb-5">🌱 Kit à composer</p>
+            <div className="space-y-4">
+              {[
+                { n:"01", t:"Vous commandez les éléments", d:"Pots, graines, étiquettes et pastilles vous sont livrés séparément." },
+                { n:"02", t:"Vous assemblez à votre rythme", d:"Un moment zen avant le grand jour, idéal à faire à plusieurs." },
+                { n:"03", t:"Vous distribuez le jour J", d:"Posez les pots sur les tables ou glissez-les dans les pochettes invités." },
+              ].map(s => (
+                <div key={s.n} className="flex gap-4">
+                  <span className="font-sans-shop text-xs text-gray-300 font-bold mt-0.5 flex-shrink-0 w-6">{s.n}</span>
+                  <div><p className="font-sans-shop font-semibold text-gray-800 text-sm">{s.t}</p><p className="font-sans-shop text-xs text-gray-500 mt-0.5">{s.d}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="font-serif-shop text-xl font-bold text-gray-800 mb-5">🎁 Kit prêt à offrir</p>
+            <div className="space-y-4">
+              {[
+                { n:"01", t:"Vous commandez en quelques clics", d:"Choisissez la quantité, personnalisez l'étiquette, validez." },
+                { n:"02", t:"Chaque pot arrive assemblé", d:"Emballé, étiqueté, prêt à poser — aucune préparation nécessaire." },
+                { n:"03", t:"Vous posez sur les tables le jour J", d:"C'est tout. Vos invités repartent avec un souvenir vivant." },
+              ].map(s => (
+                <div key={s.n} className="flex gap-4">
+                  <span className="font-sans-shop text-xs text-gray-300 font-bold mt-0.5 flex-shrink-0 w-6">{s.n}</span>
+                  <div><p className="font-sans-shop font-semibold text-gray-800 text-sm">{s.t}</p><p className="font-sans-shop text-xs text-gray-500 mt-0.5">{s.d}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Avantages */}
       <div className="bg-rose-50 px-6 md:px-12 py-14">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-serif-shop text-3xl font-bold text-gray-800 text-center mb-10">Pourquoi choisir Fleurs de fête ?</h2>
+          <h2 className="font-serif-shop text-3xl font-bold text-gray-800 text-center mb-10">Ce qui rend ce cadeau unique</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              "📦 Format léger avec pastille de terre compressée",
-              "♻️ Emballage éco-responsable",
-              "✍️ Personnalisation : prénoms, date & logo",
-              "🚚 Livraison soignée",
-              "🌸 Compatible mariage, baptême, anniversaire…",
-              "🤝 Service client disponible et réactif",
+              { icon: "🌿", title: "100 % naturel", desc: "Graines non traitées, pastille de terre compressée, emballage éco-responsable." },
+              { icon: "✍️", title: "Entièrement personnalisé", desc: "Prénoms, date, message ou logo — chaque étiquette raconte votre histoire." },
+              { icon: "📱", title: "Une dimension digitale", desc: "Le QR code sur chaque pot invite les invités à partager la photo de leur fleur." },
+              { icon: "🐝", title: "Mellifère & utile", desc: "Les fleurs choisies nourrissent les abeilles et embellissent les jardins." },
             ].map(item => (
-              <div key={item} className="flex items-center gap-3 bg-white rounded-2xl px-5 py-3.5 border border-rose-100 shadow-sm">
-                <Check className="w-4 h-4 text-rose-400 flex-shrink-0" />
-                <span className="font-sans-shop text-sm text-gray-700">{item}</span>
+              <div key={item.title} className="flex items-start gap-4 bg-white rounded-2xl px-5 py-4 border border-rose-100 shadow-sm">
+                <span className="text-2xl flex-shrink-0 mt-0.5">{item.icon}</span>
+                <div>
+                  <p className="font-sans-shop font-bold text-gray-800 text-sm">{item.title}</p>
+                  <p className="font-sans-shop text-xs text-gray-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -193,15 +264,22 @@ function ShopHomePage({ onStart }) {
       {/* Avis */}
       <ReviewCarousel />
 
+      {/* Réassurance */}
+      <div className="px-6 md:px-12 py-10 max-w-2xl mx-auto text-center">
+        <p className="font-sans-shop text-sm text-gray-500 leading-relaxed italic">
+          Chaque commande est préparée avec soin par Gwenaëlle, depuis Nantes. Livraison soignée, emballage éco-responsable, graines certifiées non traitées.
+        </p>
+      </div>
+
       {/* CTA final */}
       <div className="bg-gradient-to-r from-rose-400 to-pink-500 px-6 py-16 text-center text-white">
-        <h2 className="font-serif-shop text-4xl font-bold mb-4">Prêt à faire fleurir votre événement ?</h2>
+        <h2 className="font-serif-shop text-4xl font-bold mb-4">Un souvenir qui fleurit longtemps après</h2>
         <p className="font-sans-shop text-white/80 text-sm mb-8 max-w-md mx-auto">
-          Créez votre kit en quelques minutes. Livraison rapide, qualité garantie.
+          Composez votre kit en quelques minutes. Livraison soignée, graines certifiées, étiquette personnalisée.
         </p>
         <button onClick={onStart}
           className="inline-flex items-center gap-2 bg-white text-rose-500 font-bold px-8 py-4 rounded-full hover:bg-rose-50 transition shadow-lg font-sans-shop text-sm">
-          Composer mon kit <ArrowRight className="w-4 h-4" />
+          Découvrir les formules <ArrowRight className="w-4 h-4" />
         </button>
       </div>
 
@@ -212,8 +290,6 @@ function ShopHomePage({ onStart }) {
           <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("FAQ")} className="hover:text-rose-400 transition">FAQ</a>
-          <span className="text-gray-200">·</span>
-          <a href={createPageUrl("Contact")} className="hover:text-rose-400 transition">Contact</a>
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("CGV")} className="hover:text-rose-400 transition">CGV</a>
           <span className="text-gray-200">·</span>
