@@ -303,6 +303,16 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+      <nav className="flex items-center justify-between px-6 md:px-12 py-4 bg-white border-b border-gray-100">
+        <a href={createPageUrl("Home")}>
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
+            alt="Fleurs de fête"
+            className="h-10"
+          />
+        </a>
+        <a href={createPageUrl("Home")} className="font-sans-shop text-xs text-gray-400 hover:text-rose-400 transition">← Retour à l'accueil</a>
+      </nav>
       <ShopBanner />
       <div className="max-w-2xl mx-auto px-4 py-10">
         <WizardProgress currentStep={step} steps={STEPS} />
