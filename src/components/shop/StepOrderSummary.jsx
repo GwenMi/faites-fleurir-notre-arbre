@@ -2,6 +2,7 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import BudgetSavings from "./BudgetSavings";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import StripePaymentForm from "./StripePaymentForm";
@@ -145,6 +146,9 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         </p>
         <p className="text-gray-700"><strong>Livraison :</strong> {customerInfo.address}</p>
       </div>
+
+      {/* Budget savings block */}
+      <BudgetSavings selection={selection} pricing={pricing} PRICING={PRICING} />
 
       {/* Post-payment note */}
       <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800">
