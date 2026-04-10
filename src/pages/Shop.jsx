@@ -85,6 +85,20 @@ const PRODUCTS = [
     cta: "Voir le kit entreprise",
     href: "KitFocusOrganisation",
   },
+  {
+    id: "kit_naturel",
+    label: "Kit Naturel Cire d'Abeille",
+    price: "À partir de 5 €",
+    unit: "/ unité",
+    badge: "100% naturel 🐝",
+    tags: ["mariage", "bapteme", "communion", "anniversaire", "entreprise", "maison_hotes"],
+    desc: "Un galet de cire d'abeille française gravé à votre logo, dans une coupelle hexagonale en bois découpée laser. 6 usages du quotidien — entretien du bois, cuir, lèvres…",
+    features: ["Galet cire d'abeille avec logo en relief", "Coupelle hexagonale en bois laser", "Carte kraft 6 usages", "Option sac coton recyclé (Pack Complet)", "Sans minimum de commande"],
+    color: "border-amber-200 bg-amber-50",
+    check: "text-amber-500",
+    cta: "Découvrir le Kit Naturel",
+    href: "KitNaturel",
+  },
 ];
 
 const USE_CASES = [
