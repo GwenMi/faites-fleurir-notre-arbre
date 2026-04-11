@@ -237,7 +237,10 @@ function ShopHomePage({ onStart }) {
       {/* === SECTION BOUTIQUE FILTRÉE === */}
       <div className="px-6 md:px-12 py-12 max-w-4xl mx-auto">
         <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 text-center">Notre catalogue</p>
-        <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-8 text-center">Trouvez le kit parfait pour votre occasion</h2>
+        <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-4 text-center">Trouvez le kit parfait pour votre occasion</h2>
+        <p className="font-sans-shop text-sm text-gray-400 text-center max-w-xl mx-auto mb-8 leading-relaxed italic">
+          Ces suggestions sont données à titre indicatif. Chaque kit peut bien sûr être commandé pour n'importe quelle occasion — l'essentiel, c'est que cela vous ressemble.
+        </p>
 
         {/* Filtres catégorie */}
         <div className="flex flex-wrap gap-2 justify-center mb-10">

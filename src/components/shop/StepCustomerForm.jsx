@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function StepCustomerForm({ customerInfo, onChange, onNext, onBack }) {
@@ -19,6 +19,10 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
   const handleNext = () => {
     if (!customerInfo.name || !customerInfo.email || !customerInfo.eventDate || !customerInfo.address) {
       toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+    if (customerInfo.isCompany && (!customerInfo.companyName || !customerInfo.vatNumber)) {
+      toast.error("Veuillez renseigner la raison sociale et le n° de TVA intracommunautaire");
       return;
     }
     const days = daysUntilEvent();
@@ -38,10 +42,54 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
         <p className="text-sm text-gray-500">Nécessaires pour préparer et expédier votre commande</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+      {/* Toggle entreprise */}
+      <button
+        type="button"
+        onClick={() => set("isCompany", !customerInfo.isCompany)}
+        className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl border-2 transition text-left ${
+          customerInfo.isCompany ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-gray-300"
+        }`}
+      >
+        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+          customerInfo.isCompany ? "border-rose-400 bg-rose-400" : "border-gray-300"
+        }`}>
+          {customerInfo.isCompany && <span className="text-white text-xs font-bold">✓</span>}
+        </div>
+        <Building2 className="w-4 h-4 text-gray-500" />
         <div>
-          <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Nom complet *</Label>
-          <Input value={customerInfo.name} onChange={e => set("name", e.target.value)} placeholder="Emma & Lucas Dupont" className="h-11 rounded-xl" />
+          <p className="text-sm font-semibold text-gray-800">Je commande en tant qu'entreprise</p>
+          <p className="text-xs text-gray-400">Raison sociale & TVA requis pour la facturation</p>
+        </div>
+      </button>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+        {customerInfo.isCompany && (
+          <>
+            <div className="pb-4 border-b border-gray-100">
+              <p className="text-xs font-semibold text-rose-500 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5" /> Informations entreprise
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Raison sociale *</Label>
+                  <Input value={customerInfo.companyName || ""} onChange={e => set("companyName", e.target.value)} placeholder="Ma Société SAS" className="h-11 rounded-xl" />
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">N° TVA intracommunautaire *</Label>
+                  <Input value={customerInfo.vatNumber || ""} onChange={e => set("vatNumber", e.target.value)} placeholder="FR 12 345678901" className="h-11 rounded-xl" />
+                  <p className="text-xs text-gray-400 mt-1">Obligatoire pour la facturation (art. 289-I CGI)</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">SIRET</Label>
+                  <Input value={customerInfo.siret || ""} onChange={e => set("siret", e.target.value)} placeholder="123 456 789 00012" className="h-11 rounded-xl" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        <div>
+          <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">{customerInfo.isCompany ? "Nom du contact *" : "Nom complet *"}</Label>
+          <Input value={customerInfo.name} onChange={e => set("name", e.target.value)} placeholder={customerInfo.isCompany ? "Prénom Nom" : "Emma & Lucas Dupont"} className="h-11 rounded-xl" />
         </div>
         <div>
           <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Email *</Label>
