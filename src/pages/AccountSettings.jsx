@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { LogOut, User, Package } from "lucide-react";
+import { LogOut, User, Package, BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderTracking from "@/components/account/OrderTracking";
+import ActivityDashboard from "@/components/account/ActivityDashboard";
 
 export default function AccountSettings() {
   const [user, setUser] = useState(null);
@@ -94,6 +95,17 @@ export default function AccountSettings() {
             <Package className="w-4 h-4 inline mr-2" />
             Mes commandes
           </button>
+          <button
+            onClick={() => setTab("activity")}
+            className={`font-sans-shop py-3 px-4 border-b-2 transition ${
+              tab === "activity"
+                ? "border-rose-400 text-rose-600 font-semibold"
+                : "border-transparent text-gray-600 hover:text-gray-800"
+            }`}
+          >
+            <BarChart2 className="w-4 h-4 inline mr-2" />
+            Mon activité
+          </button>
         </div>
 
         {/* Contenu */}
@@ -128,6 +140,10 @@ export default function AccountSettings() {
 
         {tab === "orders" && (
           <OrderTracking userEmail={user.email} />
+        )}
+
+        {tab === "activity" && (
+          <ActivityDashboard userEmail={user.email} />
         )}
       </div>
     </div>
