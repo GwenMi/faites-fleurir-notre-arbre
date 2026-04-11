@@ -74,7 +74,7 @@ export default function EventPublic() {
     best_of: isPremium && (
       <div key="best_of" className="max-w-2xl mx-auto"><BestOfSection event={event} primaryColor={primaryColor} /></div>
     ),
-    photo_gallery: isPremium && (
+    photo_gallery: isPremium && event.show_photo_gallery !== false && (
       <div key="photo_gallery" className="max-w-2xl mx-auto"><PhotoGallery event={event} primaryColor={primaryColor} /></div>
     ),
     wishlist: isPremium && event.show_wishlist !== false && (
