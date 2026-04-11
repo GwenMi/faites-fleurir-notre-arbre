@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
+import { createPageUrl } from "@/utils";
 
 const EVENT_FILTERS = [
   { id: "mariage", label: "💍 Mariage" },
   { id: "bapteme", label: "👶 Baptême" },
   { id: "communion", label: "✨ Communion" },
   { id: "anniversaire", label: "🎂 Anniversaire" },
+  { id: "entreprise", label: "🏢 Entreprise" },
+  { id: "maison_hotes", label: "🏡 Maison d'hôtes" },
 ];
 
 const KITS = [
@@ -42,15 +45,81 @@ const KITS = [
       "Assemblé & prêt à offrir ✓",
     ],
   },
+  {
+    id: "entreprise_standard",
+    emoji: "📋",
+    name: 'Pack Standard "Bureau"',
+    price: 15,
+    unit: "HT / collaborateur",
+    badge: null,
+    desc: "Clip mémo en bois, carte planning effaçable, timer flip et stylo. Tout pour s'organiser au bureau.",
+    features: [
+      "Clip mémo en bois naturel",
+      "Carte planning A5 plastifiée",
+      "Timer flip 4 positions",
+      "Stylo effaçable",
+    ],
+    href: "KitFocusOrganisation",
+  },
+  {
+    id: "entreprise_premium",
+    emoji: "🖥️",
+    name: 'Pack Premium "Moniteur"',
+    price: 20,
+    unit: "HT / collaborateur",
+    badge: "Premium ✨",
+    desc: "Clip moniteur 360° pour écrans, carte planning, timer flip et stylo. La version premium.",
+    features: [
+      "Clip moniteur orientable 360°",
+      "Carte planning A5 plastifiée",
+      "Timer flip 4 positions",
+      "Stylo effaçable",
+    ],
+    href: "KitFocusOrganisation",
+  },
+  {
+    id: "naturel_essentiel",
+    emoji: "🐝",
+    name: "Kit Naturel Essentiel",
+    price: 5,
+    unit: "/ unité",
+    badge: "100% naturel",
+    desc: "Galet de cire d'abeille gravé à votre logo, dessous de verre en bois, carte 6 usages.",
+    features: [
+      "Galet cire d'abeille",
+      "Dessous de verre en bois laser",
+      "Carte kraft 6 usages",
+    ],
+    href: "KitNaturel",
+  },
+  {
+    id: "naturel_douceur",
+    emoji: "🌿",
+    name: "Kit Naturel Douceur",
+    price: 13,
+    unit: "/ unité",
+    badge: "Coup de cœur",
+    desc: "Galet de cire gravé, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
+    features: [
+      "Galet cire d'abeille",
+      "Dessous de verre en bois laser",
+      "Carte kraft 6 usages",
+      "Sac en coton recyclé",
+    ],
+    href: "KitNaturel",
+  },
 ];
 
 export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
   const [activeEvent, setActiveEvent] = useState(selection.eventType || null);
 
-  const handleSelectKit = (kitId) => {
-    // Persist both kitType and any pre-selected event filter
-    onUpdate({ kitType: kitId, ...(activeEvent ? { eventType: activeEvent } : {}) });
-    onNext();
+  const handleSelectKit = (kit) => {
+    if (kit.href) {
+      window.location.href = createPageUrl(kit.href);
+    } else {
+      onUpdate({ kitType: kit.id, ...(activeEvent ? { eventType: activeEvent } : {}) });
+      onNext();
+    }
   };
 
   return (
@@ -84,11 +153,11 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
       </div>
 
       {/* Cartes kits */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {KITS.map(kit => (
           <button
             key={kit.id}
-            onClick={() => handleSelectKit(kit.id)}
+            onClick={() => handleSelectKit(kit)}
             className="text-left rounded-2xl border-2 border-gray-200 bg-white hover:border-rose-400 hover:bg-rose-50 hover:shadow-md transition-all p-6 relative group flex flex-col"
           >
             <span className="text-4xl block mb-4">{kit.emoji}</span>
@@ -110,7 +179,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
               ))}
             </ul>
             <div className="w-full py-2.5 rounded-xl bg-rose-400 group-hover:bg-rose-500 text-white font-sans-shop font-semibold text-sm text-center transition">
-              Choisir ce kit →
+              {kit.href ? "Découvrir →" : "Choisir ce kit →"}
             </div>
           </button>
         ))}
