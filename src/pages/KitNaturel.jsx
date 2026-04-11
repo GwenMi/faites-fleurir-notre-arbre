@@ -15,7 +15,7 @@ const USAGES = [
 const PACKS = [
   {
     id: "essentiel",
-    label: "Pack Essentiel",
+    label: "Kit Naturel Essentiel",
     price: "5",
     unit: "€ / unité",
     badge: null,
@@ -23,24 +23,23 @@ const PACKS = [
     check: "text-amber-500",
     features: [
       "Galet de cire d'abeille avec logo en relief",
-      "Coupelle hexagonale en bois découpée laser",
+      "Dessous de verre en bois découpé laser",
       "Carte kraft listant les 6 usages du galet",
     ],
   },
   {
-    id: "complet",
-    label: "Pack Complet",
-    price: "11",
+    id: "douceur",
+    label: "Kit Naturel Douceur",
+    price: "13",
     unit: "€ / unité",
-    badge: "Le plus complet 🌿",
+    badge: "Coup de cœur 🌿",
     color: "border-green-300 bg-green-50",
     check: "text-green-600",
     features: [
-      "Tout le Pack Essentiel inclus",
       "Galet de cire d'abeille avec logo en relief",
-      "Coupelle hexagonale en bois découpée laser",
+      "Dessous de verre en bois découpé laser",
       "Carte kraft listant les 6 usages du galet",
-      "Sac à dos cordon en coton recyclé avec votre logo",
+      "Sac en coton recyclé avec votre logo",
     ],
   },
 ];
@@ -75,17 +74,17 @@ export default function KitNaturel() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Kit Naturel — Galet de cire d'abeille personnalisé pour maisons d'hôtes & mariages"
-        description="Un galet de cire d'abeille française gravé à votre logo, dans une coupelle hexagonale en bois. 6 usages du quotidien. Idéal pour maisons d'hôtes, gîtes et mariages champêtres."
+        description="Un galet de cire d'abeille française gravé à votre logo, posé sur son dessous de verre en bois découpé laser. 6 usages du quotidien. Idéal pour maisons d'hôtes, gîtes et mariages champêtres."
         url="https://fleursdefete.fr/KitNaturel"
         schema={{
           "@context": "https://schema.org",
           "@type": "Product",
           "name": "Kit Naturel — Galet de cire d'abeille personnalisé",
-          "description": "Galet de cire d'abeille française avec logo en relief, coupelle hexagonale en bois découpée laser et carte kraft 6 usages. Idéal pour maisons d'hôtes et mariages champêtres.",
+          "description": "Galet de cire d'abeille française avec logo en relief, dessous de verre en bois découpé laser et carte kraft 6 usages. Idéal pour maisons d'hôtes et mariages champêtres.",
           "brand": { "@type": "Brand", "name": "Fleurs de Fête" },
           "offers": [
-            { "@type": "Offer", "name": "Pack Essentiel", "price": "5.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" },
-            { "@type": "Offer", "name": "Pack Complet", "price": "11.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" }
+            { "@type": "Offer", "name": "Kit Naturel Essentiel", "price": "5.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" },
+            { "@type": "Offer", "name": "Kit Naturel Douceur", "price": "13.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" }
           ]
         }}
       />
@@ -124,7 +123,7 @@ export default function KitNaturel() {
         </h1>
         <div className="honey-line max-w-xs mx-auto mb-6" />
         <p className="font-sans-nat text-stone-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Un galet de cire d'abeille artisanal gravé à votre logo, posé dans une coupelle en bois hexagonale. Un cadeau utile, naturel, mémorable — que vos hôtes garderont longtemps.
+          Un galet de cire d'abeille artisanal gravé à votre logo, posé sur son dessous de verre en bois découpé laser. Un cadeau utile, naturel, mémorable — que vos hôtes garderont longtemps.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
