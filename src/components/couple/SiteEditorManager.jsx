@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Save, Loader2, ExternalLink, MapPin, Heart, Image, HelpCircle, Gift, BookOpen, Check, PiggyBank } from "lucide-react";
+import { Save, Loader2, ExternalLink, MapPin, Heart, Image, HelpCircle, Gift, BookOpen, Check } from "lucide-react";
 import { toast } from "sonner";
+import SectionOrderEditor, { DEFAULT_SECTIONS_ORDER } from "./SectionOrderEditor";
 
 const SECTIONS = [
   {
@@ -109,14 +110,18 @@ export default function SiteEditorManager({ event }) {
     cagnotte_url: event.cagnotte_url || "",
     cagnotte_message: event.cagnotte_message || "",
   });
+  const [sectionsOrder, setSectionsOrder] = useState(
+    event.sections_order?.length ? event.sections_order : DEFAULT_SECTIONS_ORDER
+  );
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showOrderEditor, setShowOrderEditor] = useState(false);
 
   const set = (k, v) => { setForm(f => ({ ...f, [k]: v })); setSaved(false); };
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.Event.update(event.id, form);
+    await base44.entities.Event.update(event.id, { ...form, sections_order: sectionsOrder });
     setSaving(false);
     setSaved(true);
     toast.success("Sections du site enregistrées ✓");
@@ -134,6 +139,27 @@ export default function SiteEditorManager({ event }) {
             className="text-xs text-rose-500 flex items-center gap-1 hover:text-rose-600 transition border border-rose-200 px-3 py-1.5 rounded-full">
             <ExternalLink className="w-3.5 h-3.5" /> Voir mon site
           </a>
+        )}
+      </div>
+
+      {/* Drag & drop order editor */}
+      <div className="border-2 border-dashed border-gray-200 rounded-2xl overflow-hidden">
+        <button
+          onClick={() => setShowOrderEditor(v => !v)}
+          className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-base">⠿</span>
+            <p className="text-sm font-semibold text-gray-700">Ordre des sections</p>
+          </div>
+          <span className="text-xs text-rose-400 font-semibold">{showOrderEditor ? "Fermer ↑" : "Modifier ↓"}</span>
+        </button>
+        {showOrderEditor && (
+          <div className="px-4 pb-4 border-t border-gray-100">
+            <div className="mt-3">
+              <SectionOrderEditor order={sectionsOrder} onChange={setSectionsOrder} />
+            </div>
+          </div>
         )}
       </div>
 
@@ -203,6 +229,11 @@ export default function SiteEditorManager({ event }) {
 
       <Button onClick={handleSave} disabled={saving} className="rounded-xl bg-rose-500 hover:bg-rose-600 text-white">
         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : saved ? <Check className="w-4 h-4 mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+        {saved ? "Enregistré ✓" : "Enregistrer les sections"}
+      </Button>
+    </div>
+  );
+}
         {saved ? "Enregistré ✓" : "Enregistrer les sections"}
       </Button>
     </div>

@@ -57,6 +57,48 @@ export default function EventPublic() {
 
   const isPremium = event.plan === "premium";
   const primaryColor = event.primary_color || "#f43f5e";
+
+  const DEFAULT_ORDER = ["couple_story","day_schedule","rsvp","best_of","photo_gallery","wishlist","seating_plan","faq","map","guest_photos","guestbook","cagnotte"];
+  const sectionsOrder = event.sections_order?.length ? event.sections_order : DEFAULT_ORDER;
+
+  const SECTION_RENDERS = {
+    couple_story: isPremium && event.show_couple_story && event.couple_story && (
+      <div key="couple_story" className="max-w-2xl mx-auto px-4"><CoupleStorySection event={event} primaryColor={primaryColor} /></div>
+    ),
+    day_schedule: isPremium && (
+      <div key="day_schedule" className="max-w-2xl mx-auto px-4"><DayScheduleSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    rsvp: isPremium && (
+      <div key="rsvp" className="max-w-2xl mx-auto px-4"><RSVPSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    best_of: isPremium && (
+      <div key="best_of" className="max-w-2xl mx-auto"><BestOfSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    photo_gallery: isPremium && (
+      <div key="photo_gallery" className="max-w-2xl mx-auto"><PhotoGallery event={event} primaryColor={primaryColor} /></div>
+    ),
+    wishlist: isPremium && event.show_wishlist !== false && (
+      <div key="wishlist" className="max-w-2xl mx-auto"><WishlistSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    seating_plan: isPremium && (
+      <div key="seating_plan" className="max-w-2xl mx-auto"><SeatingPlanSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    faq: isPremium && event.show_faq !== false && (
+      <div key="faq" className="max-w-2xl mx-auto"><FAQSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    map: isPremium && event.show_map && event.map_address && (
+      <div key="map" className="max-w-2xl mx-auto px-4"><MapSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    guest_photos: isPremium && (
+      <div key="guest_photos" className="max-w-2xl mx-auto"><GuestPhotoUploadSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    guestbook: isPremium && event.show_guestbook !== false && (
+      <div key="guestbook" className="max-w-2xl mx-auto border-t border-gray-100"><GuestbookSection event={event} primaryColor={primaryColor} /></div>
+    ),
+    cagnotte: isPremium && event.show_cagnotte && event.cagnotte_url && (
+      <div key="cagnotte" className="max-w-2xl mx-auto border-t border-gray-100"><CagnotteSection event={event} primaryColor={primaryColor} /></div>
+    ),
+  };
   const secondaryColor = event.secondary_color || "#86efac";
   const fontHeading = event.font_heading || "Cormorant Garamond";
   const fontBody = event.font_body || "Lato";
@@ -115,89 +157,8 @@ export default function EventPublic() {
         </div>
       </div>
 
-      {/* Couple Story — Premium */}
-      {isPremium && event.show_couple_story && event.couple_story && (
-        <div className="max-w-2xl mx-auto px-4">
-          <CoupleStorySection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Day Schedule Section — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto px-4">
-          <DayScheduleSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* RSVP Section — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto px-4">
-          <RSVPSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Best of Section — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto">
-          <BestOfSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Photo Gallery — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto">
-          <PhotoGallery event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Wishlist Section — Premium */}
-      {isPremium && event.show_wishlist !== false && (
-        <div className="max-w-2xl mx-auto">
-          <WishlistSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Seating Plan Section — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto">
-          <SeatingPlanSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* FAQ Section — Premium */}
-      {isPremium && event.show_faq !== false && (
-        <div className="max-w-2xl mx-auto">
-          <FAQSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Map Section — Premium */}
-      {isPremium && event.show_map && event.map_address && (
-        <div className="max-w-2xl mx-auto px-4">
-          <MapSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Guest Photos Section — Premium */}
-      {isPremium && (
-        <div className="max-w-2xl mx-auto">
-          <GuestPhotoUploadSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Guestbook Section — Premium */}
-      {isPremium && event.show_guestbook !== false && (
-        <div className="max-w-2xl mx-auto border-t border-gray-100">
-          <GuestbookSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
-
-      {/* Cagnotte Section — Premium */}
-      {isPremium && event.show_cagnotte && event.cagnotte_url && (
-        <div className="max-w-2xl mx-auto border-t border-gray-100">
-          <CagnotteSection event={event} primaryColor={primaryColor} />
-        </div>
-      )}
+      {/* Sections dans l'ordre personnalisé */}
+      {sectionsOrder.map(key => SECTION_RENDERS[key] || null)}
 
       {/* Flower Challenge Section */}
       <div className="max-w-2xl mx-auto px-4 pb-16">
