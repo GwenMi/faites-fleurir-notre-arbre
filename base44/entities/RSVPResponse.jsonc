@@ -1,0 +1,72 @@
+{
+  "name": "RSVPResponse",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "attending": {
+      "type": "boolean"
+    },
+    "party_size": {
+      "type": "number",
+      "default": 1
+    },
+    "answers": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "meal_choices": {
+      "type": "array",
+      "description": "Choix de plats par personne du groupe. Chaque \u00e9l\u00e9ment = une personne.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "person_label": {
+            "type": "string"
+          },
+          "starter": {
+            "type": "string"
+          },
+          "main": {
+            "type": "string"
+          },
+          "dessert": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "allergies": {
+      "type": "string",
+      "description": "Allergies ou intol\u00e9rances alimentaires du groupe"
+    },
+    "dietary_choice": {
+      "type": "string",
+      "description": "R\u00e9gime alimentaire s\u00e9lectionn\u00e9 (v\u00e9g\u00e9tarien, vegan, etc.)"
+    },
+    "children_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre d'enfants accompagnant l'invit\u00e9"
+    },
+    "children_menu": {
+      "type": "string",
+      "description": "Menu enfant s\u00e9lectionn\u00e9"
+    }
+  },
+  "required": [
+    "event_id",
+    "guest_name",
+    "attending"
+  ]
+}

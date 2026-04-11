@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, UtensilsCrossed, AlertTriangle } from "lucide-react";
+import { Download, UtensilsCrossed, AlertTriangle, Leaf, Baby } from "lucide-react";
 
 const COURSE_LABELS = {
   starter: "Entrées",
@@ -40,6 +40,24 @@ export default function MealSummary({ responses }) {
   const allergiesList = attending
     .filter(r => r.allergies && r.allergies.trim())
     .map(r => ({ name: r.guest_name, note: r.allergies }));
+
+  const dietaryCounts = useMemo(() => {
+    const counts = {};
+    attending.forEach(r => {
+      const d = r.dietary_choice;
+      if (d && d.trim()) counts[d] = (counts[d] || 0) + 1;
+    });
+    return counts;
+  }, [responses]);
+
+  const childrenTotal = attending.reduce((s, r) => s + (r.children_count || 0), 0);
+  const childrenMenuCounts = useMemo(() => {
+    const counts = {};
+    attending.forEach(r => {
+      if (r.children_count > 0 && r.children_menu) counts[r.children_menu] = (counts[r.children_menu] || 0) + r.children_count;
+    });
+    return counts;
+  }, [responses]);
 
   const exportCSV = () => {
     const rows = [["Invité", "Personnes", "Entrées", "Plats", "Desserts", "Allergies"]];
@@ -118,6 +136,36 @@ export default function MealSummary({ responses }) {
           );
         })}
       </div>
+
+      {/* Régimes alimentaires */}
+      {Object.keys(dietaryCounts).length > 0 && (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
+          <h3 className="font-semibold text-green-800 text-sm flex items-center gap-2 mb-3">
+            <Leaf className="w-4 h-4" /> Régimes alimentaires
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(dietaryCounts).map(([diet, count]) => (
+              <span key={diet} className="bg-white border border-green-200 rounded-full px-3 py-1 text-xs font-semibold text-green-700">{diet} × {count}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Enfants */}
+      {childrenTotal > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+          <h3 className="font-semibold text-blue-800 text-sm flex items-center gap-2 mb-2">
+            <Baby className="w-4 h-4" /> Menus enfants — {childrenTotal} enfant{childrenTotal > 1 ? "s" : ""}
+          </h3>
+          {Object.keys(childrenMenuCounts).length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-1">
+              {Object.entries(childrenMenuCounts).map(([menu, count]) => (
+                <span key={menu} className="bg-white border border-blue-200 rounded-full px-3 py-1 text-xs font-semibold text-blue-700">{menu} × {count}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Allergies */}
       {allergiesList.length > 0 && (
