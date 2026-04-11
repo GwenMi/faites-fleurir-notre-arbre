@@ -31,9 +31,11 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         payment_status: "paid",
         options_selected: {
           kitType: selection.kitType,
+          eventType: selection.eventType,
           containerType: selection.containerType,
           sacCadeau: selection.sacCadeau,
           packs: packs,
+          customization: selection.customization || {},
           pricePerPot: pricing.pricePerPot,
           event_date: customerInfo.eventDate,
           phone: customerInfo.phone,
