@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 export default function StepCustomization({ selection, onUpdate, onNext, onBack, seeds }) {
+  const [showLogoConfirm, setShowLogoConfirm] = useState(false);
+
   const handleNext = () => {
     // Validation basée sur le type d'événement
     if (selection.eventType === "entreprise") {
@@ -23,6 +26,12 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
         return;
       }
     }
+    // Si pas de logo uploadé, demander confirmation
+    const hasLogo = selection.customization?.companyLogo || selection.customization?.accommodationLogo || selection.customization?.personalLogo;
+    if (!hasLogo) {
+      setShowLogoConfirm(true);
+      return;
+    }
     onNext();
   };
 
@@ -36,6 +45,39 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
   };
 
   const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
+
+  const LogoUpload = ({ field, label }) => (
+    <div>
+      <label className="block text-sm font-semibold text-gray-900 mb-2">{label}</label>
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-rose-300 transition cursor-pointer relative">
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => updateCustomization({ [field]: reader.result });
+              reader.readAsDataURL(file);
+            }
+          }}
+          className="absolute inset-0 opacity-0 cursor-pointer"
+        />
+        {selection.customization?.[field] ? (
+          <div className="flex flex-col items-center gap-2">
+            <img src={selection.customization[field]} alt="Logo" className="h-16 w-auto" />
+            <p className="text-sm text-gray-600">Cliquez pour changer</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2">
+            <Upload className="w-5 h-5 text-gray-400" />
+            <p className="text-gray-600 font-semibold text-sm">Télécharger votre logo ou visuel de personnalisation (facultatif)</p>
+            <p className="text-xs text-gray-500">JPG, PNG ou SVG</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
   const isCompanyEvent = selection.eventType === "entreprise";
   const isAccommodationEvent = selection.eventType === "chambre_hotes";
 
@@ -96,7 +138,6 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
             />
             <p className="text-xs text-gray-500 mt-1">Les prénoms qui apparaîtront sur les étiquettes</p>
           </div>
-
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">Date de l'événement</label>
             <Input
@@ -107,6 +148,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
             />
             <p className="text-xs text-gray-500 mt-1">Format: JJ/MM/AAAA sur l'étiquette</p>
           </div>
+          <LogoUpload field="personalLogo" label="Logo ou visuel de personnalisation (facultatif)" />
         </div>
       )}
 
@@ -123,38 +165,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
               className="h-11 rounded-lg"
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">Logo de l'entreprise</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-rose-300 transition cursor-pointer relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      updateCustomization({ companyLogo: reader.result });
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              {selection.customization?.companyLogo ? (
-                <div className="flex flex-col items-center gap-2">
-                  <img src={selection.customization.companyLogo} alt="Logo" className="h-16 w-auto" />
-                  <p className="text-sm text-gray-600">Cliquez pour changer</p>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-gray-600 font-semibold">📁 Télécharger le logo</p>
-                  <p className="text-xs text-gray-500 mt-1">PNG, JPG ou SVG</p>
-                </div>
-              )}
-            </div>
-          </div>
+          <LogoUpload field="companyLogo" label="Logo de l'entreprise (facultatif)" />
         </div>
       )}
 
@@ -171,38 +182,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
               className="h-11 rounded-lg"
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">Logo ou image de marque</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-rose-300 transition cursor-pointer relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      updateCustomization({ accommodationLogo: reader.result });
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              {selection.customization?.accommodationLogo ? (
-                <div className="flex flex-col items-center gap-2">
-                  <img src={selection.customization.accommodationLogo} alt="Logo" className="h-16 w-auto" />
-                  <p className="text-sm text-gray-600">Cliquez pour changer</p>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-gray-600 font-semibold">📁 Télécharger votre logo</p>
-                  <p className="text-xs text-gray-500 mt-1">PNG, JPG ou SVG</p>
-                </div>
-              )}
-            </div>
-          </div>
+          <LogoUpload field="accommodationLogo" label="Logo ou image de marque (facultatif)" />
         </div>
       )}
 
@@ -223,6 +203,24 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
+
+      {/* Confirmation sans logo */}
+      {showLogoConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <h4 className="text-lg font-bold text-gray-900 mb-2">Logo manquant</h4>
+            <p className="text-sm text-gray-600 mb-5">Vous n'avez pas téléchargé de logo pour votre personnalisation. Êtes-vous sûr de vouloir continuer sans personnalisation ?</p>
+            <div className="flex flex-col gap-2">
+              <Button onClick={() => { setShowLogoConfirm(false); onNext(); }} className="w-full bg-rose-500 hover:bg-rose-600 text-white rounded-xl">
+                Oui, continuer sans logo
+              </Button>
+              <Button onClick={() => setShowLogoConfirm(false)} variant="outline" className="w-full rounded-xl">
+                Non, ajouter un logo
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

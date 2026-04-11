@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   CheckCircle2, Loader2, AlertCircle, ChevronLeft, X,
-  Building2, Mail, Phone, MapPin, Package, Star, Leaf, Clock, Infinity, Banknote, ChevronRight
+  Building2, MapPin, Leaf, Clock, Banknote, ChevronRight, Upload, Package, Infinity
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -54,13 +54,15 @@ function getUnitPrice(pack, qty) {
 
 // ----------- Checkout modal -----------
 function CheckoutModal({ pack, onClose }) {
-  const [step, setStep] = useState(1); // 1 = infos, 2 = paiement, 3 = confirmation
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     name: "", company: "", email: "", phone: "",
     quantity: 10,
     address: "", city: "", zip: "", country: "France",
-    logo: false, logo_notes: "",
   });
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [showLogoConfirm, setShowLogoConfirm] = useState(false);
   const [order, setOrder] = useState(null);
   const [loadingOrder, setLoadingOrder] = useState(false);
 
@@ -69,17 +71,27 @@ function CheckoutModal({ pack, onClose }) {
   const total = (qty * unitPrice).toFixed(2);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm(f => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
   };
 
-  const handleCreateOrder = async (e) => {
-    e.preventDefault();
-    if (!form.name || !form.email || !form.address || !form.city || !form.zip) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
-      return;
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setLogoPreview(reader.result);
+      reader.readAsDataURL(file);
     }
+  };
+
+  const doCreateOrder = async () => {
     setLoadingOrder(true);
+    let logoUrl = "";
+    if (logoFile) {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
+      logoUrl = file_url;
+    }
     const created = await base44.entities.Order.create({
       customer_name: form.name,
       customer_email: form.email,
@@ -92,8 +104,7 @@ function CheckoutModal({ pack, onClose }) {
       options_selected: {
         company: form.company,
         phone: form.phone,
-        logo_requested: form.logo,
-        logo_notes: form.logo_notes,
+        logo_url: logoUrl,
         delivery_address: `${form.address}, ${form.zip} ${form.city}, ${form.country}`,
         unit_price: unitPrice,
         source: "kit-focus-organisation",
@@ -102,6 +113,19 @@ function CheckoutModal({ pack, onClose }) {
     setOrder(created);
     setLoadingOrder(false);
     setStep(2);
+  };
+
+  const handleCreateOrder = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.address || !form.city || !form.zip) {
+      toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+    if (!logoFile) {
+      setShowLogoConfirm(true);
+      return;
+    }
+    await doCreateOrder();
   };
 
   return (
@@ -179,24 +203,25 @@ function CheckoutModal({ pack, onClose }) {
                 </div>
               </div>
 
-              {/* Logo */}
-              <label className="flex items-start gap-3 p-3 rounded-xl border border-[#c3e8d8] bg-[#f0faf5] cursor-pointer">
-                <input type="checkbox" name="logo" checked={form.logo} onChange={handleChange} className="mt-0.5 accent-[#1D9E75]" />
-                <div>
-                  <p className="text-sm font-semibold text-gray-800">Personnalisation logo</p>
-                  <p className="text-xs text-gray-500">Ajout de votre logo sur les kits (+délai à convenir)</p>
-                </div>
-              </label>
-              {form.logo && (
-                <textarea
-                  name="logo_notes"
-                  value={form.logo_notes}
-                  onChange={handleChange}
-                  placeholder="Décrivez votre demande de personnalisation…"
-                  rows={2}
-                  className="w-full rounded-xl border border-gray-200 text-sm p-3 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/30"
-                />
-              )}
+              {/* Logo upload */}
+              <div>
+                <p className="text-xs font-semibold text-gray-600 mb-2">Télécharger votre logo ou visuel de personnalisation <span className="font-normal text-gray-400">(facultatif)</span></p>
+                <label className="block border-2 border-dashed border-[#c3e8d8] rounded-xl p-4 text-center cursor-pointer hover:border-[#1D9E75] transition relative">
+                  <input type="file" accept=".jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml" onChange={handleLogoChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+                  {logoPreview ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <img src={logoPreview} alt="Logo" className="h-12 w-auto mx-auto" />
+                      <p className="text-xs text-[#1D9E75]">{logoFile.name} — Cliquez pour changer</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-1">
+                      <Upload className="w-5 h-5 text-[#1D9E75]" />
+                      <p className="text-sm text-gray-600">Glissez votre logo ou cliquez</p>
+                      <p className="text-xs text-gray-400">JPG, PNG ou SVG</p>
+                    </div>
+                  )}
+                </label>
+              </div>
 
               <Button
                 type="submit"
@@ -208,7 +233,25 @@ function CheckoutModal({ pack, onClose }) {
               </Button>
 
               <p className="text-xs text-gray-400 text-center">Sans minimum de commande · Assemblé en France</p>
-            </form>
+              </form>
+              )}
+
+          {/* Confirmation sans logo */}
+          {showLogoConfirm && (
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4">
+              <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+                <h4 className="text-lg font-bold text-gray-900 mb-2">Logo manquant</h4>
+                <p className="text-sm text-gray-600 mb-5">Vous n'avez pas téléchargé de logo pour votre personnalisation. Êtes-vous sûr de vouloir continuer sans personnalisation ?</p>
+                <div className="flex flex-col gap-2">
+                  <Button onClick={() => { setShowLogoConfirm(false); doCreateOrder(); }} className="w-full rounded-xl text-white" style={{ background: "#1D9E75" }}>
+                    Oui, continuer sans logo
+                  </Button>
+                  <Button onClick={() => setShowLogoConfirm(false)} variant="outline" className="w-full rounded-xl">
+                    Non, ajouter un logo
+                  </Button>
+                </div>
+              </div>
+            </div>
           )}
 
           {step === 2 && order && (
