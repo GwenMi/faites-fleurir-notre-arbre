@@ -203,7 +203,7 @@ function ShopHomePage({ onStart }) {
         </a>
         <div className="flex items-center gap-3">
           <a href={createPageUrl("Home")} className="font-sans-shop text-sm text-gray-500 hover:text-rose-400 transition hidden sm:block">Accueil</a>
-          <button onClick={onStart}
+          <button onClick={() => onStart({})}
             className="font-sans-shop text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
             Commander
           </button>
@@ -412,9 +412,11 @@ export default function Shop() {
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
   const handleStart = (preselect = {}) => {
-    if (preselect.eventType || preselect.kitType) {
-      setSelection(s => ({ ...s, ...preselect }));
-    }
+    setSelection(s => ({
+      ...s,
+      ...preselect,
+      eventType: preselect.eventType || s.eventType || 'mariage',
+    }));
     setStep(preselect.kitType ? 2 : 1);
   };
 
