@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeft, ChevronRight, AlertCircle, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,7 +16,7 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
   };
 
   const handleNext = () => {
-    if (!customerInfo.name || !customerInfo.email || !customerInfo.eventDate || !customerInfo.address) {
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.eventDate || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
@@ -116,9 +115,27 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
             </p>
           )}
         </div>
-        <div>
-          <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Adresse de livraison *</Label>
-          <Textarea value={customerInfo.address} onChange={e => set("address", e.target.value)} placeholder={"12 rue des Roses\n75001 Paris"} className="rounded-xl" rows={3} />
+        
+        {/* Adresse séparée en champs */}
+        <div className="space-y-3 pt-4 border-t border-gray-100">
+          <div>
+            <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Rue / Adresse *</Label>
+            <Input value={customerInfo.street || ""} onChange={e => set("street", e.target.value)} placeholder="12 rue des Roses" className="h-11 rounded-xl" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Code postal *</Label>
+              <Input value={customerInfo.zipCode || ""} onChange={e => set("zipCode", e.target.value)} placeholder="75001" className="h-11 rounded-xl" />
+            </div>
+            <div>
+              <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Ville *</Label>
+              <Input value={customerInfo.city || ""} onChange={e => set("city", e.target.value)} placeholder="Paris" className="h-11 rounded-xl" />
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Pays *</Label>
+            <Input value={customerInfo.country || "France"} onChange={e => set("country", e.target.value)} placeholder="France" className="h-11 rounded-xl" />
+          </div>
         </div>
       </div>
 

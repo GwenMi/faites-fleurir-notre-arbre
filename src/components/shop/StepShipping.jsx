@@ -58,7 +58,7 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
   }, [weightGrams]);
 
   const handleSelect = (method) => {
-    onSelect(isFreeShipping ? { ...method, price: 0 } : method);
+    onSelect(isFreeShipping && method.id !== "custom" ? { ...method, price: 0 } : method);
   };
 
   const handleNext = () => {
@@ -93,8 +93,32 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
       )}
 
       {!loading && !error && methods.length === 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-700">
-          Aucune méthode de livraison disponible pour ce poids. Contactez-nous si besoin.
+        <div className="space-y-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-700">
+            <p className="font-semibold mb-2">Livraison personnalisée</p>
+            <p>Les tarifs des transporteurs ne sont pas disponibles pour ce poids. Sélectionnez l'option ci-dessous — nous vous recontacterons avec un devis précis.</p>
+          </div>
+          <button
+            onClick={() => handleSelect({ id: "custom", name: "Livraison personnalisée", carrier: "custom", price: 0, deliveryDays: null })}
+            className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
+              shippingMethod?.id === "custom"
+                ? "border-rose-400 bg-rose-50"
+                : "border-gray-200 bg-white hover:border-rose-200"
+            }`}
+          >
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+              shippingMethod?.id === "custom" ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"
+            }`}>
+              <Truck className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-gray-800 text-sm">Livraison personnalisée</p>
+              <p className="text-xs text-gray-400 mt-0.5">Nous vous recontacterons avec un devis</p>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <p className="font-bold text-gray-500 text-sm">À confirmer</p>
+            </div>
+          </button>
         </div>
       )}
 
