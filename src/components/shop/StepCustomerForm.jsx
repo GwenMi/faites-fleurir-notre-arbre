@@ -42,25 +42,31 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
         <p className="text-sm text-gray-500">Nécessaires pour préparer et expédier votre commande</p>
       </div>
 
-      {/* Toggle entreprise */}
-      <button
-        type="button"
-        onClick={() => set("isCompany", !customerInfo.isCompany)}
-        className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl border-2 transition text-left ${
-          customerInfo.isCompany ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-gray-300"
-        }`}
-      >
-        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-          customerInfo.isCompany ? "border-rose-400 bg-rose-400" : "border-gray-300"
-        }`}>
-          {customerInfo.isCompany && <span className="text-white text-xs font-bold">✓</span>}
-        </div>
-        <Building2 className="w-4 h-4 text-gray-500" />
-        <div>
-          <p className="text-sm font-semibold text-gray-800">Je commande en tant qu'entreprise</p>
-          <p className="text-xs text-gray-400">Raison sociale & TVA requis pour la facturation</p>
-        </div>
-      </button>
+      {/* Particulier / Entreprise */}
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => set("isCompany", false)}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold text-sm transition ${
+            !customerInfo.isCompany
+              ? "border-rose-400 bg-rose-50 text-rose-600"
+              : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
+          }`}
+        >
+          <span>👤</span> Particulier
+        </button>
+        <button
+          type="button"
+          onClick={() => set("isCompany", true)}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold text-sm transition ${
+            customerInfo.isCompany
+              ? "border-rose-400 bg-rose-50 text-rose-600"
+              : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
+          }`}
+        >
+          <Building2 className="w-4 h-4" /> Entreprise
+        </button>
+      </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
         {customerInfo.isCompany && (
