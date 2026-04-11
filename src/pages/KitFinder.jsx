@@ -60,6 +60,7 @@ function getRecommendation({ event, recipient, budget }) {
       desc: "Clip moniteur orientable 360°, carte planning effaçable, timer flip et stylo — la version haut de gamme pour vos équipes.",
       tag: "Premium entreprise ✨",
       href: "KitFocusOrganisation",
+      params: null,
       color: "from-emerald-400 to-teal-500",
     };
     return {
@@ -69,6 +70,7 @@ function getRecommendation({ event, recipient, budget }) {
       desc: "Clip mémo en bois, carte planning effaçable, timer flip et stylo effaçable — tout le nécessaire pour s'organiser au bureau.",
       tag: "Idéal entreprise",
       href: "KitFocusOrganisation",
+      params: null,
       color: "from-blue-400 to-cyan-500",
     };
   }
@@ -81,6 +83,7 @@ function getRecommendation({ event, recipient, budget }) {
       desc: "Galet de cire d'abeille gravé à votre logo, dessous de verre bois, carte 6 usages et sac coton recyclé. L'accueil parfait pour vos hôtes.",
       tag: "Coup de cœur 🌿",
       href: "KitNaturel",
+      params: null,
       color: "from-yellow-400 to-amber-500",
     };
     return {
@@ -90,6 +93,7 @@ function getRecommendation({ event, recipient, budget }) {
       desc: "Galet de cire d'abeille gravé à votre logo posé sur son dessous de verre bois. 6 usages du quotidien, 100% naturel.",
       tag: "100% naturel 🐝",
       href: "KitNaturel",
+      params: null,
       color: "from-yellow-300 to-amber-400",
     };
   }
@@ -102,6 +106,7 @@ function getRecommendation({ event, recipient, budget }) {
     desc: "Vous assemblez vous-même les éléments à votre rythme — graines, pastille de terre, étiquette personnalisée. Fait main et personnel.",
     tag: "Le plus économique",
     href: "Shop",
+    params: `eventType=${event}&kitType=compose`,
     color: "from-rose-400 to-pink-500",
   };
 
@@ -112,6 +117,7 @@ function getRecommendation({ event, recipient, budget }) {
     desc: "Tout arrive assemblé et emballé. Il suffit de poser les pots sur les tables le jour J — rien à préparer, rien à stresser.",
     tag: "Le plus choisi ✨",
     href: "Shop",
+    params: `eventType=${event}&kitType=pret`,
     color: "from-rose-500 to-pink-600",
   };
 }
@@ -271,9 +277,14 @@ export default function KitFinder() {
               <p className="font-sans-shop text-white/90 text-sm leading-relaxed mt-4">{recommendation.desc}</p>
             </div>
 
-            <a href={createPageUrl(recommendation.href)}
+            <a href={createPageUrl(recommendation.href) + (recommendation.params ? `?${recommendation.params}` : "")}
               className="w-full flex items-center justify-center gap-2 font-sans-shop font-bold text-white bg-gray-800 hover:bg-gray-900 transition py-4 rounded-2xl text-sm shadow-sm">
-              <Sparkles className="w-4 h-4" /> Découvrir ce kit et commander
+              <Sparkles className="w-4 h-4" /> Commander ce kit
+            </a>
+
+            <a href={createPageUrl("Shop")}
+              className="w-full flex items-center justify-center gap-2 font-sans-shop text-sm text-rose-500 font-semibold bg-rose-50 hover:bg-rose-100 transition py-3.5 rounded-2xl border border-rose-100">
+              🛍️ Voir tous les produits
             </a>
 
             <button onClick={reset}

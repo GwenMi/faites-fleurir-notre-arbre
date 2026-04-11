@@ -432,15 +432,24 @@ function ShopHomePage({ onStart }) {
 }
 
 export default function Shop() {
-  const [step, setStep] = useState(0);
+  const urlParams = new URLSearchParams(window.location.search);
+  const initEventType = urlParams.get("eventType");
+  const initKitType = urlParams.get("kitType");
+
+  const [step, setStep] = useState(() => {
+    if (initKitType && initEventType) return 3;
+    if (initKitType) return 2;
+    return 0;
+  });
   const [selection, setSelection] = useState({
-    eventType: null,
-    kitType: null,
+    eventType: initEventType || null,
+    kitType: initKitType || null,
     seedType: "tournesol_nain",
     sacCadeau: false,
     packs: [],
     containerType: null,
   });
+
   const [customerInfo, setCustomerInfo] = useState({
     name: "", email: "", phone: "", address: "", eventDate: ""
   });
