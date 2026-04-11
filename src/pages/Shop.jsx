@@ -3,6 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
 import StepKitOptions from "@/components/shop/StepKitOptions";
+import StepEventType from "@/components/shop/StepEventType";
 import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomization from "@/components/shop/StepCustomization";
 import StepEventSlug from "@/components/shop/StepEventSlug";
@@ -13,7 +14,7 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
+const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
 
 
 
@@ -459,12 +460,14 @@ export default function Shop() {
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
   const handleStart = (preselect = {}) => {
-    setSelection(s => ({
-      ...s,
-      ...preselect,
-      eventType: preselect.eventType || s.eventType || 'mariage',
-    }));
-    setStep(preselect.kitType ? 2 : 1);
+    setSelection(s => ({ ...s, ...preselect }));
+    if (preselect.kitType) {
+      setStep(3);
+    } else if (preselect.eventType) {
+      setStep(2);
+    } else {
+      setStep(1);
+    }
   };
 
   if (step === 0) return <ShopHomePage onStart={handleStart} />;
@@ -486,65 +489,73 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-8">
           {step === 1 && (
-            <StepKitOptions
+            <StepEventType
               selection={selection}
               onUpdate={updateSelection}
               onNext={() => setStep(2)}
               onBack={() => setStep(0)}
-              PRICING={PRICING}
             />
           )}
           {step === 2 && (
+            <StepKitOptions
+              selection={selection}
+              onUpdate={updateSelection}
+              onNext={() => setStep(3)}
+              onBack={() => setStep(1)}
+              PRICING={PRICING}
+            />
+          )}
+          {step === 3 && (
             <StepPackSelector
               selection={selection}
               onUpdate={updateSelection}
               pricing={pricing}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <StepCustomization
-              selection={selection}
-              onUpdate={updateSelection}
               onNext={() => setStep(4)}
-              onBack={() => setStep(2)}
-              seeds={SEEDS}
+              onBack={() => setStep(selection.kitType && !selection._fromShop ? 1 : 2)}
             />
           )}
           {step === 4 && (
-            <StepEventSlug
+            <StepCustomization
               selection={selection}
               onUpdate={updateSelection}
               onNext={() => setStep(5)}
               onBack={() => setStep(3)}
+              seeds={SEEDS}
             />
           )}
           {step === 5 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepEventSlug
+              selection={selection}
+              onUpdate={updateSelection}
               onNext={() => setStep(6)}
               onBack={() => setStep(4)}
             />
           )}
           {step === 6 && (
-            <StepShipping
-              totalPots={pricing.totalPots}
-              shippingMethod={shippingMethod}
-              onSelect={setShippingMethod}
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
               onNext={() => setStep(7)}
               onBack={() => setStep(5)}
             />
           )}
           {step === 7 && (
+            <StepShipping
+              totalPots={pricing.totalPots}
+              shippingMethod={shippingMethod}
+              onSelect={setShippingMethod}
+              onNext={() => setStep(8)}
+              onBack={() => setStep(6)}
+            />
+          )}
+          {step === 8 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
               shippingMethod={shippingMethod}
-              onBack={() => setStep(6)}
+              onBack={() => setStep(7)}
             />
           )}
         </div>
