@@ -12,6 +12,7 @@ const EVENT_FILTERS = [
 ];
 
 const KITS = [
+  // === FLEURS ===
   {
     id: "compose",
     emoji: "🌱",
@@ -45,6 +46,7 @@ const KITS = [
       "Assemblé & prêt à offrir ✓",
     ],
   },
+  // === ENTREPRISE ===
   {
     id: "entreprise_standard",
     emoji: "📋",
@@ -77,6 +79,7 @@ const KITS = [
     ],
     href: "KitFocusOrganisation",
   },
+  // === NATUREL ===
   {
     id: "naturel_essentiel",
     emoji: "🐝",
@@ -152,8 +155,8 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
         ))}
       </div>
 
-      {/* Cartes kits */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Cartes kits — 2 par 2 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {KITS.map(kit => (
           <button
             key={kit.id}
