@@ -497,9 +497,9 @@ export default function Shop() {
         <a href={createPageUrl("Home")} className="font-sans-shop text-xs text-gray-400 hover:text-rose-400 transition">← Retour à l'accueil</a>
       </nav>
       <ShopBanner />
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <div className="max-w-3xl mx-auto px-4 py-16">
         <WizardProgress currentStep={step} steps={STEPS} />
-        <div className="mt-8">
+        <div className="mt-12">
           {step === 1 && (
             <StepKitChoice
               selection={selection}

@@ -3,6 +3,8 @@ const EVENT_TYPES = [
   { id: "bapteme", icon: "👶", label: "Baptême" },
   { id: "communion", icon: "✨", label: "Communion" },
   { id: "anniversaire", icon: "🎂", label: "Anniversaire" },
+  { id: "fete_entreprise", icon: "🏢", label: "Entreprise" },
+  { id: "maison_hote", icon: "🏡", label: "Maison d'hôte" },
 ];
 
 export default function StepEventType({ selection, onUpdate, onNext, onBack }) {
@@ -18,13 +20,13 @@ export default function StepEventType({ selection, onUpdate, onNext, onBack }) {
         .font-sans-shop { font-family: 'Lato', system-ui, sans-serif; }
       `}</style>
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-10">
         <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Étape 2</p>
         <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-2">Quel est votre événement ?</h2>
         <p className="font-sans-shop text-sm text-gray-400">Choisissez le type pour personnaliser votre kit</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {EVENT_TYPES.map(et => (
           <button
             key={et.id}
@@ -36,12 +38,12 @@ export default function StepEventType({ selection, onUpdate, onNext, onBack }) {
             }`}
           >
             <span className="text-4xl">{et.icon}</span>
-            <span className="font-sans-shop font-semibold text-gray-700 text-sm">{et.label}</span>
+            <span className="font-sans-shop font-semibold text-gray-700 text-sm text-center">{et.label}</span>
           </button>
         ))}
       </div>
 
-      <div className="mt-6 text-center">
+      <div className="mt-8 text-center">
         <button
           onClick={onBack}
           className="font-sans-shop text-sm text-gray-400 hover:text-rose-400 transition"
