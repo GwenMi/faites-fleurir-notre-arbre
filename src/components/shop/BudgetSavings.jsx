@@ -1,19 +1,16 @@
 import { TrendingDown } from "lucide-react";
 
-const MARKET_PRICE_PER_POT = 8.0;
-
 export default function BudgetSavings({ selection, pricing, PRICING }) {
   const { totalPots, discount, pricePerPot, total } = pricing;
   if (!totalPots) return null;
-
-  const marketTotal = totalPots * MARKET_PRICE_PER_POT;
-  const savedVsMarket = marketTotal - total;
-  const savedVsMarketPct = Math.round((savedVsMarket / marketTotal) * 100);
 
   const isCompose = selection.kitType === "compose";
   const savedByKitChoice = isCompose
     ? Math.max(0, (PRICING.KIT_PRET - PRICING.KIT_COMPOSE) * totalPots)
     : 0;
+
+  // Ne monter l'écran que s'il y a au moins une économie
+  if (discount === 0 && savedByKitChoice === 0) return null;
 
   return (
     <div className="bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200 rounded-2xl p-5 space-y-3">
@@ -25,23 +22,6 @@ export default function BudgetSavings({ selection, pricing, PRICING }) {
       </div>
 
       <div className="space-y-2">
-        {/* Économie vs marché */}
-        <div className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-emerald-100">
-          <div>
-            <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-xs text-gray-500">
-              Vs. cadeaux classiques ({MARKET_PRICE_PER_POT}€/invité)
-            </p>
-            <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-sm font-semibold text-gray-800">
-              {totalPots} × {MARKET_PRICE_PER_POT}€ = {marketTotal.toFixed(2)}€
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-gray-400">Économie</p>
-            <p className="text-lg font-bold text-emerald-600">−{savedVsMarket.toFixed(2)}€</p>
-            <p className="text-xs text-emerald-500 font-semibold">{savedVsMarketPct}% moins cher</p>
-          </div>
-        </div>
-
         {/* Économie kit à composer */}
         {isCompose && savedByKitChoice > 0 && (
           <div className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-emerald-100">

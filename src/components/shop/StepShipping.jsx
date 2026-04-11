@@ -16,7 +16,7 @@ const CARRIER_LABELS = {
 };
 
 // Estimated weight per pot kit in grams (glass pot + seeds + packaging)
-const WEIGHT_PER_POT_G = 120;
+const WEIGHT_PER_POT_G = 200;
 
 export default function StepShipping({ totalPots, shippingMethod, onSelect, onNext, onBack }) {
   const [methods, setMethods] = useState([]);
