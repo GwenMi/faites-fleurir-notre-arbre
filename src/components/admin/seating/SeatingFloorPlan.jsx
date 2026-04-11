@@ -30,6 +30,8 @@ function RoomBackground({ shape }) {
 
 export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSelectGuest, onUpdatePosition, onAssignGuest, onUnassignGuest }) {
   const [roomShape, setRoomShape] = useState("rect");
+  const [roomWidth, setRoomWidth] = useState("");
+  const [roomLength, setRoomLength] = useState("");
   const [dragging, setDragging] = useState(null); // table drag
   const [dragOverTable, setDragOverTable] = useState(null); // guest drag-over
   const [selectedTable, setSelectedTable] = useState(null);
@@ -113,7 +115,24 @@ export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSele
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl px-2 py-1.5">
+            <span className="text-xs text-gray-400">📐</span>
+            <input
+              type="number" min="1" max="999" placeholder="Long."
+              value={roomLength}
+              onChange={e => setRoomLength(e.target.value)}
+              className="w-14 text-xs text-center border-none outline-none bg-transparent"
+            />
+            <span className="text-xs text-gray-300">×</span>
+            <input
+              type="number" min="1" max="999" placeholder="Larg."
+              value={roomWidth}
+              onChange={e => setRoomWidth(e.target.value)}
+              className="w-14 text-xs text-center border-none outline-none bg-transparent"
+            />
+            <span className="text-xs text-gray-400">m</span>
+          </div>
           <span className="text-xs text-gray-400 hidden sm:block">Déposez un invité sur une table 💡</span>
           <button onClick={() => window.print()} className="text-xs flex items-center gap-1 bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 rounded-xl px-3 py-1.5 transition print:hidden">
             🖨️ Imprimer
@@ -139,6 +158,13 @@ export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSele
         onClick={() => { setSelectedTable(null); }}
       >
         <RoomBackground shape={roomShape} />
+
+        {/* Room dimensions label */}
+        {(roomLength || roomWidth) && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-gray-500 border border-gray-100 pointer-events-none">
+            {roomLength || "?"} m × {roomWidth || "?"} m
+          </div>
+        )}
 
         {/* Grid */}
         <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
