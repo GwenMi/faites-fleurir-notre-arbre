@@ -234,8 +234,3 @@ export default function SiteEditorManager({ event }) {
     </div>
   );
 }
-        {saved ? "Enregistré ✓" : "Enregistrer les sections"}
-      </Button>
-    </div>
-  );
-}
