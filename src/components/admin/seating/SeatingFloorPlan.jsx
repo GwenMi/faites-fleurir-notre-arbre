@@ -32,6 +32,7 @@ export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSele
   const [roomShape, setRoomShape] = useState("rect");
   const [roomWidth, setRoomWidth] = useState("");
   const [roomLength, setRoomLength] = useState("");
+  const [roomSqm, setRoomSqm] = useState("");
   const [dragging, setDragging] = useState(null); // table drag
   const [dragOverTable, setDragOverTable] = useState(null); // guest drag-over
   const [selectedTable, setSelectedTable] = useState(null);
@@ -133,6 +134,16 @@ export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSele
             />
             <span className="text-xs text-gray-400">m</span>
           </div>
+          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl px-2 py-1.5">
+            <span className="text-xs text-gray-400">□</span>
+            <input
+              type="number" min="1" max="99999" placeholder="Surface"
+              value={roomSqm}
+              onChange={e => setRoomSqm(e.target.value)}
+              className="w-16 text-xs text-center border-none outline-none bg-transparent"
+            />
+            <span className="text-xs text-gray-400">m²</span>
+          </div>
           <span className="text-xs text-gray-400 hidden sm:block">Déposez un invité sur une table 💡</span>
           <button onClick={() => window.print()} className="text-xs flex items-center gap-1 bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 rounded-xl px-3 py-1.5 transition print:hidden">
             🖨️ Imprimer
@@ -160,9 +171,11 @@ export default function SeatingFloorPlan({ tables, guests, selectedGuest, onSele
         <RoomBackground shape={roomShape} />
 
         {/* Room dimensions label */}
-        {(roomLength || roomWidth) && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-gray-500 border border-gray-100 pointer-events-none">
-            {roomLength || "?"} m × {roomWidth || "?"} m
+        {(roomLength || roomWidth || roomSqm) && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-gray-500 border border-gray-100 pointer-events-none flex items-center gap-2">
+            {(roomLength || roomWidth) && <span>{roomLength || "?"} m × {roomWidth || "?"} m</span>}
+            {(roomLength || roomWidth) && roomSqm && <span className="text-gray-300">·</span>}
+            {roomSqm && <span>{roomSqm} m²</span>}
           </div>
         )}
 
