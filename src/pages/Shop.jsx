@@ -143,6 +143,7 @@ const USE_CASES = [
 
 function ShopHomePage({ onStart }) {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [showOtherKits, setShowOtherKits] = useState(false);
 
   const filteredProducts = activeCategory === "all"
     ? PRODUCTS
@@ -241,7 +242,7 @@ function ShopHomePage({ onStart }) {
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => { setActiveCategory(cat.id); setShowOtherKits(false); }}
               className={`px-4 py-2 rounded-full font-sans-shop text-sm font-semibold transition border ${
                 activeCategory === cat.id
                   ? "bg-rose-400 text-white border-rose-400 shadow-sm"
@@ -279,6 +280,52 @@ function ShopHomePage({ onStart }) {
             </div>
           ))}
         </div>
+
+        {/* Autres kits */}
+        {activeCategory !== "all" && (() => {
+          const otherProducts = PRODUCTS.filter(p => !p.tags.includes(activeCategory));
+          if (otherProducts.length === 0) return null;
+          return (
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setShowOtherKits(v => !v)}
+                className="font-sans-shop text-sm text-gray-400 hover:text-rose-400 transition border border-gray-200 hover:border-rose-200 px-5 py-2.5 rounded-full"
+              >
+                {showOtherKits ? "Masquer les autres kits ✕" : "Voir les autres kits ↓"}
+              </button>
+              {showOtherKits && (
+                <div className="mt-6">
+                  <p className="font-sans-shop text-xs tracking-[0.25em] uppercase text-gray-400 mb-5">Nos autres produits disponibles</p>
+                  <div className={`grid gap-5 ${otherProducts.length === 1 ? "max-w-sm mx-auto" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+                    {otherProducts.map(product => (
+                      <div key={product.id} className={`border-2 ${product.color} rounded-3xl p-7 relative flex flex-col opacity-90`}>
+                        {product.badge && (
+                          <span className="absolute top-4 right-4 bg-gray-400 text-white text-xs font-bold px-2.5 py-1 rounded-full font-sans-shop">{product.badge}</span>
+                        )}
+                        <p className="font-sans-shop text-xs tracking-widest uppercase text-gray-400 mb-1">{product.label}</p>
+                        <p className="font-serif-shop text-3xl font-bold text-gray-800 mb-0.5">{product.price}<span className="text-sm font-normal text-gray-400"> {product.unit}</span></p>
+                        <p className="font-sans-shop text-sm text-gray-600 mb-4 leading-relaxed flex-1">{product.desc}</p>
+                        <ul className="space-y-2 mb-6">
+                          {product.features.map(f => (
+                            <li key={f} className="flex items-center gap-2 font-sans-shop text-sm text-gray-700">
+                              <span className={`text-xs ${product.check}`}>✓</span>{f}
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                          onClick={() => handleProductCta(product)}
+                          className="w-full py-3 rounded-full font-sans-shop font-semibold text-sm bg-gray-400 hover:bg-gray-500 text-white transition shadow-sm"
+                        >
+                          {product.cta}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Frise chronologique — uniquement pour les kits fleurs */}
