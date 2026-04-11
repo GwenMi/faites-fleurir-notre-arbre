@@ -46,6 +46,10 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           shipping_method_name: shippingMethod?.name ?? null,
           shipping_carrier: shippingMethod?.carrier ?? null,
           shipping_cost: pricing.shippingCost,
+          is_company: customerInfo.isCompany || false,
+          company_name: customerInfo.companyName || null,
+          vat_number: customerInfo.vatNumber || null,
+          siret: customerInfo.siret || null,
         }
       });
 
@@ -153,9 +157,11 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
       <BudgetSavings selection={selection} pricing={pricing} PRICING={PRICING} />
 
       {/* Post-payment note */}
-      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800">
-        🌸 <strong>Après le paiement</strong>, vous pourrez créer votre site de mariage avec QR code personnalisé inclus.
-      </div>
+      {["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType) && (
+        <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800">
+          🌸 <strong>Après le paiement</strong>, vous pourrez créer votre site personnalisé avec QR code inclus.
+        </div>
+      )}
 
       {!paymentStarted ? (
         <div className="flex gap-3">
