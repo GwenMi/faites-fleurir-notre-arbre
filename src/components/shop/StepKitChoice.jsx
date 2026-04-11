@@ -56,7 +56,7 @@ const KITS = [
     price: 15,
     unit: "HT / collaborateur",
     badge: null,
-    color: "border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100",
+    color: "border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100",
     desc: "Clip mémo en bois, carte planning effaçable, timer flip et stylo. Tout pour s'organiser au bureau.",
     features: [
       "Clip mémo en bois naturel",
@@ -73,7 +73,7 @@ const KITS = [
     price: 20,
     unit: "HT / collaborateur",
     badge: "Premium ✨",
-    color: "border-blue-300 bg-gradient-to-br from-blue-100 to-blue-200",
+    color: "border-emerald-300 bg-gradient-to-br from-emerald-100 to-emerald-200",
     desc: "Clip moniteur 360° pour écrans, carte planning, timer flip et stylo. La version premium.",
     features: [
       "Clip moniteur orientable 360°",
