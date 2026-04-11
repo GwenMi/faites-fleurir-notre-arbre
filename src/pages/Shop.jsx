@@ -108,7 +108,8 @@ const PRODUCTS = [
     price: "5 €",
     unit: "/ unité",
     badge: "100% naturel 🐝",
-    tags: ["maison_hotes"],
+    tags: ["maison_hotes", "mariage", "bapteme", "communion", "anniversaire"],
+    secondary: true,
     desc: "Un galet de cire d'abeille française gravé à votre logo, posé sur son dessous de verre en bois découpé laser. 6 usages du quotidien.",
     features: ["Galet cire d'abeille avec logo en relief", "Dessous de verre en bois laser", "Carte kraft 6 usages"],
     color: "border-yellow-200 bg-yellow-50",
@@ -122,7 +123,8 @@ const PRODUCTS = [
     price: "13 €",
     unit: "/ unité",
     badge: "Coup de cœur 🌿",
-    tags: ["maison_hotes"],
+    tags: ["maison_hotes", "mariage", "bapteme", "communion", "anniversaire"],
+    secondary: true,
     desc: "La formule complète : le galet de cire gravé, son dessous de verre en bois, la carte 6 usages et un sac en coton recyclé pour offrir l'ensemble avec élégance.",
     features: ["Galet cire d'abeille avec logo en relief", "Dessous de verre en bois laser", "Carte kraft 6 usages", "Sac en coton recyclé inclus"],
     color: "border-yellow-300 bg-yellow-100",
@@ -144,9 +146,14 @@ const USE_CASES = [
 function ShopHomePage({ onStart }) {
   const [activeCategory, setActiveCategory] = useState("all");
 
+  const FLOWER_CATEGORIES = ["mariage", "bapteme", "communion", "anniversaire"];
   const filteredProducts = activeCategory === "all"
     ? PRODUCTS
-    : PRODUCTS.filter(p => p.tags.includes(activeCategory));
+    : (() => {
+        const primary = PRODUCTS.filter(p => p.tags.includes(activeCategory) && !p.secondary);
+        const secondary = PRODUCTS.filter(p => p.tags.includes(activeCategory) && p.secondary);
+        return [...primary, ...secondary];
+      })();
 
   const filteredUseCases = activeCategory === "all"
     ? USE_CASES
@@ -254,8 +261,10 @@ function ShopHomePage({ onStart }) {
         </div>
 
         {/* Produits filtrés */}
-        <div className={`grid gap-5 ${filteredProducts.length === 1 ? "max-w-sm mx-auto" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
-          {filteredProducts.map(product => (
+        {(() => {
+          const primaryProducts = filteredProducts.filter(p => !p.secondary);
+          const secondaryProducts = filteredProducts.filter(p => p.secondary);
+          const renderCard = (product) => (
             <div key={product.id} className={`border-2 ${product.color} rounded-3xl p-7 relative flex flex-col`}>
               {product.badge && (
                 <span className="absolute top-4 right-4 bg-rose-400 text-white text-xs font-bold px-2.5 py-1 rounded-full font-sans-shop">{product.badge}</span>
@@ -277,8 +286,23 @@ function ShopHomePage({ onStart }) {
                 {product.cta}
               </button>
             </div>
-          ))}
-        </div>
+          );
+          return (
+            <>
+              <div className={`grid gap-5 ${primaryProducts.length === 1 ? "max-w-sm mx-auto" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+                {primaryProducts.map(renderCard)}
+              </div>
+              {secondaryProducts.length > 0 && (
+                <div className="mt-10">
+                  <p className="font-sans-shop text-xs tracking-[0.25em] uppercase text-gray-400 text-center mb-5">✦ Également disponible pour cet événement</p>
+                  <div className={`grid gap-5 ${secondaryProducts.length === 1 ? "max-w-sm mx-auto" : "grid-cols-1 sm:grid-cols-2"}`}>
+                    {secondaryProducts.map(renderCard)}
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
       </div>
 
       {/* Frise chronologique — uniquement pour les kits fleurs */}
