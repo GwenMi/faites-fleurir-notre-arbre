@@ -287,7 +287,8 @@ function ShopHomePage({ onStart }) {
         </div>
       </div>
 
-      {/* Frise chronologique */}
+      {/* Frise chronologique — uniquement pour les kits fleurs */}
+      {["all", "mariage", "bapteme", "communion", "anniversaire"].includes(activeCategory) && (
       <div className="px-6 md:px-12 py-12 max-w-3xl mx-auto">
         <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 text-center">Le voyage du cadeau</p>
         <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-8 text-center">De votre table à leur fenêtre</h2>
@@ -311,6 +312,7 @@ function ShopHomePage({ onStart }) {
           ))}
         </div>
       </div>
+      )}
 
       {/* Cas d'usage filtrés */}
       <div className="px-6 md:px-12 py-12 max-w-4xl mx-auto">
@@ -327,7 +329,8 @@ function ShopHomePage({ onStart }) {
         </div>
       </div>
 
-      {/* Avantages */}
+      {/* Avantages — uniquement pour les kits fleurs */}
+      {["all", "mariage", "bapteme", "communion", "anniversaire"].includes(activeCategory) && (
       <div className="bg-rose-50 px-6 md:px-12 py-14">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif-shop text-3xl font-bold text-gray-800 text-center mb-10">Ce qui rend ce cadeau unique</h2>
@@ -349,6 +352,7 @@ function ShopHomePage({ onStart }) {
           </div>
         </div>
       </div>
+      )}
 
       {/* Avis */}
       <ReviewCarousel />
