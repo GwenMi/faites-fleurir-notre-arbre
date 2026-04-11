@@ -98,6 +98,10 @@ export default function Home() {
             className="flex-1 py-4 rounded-full font-sans-clean font-bold text-white shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
             <Sparkles className="w-4 h-4" /> Découvrir les formules
           </a>
+          <a href={createPageUrl("KitFinder")}
+            className="flex-1 py-4 rounded-full font-sans-clean font-semibold text-rose-500 border-2 border-rose-200 flex items-center justify-center gap-2 hover:bg-rose-50 transition text-sm">
+            🎯 Quel kit pour moi ?
+          </a>
         </div>
 
         {/* 3 arguments courts */}
