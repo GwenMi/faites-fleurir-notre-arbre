@@ -48,10 +48,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
   const [activeEvent, setActiveEvent] = useState(selection.eventType || null);
 
   const handleSelectKit = (kitId) => {
-    onUpdate({
-      kitType: kitId,
-      eventType: activeEvent || "mariage",
-    });
+    onUpdate({ kitType: kitId });
     onNext();
   };
 

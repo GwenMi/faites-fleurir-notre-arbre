@@ -19,7 +19,7 @@ export default function StepEventType({ selection, onUpdate, onNext, onBack }) {
       `}</style>
 
       <div className="text-center mb-8">
-        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Étape 1</p>
+        <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Étape 2</p>
         <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-2">Quel est votre événement ?</h2>
         <p className="font-sans-shop text-sm text-gray-400">Choisissez le type pour personnaliser votre kit</p>
       </div>
@@ -46,7 +46,7 @@ export default function StepEventType({ selection, onUpdate, onNext, onBack }) {
           onClick={onBack}
           className="font-sans-shop text-sm text-gray-400 hover:text-rose-400 transition"
         >
-          ← Retour à la boutique
+          ← Retour au choix du kit
         </button>
       </div>
     </div>
