@@ -48,7 +48,8 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
   const [activeEvent, setActiveEvent] = useState(selection.eventType || null);
 
   const handleSelectKit = (kitId) => {
-    onUpdate({ kitType: kitId });
+    // Persist both kitType and any pre-selected event filter
+    onUpdate({ kitType: kitId, ...(activeEvent ? { eventType: activeEvent } : {}) });
     onNext();
   };
 
@@ -70,7 +71,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
         {EVENT_FILTERS.map(ev => (
           <button
             key={ev.id}
-            onClick={() => setActiveEvent(ev.id)}
+            onClick={() => { setActiveEvent(ev.id); onUpdate({ eventType: ev.id }); }}
             className={`px-4 py-1.5 rounded-full font-sans-shop text-sm font-semibold border transition ${
               activeEvent === ev.id
                 ? "bg-rose-400 text-white border-rose-400"
