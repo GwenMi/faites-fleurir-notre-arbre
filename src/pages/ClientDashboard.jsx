@@ -363,7 +363,7 @@ export default function ClientDashboard() {
                         )}
 
                         {/* Lien site événement */}
-                        {opts.site_public_url && (
+                        {opts.site_public_url ? (
                           <div className="flex items-center gap-3 p-3 bg-rose-50 rounded-xl">
                             <Flower2 className="w-4 h-4 text-rose-400 flex-shrink-0" />
                             <p className="font-sans-clean text-xs text-rose-600 font-semibold flex-1">Site événement lié</p>
@@ -375,6 +375,25 @@ export default function ClientDashboard() {
                             >
                               Accéder <ExternalLink className="w-3 h-3" />
                             </a>
+                          </div>
+                        ) : ["mariage", "anniversaire", "bapteme", "communion"].includes(opts.eventType) && (
+                          <div className="flex flex-col gap-2 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
+                            <p className="font-sans-clean text-xs font-semibold text-indigo-700">🌸 Créez votre site événement</p>
+                            <p className="font-sans-clean text-xs text-indigo-600">Partagez votre programme, gérez vos invités et le défi fleur.</p>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              <a
+                                href={createPageUrl("CreateMyEvent") + `?order_id=${order.id}&plan=basic`}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 rounded-xl font-sans-clean text-xs font-semibold transition"
+                              >
+                                Créer mon site gratuit
+                              </a>
+                              <a
+                                href={createPageUrl("CreateMyEvent") + `?order_id=${order.id}&plan=premium`}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-sans-clean text-xs font-semibold transition"
+                              >
+                                ✨ Version complète — 39,99€
+                              </a>
+                            </div>
                           </div>
                         )}
 
@@ -412,12 +431,20 @@ export default function ClientDashboard() {
                 <Flower2 className="w-16 h-16 text-gray-200 mx-auto mb-4" />
                 <p className="font-serif-elegant text-2xl text-gray-400 mb-2">Aucun événement</p>
                 <p className="font-sans-clean text-sm text-gray-400 mb-6">Vous n'avez pas encore créé de site événementiel.</p>
-                <a
-                  href={createPageUrl("Boutique")}
-                  className="inline-flex items-center gap-2 bg-rose-500 text-white rounded-full px-6 py-3 font-sans-clean text-sm font-semibold hover:bg-rose-600 transition"
-                >
-                  Créer mon événement <ChevronRight className="w-4 h-4" />
-                </a>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <a
+                    href={createPageUrl("CreateMyEvent") + `?plan=basic`}
+                    className="inline-flex items-center gap-2 bg-white border-2 border-rose-300 text-rose-600 rounded-full px-6 py-3 font-sans-clean text-sm font-semibold hover:bg-rose-50 transition"
+                  >
+                    Créer mon site gratuit
+                  </a>
+                  <a
+                    href={createPageUrl("CreateMyEvent") + `?plan=premium`}
+                    className="inline-flex items-center gap-2 bg-rose-500 text-white rounded-full px-6 py-3 font-sans-clean text-sm font-semibold hover:bg-rose-600 transition"
+                  >
+                    ✨ Version complète — 39,99€ <ChevronRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

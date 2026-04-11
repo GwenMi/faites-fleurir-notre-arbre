@@ -141,6 +141,8 @@ export default function OrderConfirmation() {
   }
 
   const isFullPayment = order.payment_status === "paid";
+  const eventType = order.options_selected?.eventType;
+  const isPersonalEventType = ["mariage", "anniversaire", "bapteme", "communion"].includes(eventType);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
@@ -273,7 +275,7 @@ export default function OrderConfirmation() {
         </div>
 
         {/* Création du site événement */}
-        {!order.options_selected?.site_public_url && siteChoice !== "dismissed" && (
+        {isPersonalEventType && !order.options_selected?.site_public_url && siteChoice !== "dismissed" && (
           <div className="bg-white rounded-3xl border border-rose-100 shadow-sm p-6 mb-8">
             <div className="flex items-start justify-between mb-3">
               <h3 className="font-serif-elegant text-xl font-bold text-gray-800">
