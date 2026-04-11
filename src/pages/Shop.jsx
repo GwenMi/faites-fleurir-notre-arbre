@@ -13,17 +13,9 @@ import ReviewCarousel from "@/components/shop/ReviewCarousel";
 import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Package, Leaf, Heart, Check } from "lucide-react";
 
-const STEPS = ["Type d'événement", "Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
+const STEPS = ["Kit & options", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
 
-const EVENT_TYPES = [
-  { id: "mariage", label: "💍 Mariage", hasSite: true },
-  { id: "bapteme", label: "👶 Baptême", hasSite: true },
-  { id: "communion", label: "✨ Communion", hasSite: true },
-  { id: "anniversaire", label: "🎂 Anniversaire", hasSite: true },
-  { id: "entreprise", label: "🏢 Entreprise", hasSite: false },
-  { id: "chambre_hotes", label: "🏡 Chambre d'hôtes", hasSite: false },
-  { id: "autre", label: "🎉 Autre", hasSite: false },
-];
+
 
 export const PRICING = {
   KIT_COMPOSE: 3.90,
@@ -164,7 +156,9 @@ function ShopHomePage({ onStart }) {
     if (product.href) {
       window.location.href = createPageUrl(product.href);
     } else {
-      onStart();
+      const eventType = activeCategory === 'all' ? (product.tags[0] || 'mariage') : activeCategory;
+      const kitType = product.id === 'kit_compose' ? 'compose' : 'pret';
+      onStart({ eventType, kitType });
     }
   };
 
@@ -227,7 +221,7 @@ function ShopHomePage({ onStart }) {
         <p className="font-sans-shop text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
           Un petit pot de graines personnalisé, posé sur chaque table. Lorsque la fleur pousse, vos invités pensent encore à votre événement — et partagent la photo.
         </p>
-        <button onClick={onStart}
+        <button onClick={() => onStart({})}
           className="inline-flex items-center gap-2 py-4 px-8 rounded-full font-sans-shop font-bold text-white shadow-lg bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
           <Sparkles className="w-4 h-4" /> Composer mon kit
         </button>
@@ -363,7 +357,7 @@ function ShopHomePage({ onStart }) {
         <p className="font-sans-shop text-white/80 text-sm mb-8 max-w-md mx-auto">
           Composez votre kit en quelques minutes. Livraison soignée, graines certifiées, étiquette personnalisée.
         </p>
-        <button onClick={onStart}
+        <button onClick={() => onStart({})}
           className="inline-flex items-center gap-2 bg-white text-rose-500 font-bold px-8 py-4 rounded-full hover:bg-rose-50 transition shadow-lg font-sans-shop text-sm">
           Découvrir les formules <ArrowRight className="w-4 h-4" />
         </button>
@@ -385,50 +379,6 @@ function ShopHomePage({ onStart }) {
         </div>
         <p className="font-sans-shop text-xs text-gray-300 mt-4">© 2025 Fleurs en fête — Papin Gwenaëlle</p>
       </footer>
-    </div>
-  );
-}
-
-function StepEventType({ selection, onUpdate, onNext, onBack }) {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="text-3xl font-bold text-gray-800 mb-2">Quel type d'événement ?</h2>
-        <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-gray-500">Sélectionnez votre type d'événement pour une expérience adaptée.</p>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {EVENT_TYPES.map(event => (
-          <button
-            key={event.id}
-            onClick={() => onUpdate({ eventType: event.id })}
-            className={`p-4 rounded-2xl border-2 transition text-left ${
-              selection.eventType === event.id
-                ? 'border-rose-400 bg-rose-50'
-                : 'border-gray-200 bg-white hover:border-rose-200'
-            }`}
-          >
-            <p style={{ fontFamily: "'Lato', sans-serif" }} className="font-semibold text-gray-800">{event.label}</p>
-            {event.hasSite && <p style={{ fontFamily: "'Lato', sans-serif" }} className="text-xs text-rose-400 mt-1">✓ Site personnalisé possible</p>}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-3 pt-6">
-        <button onClick={onBack}
-          className="flex-1 py-3 rounded-full font-sans-shop font-semibold text-gray-600 border-2 border-gray-200 hover:border-gray-300 transition text-sm">
-          Retour
-        </button>
-        <button onClick={onNext}
-          disabled={!selection.eventType}
-          className={`flex-1 py-3 rounded-full font-sans-shop font-semibold text-white transition text-sm ${
-            selection.eventType 
-              ? 'bg-rose-400 hover:bg-rose-500' 
-              : 'bg-gray-300 cursor-not-allowed'
-          }`}>
-          Suivant
-        </button>
-      </div>
     </div>
   );
 }
@@ -461,7 +411,14 @@ export default function Shop() {
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
-  if (step === 0) return <ShopHomePage onStart={() => setStep(1)} />;
+  const handleStart = (preselect = {}) => {
+    if (preselect.eventType || preselect.kitType) {
+      setSelection(s => ({ ...s, ...preselect }));
+    }
+    setStep(preselect.kitType ? 2 : 1);
+  };
+
+  if (step === 0) return <ShopHomePage onStart={handleStart} />;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
@@ -480,73 +437,65 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-8">
           {step === 1 && (
-            <StepEventType
+            <StepKitOptions
               selection={selection}
               onUpdate={updateSelection}
               onNext={() => setStep(2)}
               onBack={() => setStep(0)}
-            />
-          )}
-          {step === 2 && (
-            <StepKitOptions
-              selection={selection}
-              onUpdate={updateSelection}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
               PRICING={PRICING}
             />
           )}
-          {step === 3 && (
+          {step === 2 && (
             <StepPackSelector
               selection={selection}
               onUpdate={updateSelection}
               pricing={pricing}
+              onNext={() => setStep(3)}
+              onBack={() => setStep(1)}
+            />
+          )}
+          {step === 3 && (
+            <StepCustomization
+              selection={selection}
+              onUpdate={updateSelection}
               onNext={() => setStep(4)}
               onBack={() => setStep(2)}
+              seeds={SEEDS}
             />
           )}
           {step === 4 && (
-            <StepCustomization
+            <StepEventSlug
               selection={selection}
               onUpdate={updateSelection}
               onNext={() => setStep(5)}
               onBack={() => setStep(3)}
-              seeds={SEEDS}
             />
           )}
           {step === 5 && (
-            <StepEventSlug
-              selection={selection}
-              onUpdate={updateSelection}
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
               onNext={() => setStep(6)}
               onBack={() => setStep(4)}
             />
           )}
           {step === 6 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
+            <StepShipping
+              totalPots={pricing.totalPots}
+              shippingMethod={shippingMethod}
+              onSelect={setShippingMethod}
               onNext={() => setStep(7)}
               onBack={() => setStep(5)}
             />
           )}
           {step === 7 && (
-            <StepShipping
-              totalPots={pricing.totalPots}
-              shippingMethod={shippingMethod}
-              onSelect={setShippingMethod}
-              onNext={() => setStep(8)}
-              onBack={() => setStep(6)}
-            />
-          )}
-          {step === 8 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
               shippingMethod={shippingMethod}
-              onBack={() => setStep(7)}
+              onBack={() => setStep(6)}
             />
           )}
         </div>
