@@ -20,6 +20,7 @@ const KITS = [
     price: 3.90,
     unit: "/ invité",
     badge: null,
+    color: "border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100",
     desc: "Les éléments sont envoyés séparément pour que vous puissiez assembler vos cadeaux à votre rythme.",
     features: [
       "Graines de fleur",
@@ -36,6 +37,7 @@ const KITS = [
     price: 5.90,
     unit: "/ invité",
     badge: "Le plus choisi ✨",
+    color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
     desc: "Tout arrive assemblé et emballé. Posez simplement les pots sur les tables le jour J.",
     features: [
       "Graines de fleur",
@@ -54,6 +56,7 @@ const KITS = [
     price: 15,
     unit: "HT / collaborateur",
     badge: null,
+    color: "border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100",
     desc: "Clip mémo en bois, carte planning effaçable, timer flip et stylo. Tout pour s'organiser au bureau.",
     features: [
       "Clip mémo en bois naturel",
@@ -70,6 +73,7 @@ const KITS = [
     price: 20,
     unit: "HT / collaborateur",
     badge: "Premium ✨",
+    color: "border-blue-300 bg-gradient-to-br from-blue-100 to-blue-200",
     desc: "Clip moniteur 360° pour écrans, carte planning, timer flip et stylo. La version premium.",
     features: [
       "Clip moniteur orientable 360°",
@@ -87,6 +91,7 @@ const KITS = [
     price: 5,
     unit: "/ unité",
     badge: "100% naturel",
+    color: "border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100",
     desc: "Galet de cire d'abeille gravé à votre logo, dessous de verre en bois, carte 6 usages.",
     features: [
       "Galet cire d'abeille",
@@ -102,6 +107,7 @@ const KITS = [
     price: 13,
     unit: "/ unité",
     badge: "Coup de cœur",
+    color: "border-amber-300 bg-gradient-to-br from-amber-100 to-amber-200",
     desc: "Galet de cire gravé, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
     features: [
       "Galet cire d'abeille",
@@ -161,7 +167,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
           <button
             key={kit.id}
             onClick={() => handleSelectKit(kit)}
-            className="text-left rounded-2xl border-2 border-gray-200 bg-white hover:border-rose-400 hover:bg-rose-50 hover:shadow-md transition-all p-6 relative group flex flex-col"
+            className={`text-left rounded-2xl border-2 ${kit.color} hover:shadow-md transition-all p-6 relative group flex flex-col`}
           >
             <span className="text-4xl block mb-4">{kit.emoji}</span>
             {kit.badge && (
