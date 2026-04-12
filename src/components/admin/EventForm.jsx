@@ -169,11 +169,7 @@ export default function EventForm({ event, onSave, onCancel }) {
           onChange={(e) => set("welcome_message", e.target.value)} className="rounded-xl" rows={3} />
       </div>
 
-      <div className="space-y-1">
-        <Label>Type de graine offerte</Label>
-        <Input placeholder="Ex: Tournesol, Lavande, Marguerite..." value={form.seed_type}
-          onChange={(e) => set("seed_type", e.target.value)} className="rounded-xl h-11" />
-      </div>
+
 
       {/* Cover image */}
       <div className="space-y-1">
@@ -197,31 +193,55 @@ export default function EventForm({ event, onSave, onCancel }) {
         </label>
       </div>
 
-      {/* Template */}
-      <div className="space-y-2">
+      {/* Template avec aperçu */}
+      <div className="space-y-3">
         <Label>Template <span className="text-gray-400 font-normal text-xs">— adaptés à votre type d'événement</span></Label>
         {availableTemplates.length === 0 ? (
           <p className="text-sm text-gray-400">Aucun template disponible pour ce type d'événement.</p>
         ) : (
-          <div className="grid grid-cols-3 gap-2">
-            {freeTemplates.map(([key, tpl]) => (
-              <button key={key} type="button"
-                onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
-                className={`p-3 rounded-xl border-2 text-center text-sm font-medium transition ${form.template === key ? "border-purple-400 bg-purple-50" : "border-gray-200 bg-white hover:border-gray-300"}`}>
-                <span className="text-lg">{tpl.emoji}</span>
-                <span className="block mt-0.5">{tpl.name}</span>
-                <span className="block text-xs text-green-500 mt-0.5">Gratuit</span>
-              </button>
-            ))}
-            {premiumTemplates.map(([key, tpl]) => (
-              <button key={key} type="button"
-                onClick={() => { set("template", key); set("plan", "premium"); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
-                className={`p-3 rounded-xl border-2 text-center text-sm font-medium transition ${form.template === key ? "border-amber-400 bg-amber-50" : "border-gray-200 bg-white hover:border-gray-300"}`}>
-                <span className="text-lg">{tpl.emoji}</span>
-                <span className="block mt-0.5">{tpl.name}</span>
-                <span className="block text-xs text-amber-500 mt-0.5">⭐ Premium</span>
-              </button>
-            ))}
+          <div className="space-y-3">
+            {/* Aperçu du template sélectionné */}
+            {TEMPLATES[form.template] && (
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-2xl p-6 text-center">
+                <p className="text-xs text-gray-400 mb-2">APERÇU</p>
+                <div className="text-5xl mb-4">{TEMPLATES[form.template].emoji}</div>
+                <h3 className="font-serif-elegant text-2xl font-bold mb-4" style={{ color: form.primary_color }}>{form.couple_names || "Votre événement"}</h3>
+                <div className="flex gap-2 justify-center mb-4">
+                  <div className="w-12 h-12 rounded-lg shadow" style={{ backgroundColor: form.primary_color }}></div>
+                  <div className="w-12 h-12 rounded-lg shadow" style={{ backgroundColor: form.secondary_color }}></div>
+                </div>
+                <p className="font-sans-clean text-sm text-gray-600">{TEMPLATES[form.template].description}</p>
+              </div>
+            )}
+            {/* Grid de sélection */}
+            <div className="grid grid-cols-3 gap-2">
+              {freeTemplates.map(([key, tpl]) => (
+                <button key={key} type="button"
+                  onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
+                  className={`p-4 rounded-xl border-2 text-center transition ${form.template === key ? "border-purple-400 bg-purple-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
+                  <div className="text-2xl mb-2">{tpl.emoji}</div>
+                  <p className="text-xs font-semibold text-gray-800 mb-1">{tpl.name}</p>
+                  <div className="flex gap-1 justify-center mb-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.primaryColor }}></div>
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.secondaryColor }}></div>
+                  </div>
+                  <span className="text-xs text-green-500 font-semibold">Gratuit</span>
+                </button>
+              ))}
+              {premiumTemplates.map(([key, tpl]) => (
+                <button key={key} type="button"
+                  onClick={() => { set("template", key); set("plan", "premium"); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
+                  className={`p-4 rounded-xl border-2 text-center transition ${form.template === key ? "border-amber-400 bg-amber-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
+                  <div className="text-2xl mb-2">{tpl.emoji}</div>
+                  <p className="text-xs font-semibold text-gray-800 mb-1">{tpl.name}</p>
+                  <div className="flex gap-1 justify-center mb-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.primaryColor }}></div>
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.secondaryColor }}></div>
+                  </div>
+                  <span className="text-xs text-amber-500 font-semibold">⭐ Premium</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
