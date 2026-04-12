@@ -134,7 +134,7 @@ export default function Shop() {
             className="h-10"
           />
         </a>
-        <a href={createPageUrl("Home")} className="font-sans-shop text-xs text-gray-400 hover:text-rose-400 transition">← Retour à l'accueil</a>
+        <span className="font-sans-shop text-xs text-gray-400">Boutique</span>
       </nav>
       <ShopBanner />
       <div className="max-w-3xl mx-auto px-4 py-16">
