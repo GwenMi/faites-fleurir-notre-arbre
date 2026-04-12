@@ -7,59 +7,37 @@ export default function ClassicTemplate({ event, primaryColor, secondaryColor, f
         .font-body { font-family: '${fontBody}', sans-serif; }
       `}</style>
       
-      <div className="flex min-h-screen" style={{ backgroundColor: `${primaryColor}02` }}>
-        {/* Bande gauche avec ornements */}
-        <div className="w-2 md:w-4 flex flex-col items-center py-16 gap-12" style={{ background: `linear-gradient(180deg, ${primaryColor}08, ${primaryColor}04)`, borderRight: `1px solid ${primaryColor}20` }}>
-          <div className="text-3xl" style={{ opacity: 0.15 }}>✦</div>
-          <div className="flex-1 flex flex-col items-center justify-center gap-8">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} style={{ opacity: 0.15 }}>
-                <div className="text-2xl">❖</div>
-              </div>
-            ))}
-          </div>
-          <div className="text-3xl" style={{ opacity: 0.15 }}>✦</div>
-        </div>
+      <div className="flex min-h-screen bg-white">
+        {/* Bande gauche élégante */}
+        <div className="hidden md:flex w-1 flex-col" style={{ background: `linear-gradient(180deg, ${primaryColor}15, transparent)` }} />
         
-        <div className="flex-1 max-w-5xl mx-auto px-6 md:px-12 py-16">
-          {/* Header */}
-          <header className="text-center mb-16 pb-12" style={{ borderBottomWidth: '3px', borderBottomStyle: 'solid', borderBottomColor: `${primaryColor}30` }}>
-            <div className="mb-3 text-2xl" style={{ opacity: 0.15 }}>✤</div>
-            <h1 className="font-heading text-5xl md:text-6xl font-bold mb-4 tracking-wide" style={{ color: primaryColor, letterSpacing: '0.02em' }}>
+        <div className="flex-1 max-w-5xl mx-auto px-8 md:px-16 py-20">
+          {/* Header classique */}
+          <header className="text-center mb-20 pb-16" style={{ borderBottom: `2px solid ${primaryColor}25` }}>
+            <h1 className="font-heading text-6xl md:text-7xl font-bold mb-6 tracking-tight" style={{ color: primaryColor }}>
               {event?.couple_names || "Votre événement"}
             </h1>
-            <div className="mb-4 text-2xl" style={{ opacity: 0.15 }}>✤</div>
             {event?.event_name && (
-              <p className="font-body text-lg text-gray-600 mb-4">{event.event_name}</p>
+              <p className="font-body text-xl text-gray-700 mb-6 font-light">{event.event_name}</p>
             )}
             {event?.event_date && (
-              <p className="font-body text-sm text-gray-500">{new Date(event.event_date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <p className="font-body text-sm text-gray-600 tracking-widest uppercase">{new Date(event.event_date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             )}
           </header>
 
           {/* Contenu */}
-          <main className="space-y-16">
+          <main className="space-y-20">
             {children}
           </main>
 
-          {/* Footer */}
-          <footer className="mt-20 pt-12 border-t border-gray-100 text-center text-gray-500 text-sm">
-            <p>Merci de votre présence à cet événement</p>
+          {/* Footer classique */}
+          <footer className="mt-28 pt-16" style={{ borderTop: `2px solid ${primaryColor}25` }}>
+            <p className="font-body text-center text-gray-600 text-sm">Merci de votre présence</p>
           </footer>
         </div>
 
-        {/* Bande droite avec ornements */}
-        <div className="w-2 md:w-4 flex flex-col items-center py-16 gap-12" style={{ background: `linear-gradient(180deg, ${primaryColor}08, ${primaryColor}04)`, borderLeft: `1px solid ${primaryColor}20` }}>
-          <div className="text-3xl" style={{ opacity: 0.15 }}>✦</div>
-          <div className="flex-1 flex flex-col items-center justify-center gap-8">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} style={{ opacity: 0.15 }}>
-                <div className="text-2xl">❖</div>
-              </div>
-            ))}
-          </div>
-          <div className="text-3xl" style={{ opacity: 0.15 }}>✦</div>
-        </div>
+        {/* Bande droite */}
+        <div className="hidden md:flex w-1 flex-col" style={{ background: `linear-gradient(180deg, transparent, ${primaryColor}15)` }} />
       </div>
     </div>
   );
