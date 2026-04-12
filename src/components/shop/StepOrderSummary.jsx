@@ -10,6 +10,8 @@ import StripePaymentForm from "./StripePaymentForm";
 export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onBack }) {
   const [paymentStarted, setPaymentStarted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [paymentDone, setPaymentDone] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState(null);
 
   const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
   const basePrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
@@ -18,10 +20,11 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
 
   const handlePaymentSuccess = async () => {
     setLoading(true);
+    const fullName = `${customerInfo.firstName || ""} ${customerInfo.lastName || ""}`.trim() || customerInfo.name || "";
     try {
       const packsLabel = packs.map(p => `Pack ${p.size} × ${p.qty}`).join(", ");
       const order = await base44.entities.Order.create({
-        customer_name: customerInfo.name,
+        customer_name: fullName,
         customer_email: customerInfo.email,
         product_id: `multi_pack`,
         product_name: `${packsLabel} — ${kitLabel}`,
@@ -39,7 +42,11 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           pricePerPot: pricing.pricePerPot,
           event_date: customerInfo.eventDate,
           phone: customerInfo.phone,
-          delivery_address: customerInfo.address,
+          delivery_address: `${customerInfo.street || ""}, ${customerInfo.zipCode || ""} ${customerInfo.city || ""}, ${customerInfo.country || ""}`.trim(),
+          billing_street: customerInfo.billingStreet || customerInfo.street,
+          billing_city: customerInfo.billingCity || customerInfo.city,
+          billing_zip: customerInfo.billingZipCode || customerInfo.zipCode,
+          billing_country: customerInfo.billingCountry || customerInfo.country,
           subtotal: pricing.subtotal,
           discount: pricing.discount,
           shipping_method_id: shippingMethod?.id ?? null,
@@ -78,9 +85,10 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         console.log('PDF generation warning:', pdfError.message);
       }
 
-      window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${order.id}`;
+      setCreatedOrderId(order.id);
+      setPaymentDone(true);
     } catch (e) {
-      toast.error("Erreur lors de la finalisation de la commande");
+      alert("Erreur lors de la finalisation : " + e.message);
       setLoading(false);
     }
   };
@@ -168,14 +176,51 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
       {/* Budget savings block */}
       <BudgetSavings selection={selection} pricing={pricing} PRICING={PRICING} />
 
-      {/* Post-payment note */}
-      {["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType) && (
-        <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800">
-          🌸 <strong>Après le paiement</strong>, vous pourrez créer votre site personnalisé avec QR code inclus.
-        </div>
-      )}
 
-      {!paymentStarted ? (
+
+      {paymentDone ? (
+        // Étape post-paiement : proposer la création du site
+        <div className="space-y-4">
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+            <div className="text-4xl mb-3">🎉</div>
+            <h3 className="font-bold text-gray-900 text-xl mb-2">Commande confirmée !</h3>
+            <p className="text-sm text-gray-500">Votre paiement a bien été reçu. Merci pour votre commande 🌸</p>
+          </div>
+
+          {["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType) && (
+            <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 space-y-4">
+              <div className="text-center">
+                <p className="text-lg font-bold text-indigo-900 mb-1">✨ Créez votre site personnalisé</p>
+                <p className="text-sm text-indigo-700">Invitez vos convives, partagez les photos, gérez les RSVP… inclus dans votre commande.</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  onClick={() => window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${createdOrderId}&create_site=1`}
+                  className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold"
+                >
+                  🌐 Créer mon site événement
+                </Button>
+                <Button
+                  onClick={() => window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${createdOrderId}`}
+                  variant="outline"
+                  className="flex-1 h-12 rounded-xl text-gray-500"
+                >
+                  Passer pour l'instant
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType) && (
+            <Button
+              onClick={() => window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${createdOrderId}`}
+              className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold"
+            >
+              Voir ma commande →
+            </Button>
+          )}
+        </div>
+      ) : !paymentStarted ? (
         <div className="flex gap-3">
           <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
             <ChevronLeft className="w-4 h-4 mr-2" /> Retour

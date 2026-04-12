@@ -31,7 +31,7 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
         customerName: customerInfo.name,
       });
 
-      const { clientSecret, paymentIntentId } = response.data;
+      const { clientSecret, paymentIntentId } = response;
 
       // Confirmer le paiement avec Stripe
       const paymentResult = await stripe.confirmCardPayment(clientSecret, {
@@ -148,7 +148,7 @@ export default function StripePaymentForm({ customerInfo, total, onSuccess, onBa
   useEffect(() => {
     base44.functions.invoke("getStripePublicKey", {})
       .then((res) => {
-        const key = res?.data?.publicKey;
+        const key = res?.publicKey;
         if (!key) throw new Error("Clé publique Stripe manquante");
         setStripePromise(loadStripe(key));
       })

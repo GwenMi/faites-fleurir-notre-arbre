@@ -98,14 +98,24 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
       {/* Auth block */}
       {!isAuthenticated ? (
         <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 space-y-3">
-          <p className="text-sm font-semibold text-gray-800">📋 Connectez-vous pour finaliser votre commande</p>
-          <p className="text-xs text-gray-500 leading-relaxed">Votre compte vous permettra de suivre votre commande, accéder à votre site événement et recevoir vos QR codes.</p>
+          <p className="text-sm font-semibold text-gray-800">🔐 Connexion ou création de compte obligatoire</p>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            Un compte est nécessaire pour valider votre commande, suivre la livraison et accéder à votre site événement.<br />
+            <strong>Si vous n'avez pas encore de compte</strong>, vous pouvez en créer un en quelques secondes — un email de validation vous sera envoyé pour confirmer votre adresse.
+          </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-1">
             <Button
               onClick={() => base44.auth.redirectToLogin(window.location.href)}
               className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
             >
-              <LogIn className="w-4 h-4 mr-2" /> Se connecter / Créer un compte
+              <LogIn className="w-4 h-4 mr-2" /> Se connecter
+            </Button>
+            <Button
+              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              variant="outline"
+              className="flex-1 h-11 rounded-xl border-rose-300 text-rose-600 font-semibold"
+            >
+              ✉️ Créer un compte
             </Button>
           </div>
         </div>

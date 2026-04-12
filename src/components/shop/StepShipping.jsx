@@ -92,7 +92,7 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
         </div>
       )}
 
-      {!loading && !error && methods.length === 0 && (
+      {!loading && (error || methods.length === 0) && (
         <div className="space-y-4">
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-700">
             <p className="font-semibold mb-2">Livraison personnalisée</p>
