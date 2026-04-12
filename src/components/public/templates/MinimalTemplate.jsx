@@ -8,12 +8,19 @@ export default function MinimalTemplate({ event, primaryColor, secondaryColor, f
       `}</style>
       
       <div className="flex min-h-screen bg-gradient-to-b from-white to-gray-50">
-        {/* Bande gauche minimaliste - fine ligne */}
-        <div style={{ backgroundColor: primaryColor }} className="w-0.5 md:w-1" />
+        {/* Bande gauche géométrique */}
+        <div className="w-2 md:w-3 flex flex-col items-center py-20 gap-6" style={{ backgroundColor: `${primaryColor}08` }}>
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.3 + (i * 0.05) }} />
+          ))}
+        </div>
         
         <div className="flex-1 max-w-5xl mx-auto px-6 md:px-12 py-16">
           {/* Header */}
-          <header className="text-center mb-16 pb-12">
+          <header className="text-center mb-16 pb-12 relative">
+            <div className="mb-8 flex justify-center">
+              <div style={{ width: '40px', height: '2px', backgroundColor: primaryColor }} />
+            </div>
             <h1 className="font-heading text-5xl md:text-6xl font-light mb-4" style={{ color: primaryColor, letterSpacing: '0.05em' }}>
               {event?.couple_names || "Votre événement"}
             </h1>
@@ -41,8 +48,12 @@ export default function MinimalTemplate({ event, primaryColor, secondaryColor, f
           </footer>
         </div>
 
-        {/* Bande droite minimaliste */}
-        <div style={{ backgroundColor: primaryColor }} className="w-0.5 md:w-1" />
+        {/* Bande droite géométrique */}
+        <div className="w-2 md:w-3 flex flex-col items-center py-20 gap-6" style={{ backgroundColor: `${primaryColor}08` }}>
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.3 + (i * 0.05) }} />
+          ))}
+        </div>
       </div>
     </div>
   );

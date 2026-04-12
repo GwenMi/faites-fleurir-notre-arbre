@@ -7,26 +7,32 @@ export default function FestiveTemplate({ event, primaryColor, secondaryColor, f
         .font-body { font-family: '${fontBody}', sans-serif; }
       `}</style>
       
-      <div className="flex min-h-screen bg-gradient-to-b from-rose-50 via-white to-rose-50">
-        {/* Bande gauche festive avec carrés colorés */}
-        <div className="w-2 md:w-4 flex flex-col gap-2 p-2" style={{ backgroundColor: primaryColor, opacity: 0.05 }}>
-          {[...Array(15)].map((_, i) => (
-            <div key={i} className="w-full h-3 rounded" style={{
-              backgroundColor: i % 2 === 0 ? primaryColor : secondaryColor,
-              opacity: 0.4
-            }} />
-          ))}
+      <div className="flex min-h-screen" style={{ background: `linear-gradient(135deg, ${primaryColor}10 0%, ${secondaryColor}10 100%)` }}>
+        {/* Bande gauche festive */}
+        <div className="w-3 md:w-5 flex flex-col gap-4 p-3 items-center" style={{ background: `linear-gradient(180deg, ${primaryColor}15, ${secondaryColor}15)` }}>
+          <div className="text-3xl">🎊</div>
+          <div className="flex-1 flex flex-col gap-3 justify-center">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="flex gap-2 justify-center">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.5 }} />
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: secondaryColor, opacity: 0.5 }} />
+              </div>
+            ))}
+          </div>
+          <div className="text-3xl">🎉</div>
         </div>
         
         <div className="flex-1 max-w-5xl mx-auto px-6 md:px-12 py-16">
           {/* Header festif */}
-          <header className="text-center mb-16 pb-12">
-            <div className="mb-6 flex justify-center gap-3">
-              <span className="text-3xl">✨</span>
-              <span className="text-3xl">🎉</span>
-              <span className="text-3xl">✨</span>
+          <header className="text-center mb-16 pb-12 relative">
+            <div className="mb-8 flex justify-center gap-4 text-4xl flex-wrap">
+              <span>🎉</span>
+              <span>✨</span>
+              <span>🎊</span>
+              <span>✨</span>
+              <span>🎉</span>
             </div>
-            <h1 className="font-heading text-6xl md:text-7xl font-bold mb-4" style={{ color: primaryColor }}>
+            <h1 className="font-heading text-6xl md:text-7xl font-bold mb-4" style={{ color: primaryColor, textShadow: `2px 2px 0 ${secondaryColor}20` }}>
               {event?.couple_names || "Votre événement"}
             </h1>
             {event?.event_name && (
@@ -56,13 +62,17 @@ export default function FestiveTemplate({ event, primaryColor, secondaryColor, f
         </div>
 
         {/* Bande droite festive */}
-        <div className="w-2 md:w-4 flex flex-col gap-2 p-2" style={{ backgroundColor: primaryColor, opacity: 0.05 }}>
-          {[...Array(15)].map((_, i) => (
-            <div key={i} className="w-full h-3 rounded" style={{
-              backgroundColor: i % 2 === 0 ? primaryColor : secondaryColor,
-              opacity: 0.4
-            }} />
-          ))}
+        <div className="w-3 md:w-5 flex flex-col gap-4 p-3 items-center" style={{ background: `linear-gradient(180deg, ${primaryColor}15, ${secondaryColor}15)` }}>
+          <div className="text-3xl">🎊</div>
+          <div className="flex-1 flex flex-col gap-3 justify-center">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="flex gap-2 justify-center">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.5 }} />
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: secondaryColor, opacity: 0.5 }} />
+              </div>
+            ))}
+          </div>
+          <div className="text-3xl">🎉</div>
         </div>
       </div>
     </div>
