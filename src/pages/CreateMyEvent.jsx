@@ -37,9 +37,8 @@ export default function CreateMyEvent() {
     try {
       const me = await base44.auth.me();
       setUser(me);
-      // Check if user already has an event
       const [allOrders, existingEvents] = await Promise.all([
-        base44.entities.Order.filter({ customer_email: me.email }),
+        base44.entities.Order.filter({ customer_email: me.email }, "-created_date", 10),
         base44.entities.Event.filter({ created_by: me.email }, "-created_date", 1),
       ]);
       if (existingEvents?.length > 0) {
@@ -208,17 +207,18 @@ export default function CreateMyEvent() {
     );
   }
 
-  // Prefill from order (if present) or empty defaults for standalone
+  // Prefill: try to gather data from order, existing orders, and user profile
+  const bestOrder = order || unlinkableOrders[0] || null;
   const prefill = {
-    couple_names: order?.customer_name || "",
-    event_date: order?.options_selected?.event_date || "",
-    event_type: "mariage",
+    couple_names: bestOrder?.customer_name || user?.full_name || "",
+    event_date: bestOrder?.options_selected?.event_date || "",
+    event_type: bestOrder?.options_selected?.event_type || "mariage",
     primary_color: "#c084fc",
     secondary_color: "#86efac",
     template: "classique",
     plan: planFromUrl === "premium" ? "premium" : "basic",
     welcome_message: "",
-    seed_type: "",
+    seed_type: bestOrder?.options_selected?.seed_type || "",
     event_name: "",
     cover_image: "",
     status: "active",
