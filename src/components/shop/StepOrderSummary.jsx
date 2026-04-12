@@ -170,7 +170,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         <p className="text-gray-700">
           <strong>Événement :</strong> {new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
-        <p className="text-gray-700"><strong>Livraison :</strong> {customerInfo.address}</p>
+        <p className="text-gray-700"><strong>Livraison :</strong> {[customerInfo.street, customerInfo.zipCode, customerInfo.city, customerInfo.country].filter(Boolean).join(', ') || customerInfo.address || '—'}</p>
       </div>
 
       {/* Budget savings block */}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
@@ -140,32 +140,13 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
   );
 }
 
+const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const stripePromiseGlobal = stripeKey ? loadStripe(stripeKey) : null;
+
 export default function StripePaymentForm({ customerInfo, total, onSuccess, onBack }) {
-  const [stripePromise, setStripePromise] = useState(null);
-  const [loadingKey, setLoadingKey] = useState(true);
-  const [keyError, setKeyError] = useState(null);
+  const keyError = !stripeKey ? "Clé publique Stripe manquante (VITE_STRIPE_PUBLIC_KEY)" : null;
 
-  useEffect(() => {
-    base44.functions.invoke("getStripePublicKey", {})
-      .then((res) => {
-        const key = res?.publicKey;
-        if (!key) throw new Error("Clé publique Stripe manquante");
-        setStripePromise(loadStripe(key));
-      })
-      .catch((err) => setKeyError(err.message))
-      .finally(() => setLoadingKey(false));
-  }, []);
-
-  if (loadingKey) {
-    return (
-      <div className="px-6 py-10 text-center">
-        <Loader2 className="w-8 h-8 animate-spin text-rose-400 mx-auto mb-3" />
-        <p className="text-sm text-gray-500">Chargement du module de paiement…</p>
-      </div>
-    );
-  }
-
-  if (keyError || !stripePromise) {
+  if (keyError || !stripePromiseGlobal) {
     return (
       <div className="px-6 py-10 text-center">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
@@ -176,7 +157,7 @@ export default function StripePaymentForm({ customerInfo, total, onSuccess, onBa
   }
 
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromiseGlobal}>
       <PaymentForm
         customerInfo={customerInfo}
         total={total}

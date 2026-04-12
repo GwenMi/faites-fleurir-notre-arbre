@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -10,10 +10,7 @@ Deno.serve(async (req) => {
     const secretKey = Deno.env.get('sendcloud');
 
     if (!publicKey || !secretKey) {
-      return Response.json(
-        { error: 'Sendcloud credentials not configured' },
-        { status: 503 }
-      );
+      return Response.json({ error: 'Sendcloud credentials not configured' }, { status: 503 });
     }
 
     const credentials = btoa(`${publicKey}:${secretKey}`);
@@ -33,22 +30,18 @@ Deno.serve(async (req) => {
     if (!response.ok) {
       const text = await response.text();
       console.error('Sendcloud error:', response.status, text);
-      return Response.json(
-        { error: `Sendcloud API error: ${response.status}` },
-        { status: response.status }
-      );
+      return Response.json({ error: `Sendcloud API error: ${response.status} — ${text}` }, { status: response.status });
     }
 
     const data = await response.json();
 
-    // Filter methods compatible with the given weight, keep only relevant fields
     const methods = (data.shipping_methods || [])
-      .filter((m: any) => {
+      .filter((m) => {
         const min = m.min_weight ?? 0;
         const max = m.max_weight ?? Infinity;
         return weightGrams >= min && weightGrams <= max;
       })
-      .map((m: any) => ({
+      .map((m) => ({
         id: m.id,
         name: m.name,
         carrier: m.carrier,
