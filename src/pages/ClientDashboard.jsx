@@ -287,6 +287,7 @@ export default function ClientDashboard() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [events, setEvents] = useState([]);
+  const [abandonedCart, setAbandonedCart] = useState(null);
   const [tab, setTab] = useState("overview");
   const [downloadingId, setDownloadingId] = useState(null);
 
@@ -312,12 +313,14 @@ export default function ClientDashboard() {
         city: me.city || "",
         country: me.country || "France",
       });
-      const [ordersData, eventsData] = await Promise.all([
+      const [ordersData, eventsData, cartsData] = await Promise.all([
         base44.entities.Order.filter({ customer_email: me.email }, "-created_date", 50),
         base44.entities.Event.filter({ created_by: me.email }, "-created_date", 50),
+        base44.entities.AbandonedCart.filter({ user_email: me.email, status: 'active' }, "-created_date", 1),
       ]);
       setOrders(ordersData || []);
       setEvents(eventsData || []);
+      setAbandonedCart(cartsData?.[0] || null);
     } catch {
       base44.auth.redirectToLogin(window.location.href);
     } finally {
@@ -438,6 +441,26 @@ export default function ClientDashboard() {
       </div>
 
       {/* Alerts */}
+      {abandonedCart && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
+          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-4 flex items-center gap-3">
+            <ShoppingBag className="w-5 h-5 text-indigo-500 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-sans-clean text-sm font-semibold text-indigo-800">Vous avez un panier en cours</p>
+              <p className="font-sans-clean text-xs text-indigo-600 mt-0.5">
+                {abandonedCart.selection?.packs?.reduce((s, p) => s + p.size * p.qty, 0) > 0
+                  ? `${abandonedCart.selection.packs.reduce((s, p) => s + p.size * p.qty, 0)} pots de graines vous attendent !`
+                  : "Reprenez votre commande là où vous l'avez laissée."}
+              </p>
+            </div>
+            <a href="/Shop"
+              className="flex-shrink-0 flex items-center gap-1.5 text-sm font-semibold font-sans-clean text-white bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-xl transition">
+              🛒 Récupérer mon panier
+            </a>
+          </div>
+        </div>
+      )}
+
       {unpaidOrders.length > 0 && (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
           <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 flex items-center gap-3">

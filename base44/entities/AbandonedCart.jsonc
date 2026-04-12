@@ -1,0 +1,38 @@
+{
+  "name": "AbandonedCart",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "step": {
+      "type": "number",
+      "default": 1
+    },
+    "selection": {
+      "type": "object"
+    },
+    "customer_info": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed"
+      ],
+      "default": "active"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_sent_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

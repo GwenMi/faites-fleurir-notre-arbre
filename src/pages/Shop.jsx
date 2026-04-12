@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/lib/AuthContext";
+import { base44 } from "@/api/base44Client";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
 import StepKitChoice from "@/components/shop/StepKitChoice";
@@ -28,23 +30,28 @@ const SEEDS = [
 ];
 
 export default function Shop() {
+  const { user } = useAuth();
   const urlParams = new URLSearchParams(window.location.search);
   const initEventType = urlParams.get("eventType");
   const initKitType = urlParams.get("kitType");
+  const cartIdRef = useRef(null);
 
   const [step, setStep] = useState(() => {
     if (initKitType && initEventType) return 3;
     if (initKitType) return 2;
+    try { const s = localStorage.getItem("shop_step"); if (s) return parseInt(s); } catch {}
     return 1;
   });
 
-  const [selection, setSelection] = useState({
-    eventType: initEventType || null,
-    kitType: initKitType || null,
-    seedType: "tournesol_nain",
-    sacCadeau: false,
-    packs: [],
-    containerType: null,
+  const [selection, setSelection] = useState(() => {
+    try {
+      const saved = localStorage.getItem("shop_selection");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...parsed, eventType: initEventType || parsed.eventType || null, kitType: initKitType || parsed.kitType || null };
+      }
+    } catch {}
+    return { eventType: initEventType || null, kitType: initKitType || null, seedType: "tournesol_nain", sacCadeau: false, packs: [], containerType: null };
   });
 
   const [customerInfo, setCustomerInfo] = useState(() => {
@@ -52,15 +59,58 @@ export default function Shop() {
       const saved = localStorage.getItem("shop_customer_info");
       if (saved) return JSON.parse(saved);
     } catch {}
-    return { name: "", email: "", phone: "", address: "", eventDate: "",
-      firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France" };
+    return { name: "", email: "", phone: "", address: "", eventDate: "", firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France" };
   });
 
-  // Persist customerInfo to localStorage whenever it changes
+  const [shippingMethod, setShippingMethod] = useState(null);
+
+  // Persist to localStorage
   useEffect(() => {
     try { localStorage.setItem("shop_customer_info", JSON.stringify(customerInfo)); } catch {}
   }, [customerInfo]);
-  const [shippingMethod, setShippingMethod] = useState(null);
+
+  useEffect(() => {
+    try { localStorage.setItem("shop_selection", JSON.stringify(selection)); } catch {}
+  }, [selection]);
+
+  useEffect(() => {
+    try { localStorage.setItem("shop_step", String(step)); } catch {}
+  }, [step]);
+
+  // Save cart to DB when user is logged in and has made meaningful progress
+  useEffect(() => {
+    if (!user?.email || step < 3) return;
+    const save = async () => {
+      try {
+        if (cartIdRef.current) {
+          await base44.entities.AbandonedCart.update(cartIdRef.current, { step, selection, customer_info: customerInfo, status: 'active' });
+        } else {
+          const existing = await base44.entities.AbandonedCart.filter({ user_email: user.email, status: 'active' });
+          if (existing?.length > 0) {
+            cartIdRef.current = existing[0].id;
+            await base44.entities.AbandonedCart.update(existing[0].id, { step, selection, customer_info: customerInfo });
+          } else {
+            const cart = await base44.entities.AbandonedCart.create({ user_email: user.email, step, selection, customer_info: customerInfo, status: 'active' });
+            cartIdRef.current = cart.id;
+          }
+        }
+      } catch {}
+    };
+    save();
+  }, [step, user?.email]);
+
+  const handleOrderComplete = async () => {
+    try {
+      localStorage.removeItem("shop_step");
+      localStorage.removeItem("shop_selection");
+      if (cartIdRef.current) {
+        await base44.entities.AbandonedCart.update(cartIdRef.current, { status: 'completed' });
+      } else if (user?.email) {
+        const existing = await base44.entities.AbandonedCart.filter({ user_email: user.email, status: 'active' });
+        if (existing?.length > 0) await base44.entities.AbandonedCart.update(existing[0].id, { status: 'completed' });
+      }
+    } catch {}
+  };
 
   const baseKitPrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
   const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
@@ -91,64 +141,25 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-12">
           {step === 1 && (
-            <StepKitChoice
-              selection={selection}
-              onUpdate={updateSelection}
-              onNext={() => setStep(2)}
-              onBack={() => { window.location.href = createPageUrl("Home"); }}
-            />
+            <StepKitChoice selection={selection} onUpdate={updateSelection} onNext={() => setStep(2)} onBack={() => { window.location.href = createPageUrl("Home"); }} />
           )}
           {step === 2 && (
-            <StepEventType
-              selection={selection}
-              onUpdate={updateSelection}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
-            />
+            <StepEventType selection={selection} onUpdate={updateSelection} onNext={() => setStep(3)} onBack={() => setStep(1)} />
           )}
           {step === 3 && (
-            <StepPackSelector
-              selection={selection}
-              onUpdate={updateSelection}
-              pricing={pricing}
-              onNext={() => setStep(4)}
-              onBack={() => setStep(2)}
-            />
+            <StepPackSelector selection={selection} onUpdate={updateSelection} pricing={pricing} onNext={() => setStep(4)} onBack={() => setStep(2)} />
           )}
           {step === 4 && (
-            <StepCustomization
-              selection={selection}
-              onUpdate={updateSelection}
-              onNext={() => setStep(5)}
-              onBack={() => setStep(3)}
-              seeds={SEEDS}
-            />
+            <StepCustomization selection={selection} onUpdate={updateSelection} onNext={() => setStep(5)} onBack={() => setStep(3)} seeds={SEEDS} />
           )}
           {step === 5 && (
-            <StepEventSlug
-              selection={selection}
-              onUpdate={updateSelection}
-              onNext={() => setStep(6)}
-              onBack={() => setStep(4)}
-            />
+            <StepEventSlug selection={selection} onUpdate={updateSelection} onNext={() => setStep(6)} onBack={() => setStep(4)} />
           )}
           {step === 6 && (
-            <StepCustomerForm
-              customerInfo={customerInfo}
-              onChange={setCustomerInfo}
-              selection={selection}
-              onNext={() => setStep(7)}
-              onBack={() => setStep(5)}
-            />
+            <StepCustomerForm customerInfo={customerInfo} onChange={setCustomerInfo} selection={selection} onNext={() => setStep(7)} onBack={() => setStep(5)} />
           )}
           {step === 7 && (
-            <StepShipping
-              totalPots={pricing.totalPots}
-              shippingMethod={shippingMethod}
-              onSelect={setShippingMethod}
-              onNext={() => setStep(8)}
-              onBack={() => setStep(6)}
-            />
+            <StepShipping totalPots={pricing.totalPots} shippingMethod={shippingMethod} onSelect={setShippingMethod} onNext={() => setStep(8)} onBack={() => setStep(6)} />
           )}
           {step === 8 && (
             <StepOrderSummary
@@ -158,6 +169,7 @@ export default function Shop() {
               PRICING={PRICING}
               shippingMethod={shippingMethod}
               onBack={() => setStep(7)}
+              onOrderComplete={handleOrderComplete}
             />
           )}
         </div>

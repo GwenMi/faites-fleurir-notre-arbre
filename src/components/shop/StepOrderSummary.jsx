@@ -7,7 +7,7 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import StripePaymentForm from "./StripePaymentForm";
 
-export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onBack }) {
+export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onBack, onOrderComplete }) {
   const [paymentStarted, setPaymentStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
@@ -89,6 +89,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
 
       setCreatedOrderId(order.id);
       setPaymentDone(true);
+      if (onOrderComplete) onOrderComplete();
     } catch (e) {
       alert("Erreur lors de la finalisation : " + e.message);
       setLoading(false);
