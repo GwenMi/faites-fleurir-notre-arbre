@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
 import { ChevronRight, Sparkles, Check } from "lucide-react";
 
+const SHOP_URL = () => createPageUrl("Shop");
+
 const FEATURES_BASIC = [
   "Défi fleur & galerie photos interactive",
   "QR code sur vos pots de fleurs",
@@ -96,7 +98,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-8">
           <a href={createPageUrl("Shop")}
             className="flex-1 py-4 rounded-full font-sans-clean font-bold text-white shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm tracking-wide">
-            <Sparkles className="w-4 h-4" /> Découvrir les formules
+            <Sparkles className="w-4 h-4" /> Voir les formules
           </a>
           <a href={createPageUrl("KitFinder")}
             className="flex-1 py-4 rounded-full font-sans-clean font-semibold text-rose-500 border-2 border-rose-200 flex items-center justify-center gap-2 hover:bg-rose-50 transition text-sm">

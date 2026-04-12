@@ -158,9 +158,8 @@ function ShopHomePage({ onStart }) {
     if (product.href) {
       window.location.href = createPageUrl(product.href);
     } else {
-      const eventType = activeCategory === 'all' ? (product.tags[0] || 'mariage') : activeCategory;
-      const kitType = product.id === 'kit_compose' ? 'compose' : 'pret';
-      onStart({ eventType, kitType });
+      // Toujours passer par l'étape 1 pour ne pas sauter le choix de l'événement
+      onStart({});
     }
   };
 
