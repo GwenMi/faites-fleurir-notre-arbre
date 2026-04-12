@@ -1,12 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, ChevronRight, AlertCircle, Building2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function StepCustomerForm({ customerInfo, onChange, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [authUser, setAuthUser] = useState(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      base44.auth.me().then(user => {
+        setAuthUser(user);
+        // Pré-remplir email si vide
+        if (user?.email && !customerInfo.email) {
+          onChange(info => ({ ...info, email: user.email }));
+        }
+        // Pré-remplir prénom/nom depuis full_name
+        if (user?.full_name && !customerInfo.firstName) {
+          const parts = user.full_name.split(" ");
+          const firstName = parts[0] || "";
+          const lastName = parts.slice(1).join(" ") || "";
+          onChange(info => ({ ...info, firstName, lastName, name: user.full_name }));
+        }
+      }).catch(() => {});
+    }
+  }, [isAuthenticated]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
 
@@ -16,7 +39,7 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
   };
 
   const handleNext = () => {
-    if (!customerInfo.name || !customerInfo.email || !customerInfo.eventDate || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.eventDate || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
@@ -24,6 +47,8 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
       toast.error("Veuillez renseigner la raison sociale et le n° de TVA intracommunautaire");
       return;
     }
+    // Combine firstName + lastName → name (compat downstream)
+    onChange(info => ({ ...info, name: `${customerInfo.firstName} ${customerInfo.lastName}`.trim() }));
     const days = daysUntilEvent();
     if (days !== null && days < 14) {
       setShowLateWarning(true);
@@ -38,8 +63,35 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Vos informations</h2>
-        <p className="text-sm text-gray-500">Nécessaires pour préparer et expédier votre commande</p>
+        <p className="text-sm text-gray-500">Créez votre compte pour suivre votre commande et accéder à votre site personnalisé</p>
       </div>
+
+      {/* Auth block */}
+      {!isAuthenticated ? (
+        <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 space-y-3">
+          <p className="text-sm font-semibold text-gray-800">📋 Un compte est nécessaire pour finaliser votre commande</p>
+          <p className="text-xs text-gray-500 leading-relaxed">Il vous permettra de suivre votre commande, accéder à votre site événement et recevoir vos QR codes.</p>
+          <div className="flex flex-col sm:flex-row gap-3 pt-1">
+            <Button
+              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
+            >
+              <UserPlus className="w-4 h-4 mr-2" /> Créer mon compte
+            </Button>
+            <Button
+              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              variant="outline"
+              className="flex-1 h-11 rounded-xl border-rose-300 text-rose-600 hover:bg-rose-50"
+            >
+              <LogIn className="w-4 h-4 mr-2" /> J'ai déjà un compte
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800 flex items-center gap-2">
+          ✅ <span>Connecté en tant que <strong>{authUser?.email || authUser?.full_name}</strong></span>
+        </div>
+      )}
 
       {/* Particulier / Entreprise */}
       <div className="flex gap-3">
@@ -92,9 +144,15 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
             </div>
           </>
         )}
-        <div>
-          <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">{customerInfo.isCompany ? "Nom du contact *" : "Nom complet *"}</Label>
-          <Input value={customerInfo.name} onChange={e => set("name", e.target.value)} placeholder={customerInfo.isCompany ? "Prénom Nom" : "Emma & Lucas Dupont"} className="h-11 rounded-xl" />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Prénom *</Label>
+            <Input value={customerInfo.firstName || ""} onChange={e => set("firstName", e.target.value)} placeholder="Emma" className="h-11 rounded-xl" />
+          </div>
+          <div>
+            <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Nom *</Label>
+            <Input value={customerInfo.lastName || ""} onChange={e => set("lastName", e.target.value)} placeholder="Dupont" className="h-11 rounded-xl" />
+          </div>
         </div>
         <div>
           <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Email *</Label>
