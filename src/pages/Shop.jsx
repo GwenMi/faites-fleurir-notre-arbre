@@ -122,6 +122,7 @@ export default function Shop() {
             <StepCustomerForm
               customerInfo={customerInfo}
               onChange={setCustomerInfo}
+              selection={selection}
               onNext={() => setStep(7)}
               onBack={() => setStep(5)}
             />

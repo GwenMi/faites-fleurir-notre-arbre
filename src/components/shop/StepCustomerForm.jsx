@@ -2,29 +2,31 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, UserPlus } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 
-export default function StepCustomerForm({ customerInfo, onChange, onNext, onBack }) {
+export default function StepCustomerForm({ customerInfo, onChange, selection, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
   const { isAuthenticated, user } = useAuth();
 
-  // Pré-remplir depuis le compte connecté
+  // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
   useEffect(() => {
-    if (!user) return;
-    const parts = (user.full_name || "").split(" ");
+    const parts = (user?.full_name || "").split(" ");
     const firstName = parts[0] || "";
     const lastName = parts.slice(1).join(" ") || "";
+    // Date de l'événement depuis la personnalisation (selection.customization.date)
+    const eventDateFromSelection = selection?.customization?.date || "";
     onChange(info => ({
       ...info,
-      email: info.email || user.email || "",
+      email: info.email || user?.email || "",
       firstName: info.firstName || firstName,
       lastName: info.lastName || lastName,
-      name: info.name || user.full_name || "",
+      name: info.name || user?.full_name || "",
+      eventDate: info.eventDate || eventDateFromSelection,
     }));
-  }, [user]);
+  }, [user, selection]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
 
@@ -34,7 +36,7 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
   };
 
   const handleNext = () => {
-    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.eventDate || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
@@ -59,33 +61,26 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Vos informations</h2>
-        <p className="text-sm text-gray-500">Créez votre compte pour suivre votre commande et accéder à votre site personnalisé</p>
+        <p className="text-sm text-gray-500">Renseignez vos coordonnées pour la livraison et le suivi de commande</p>
       </div>
 
       {/* Auth block */}
       {!isAuthenticated ? (
         <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 space-y-3">
-          <p className="text-sm font-semibold text-gray-800">📋 Un compte est nécessaire pour finaliser votre commande</p>
-          <p className="text-xs text-gray-500 leading-relaxed">Il vous permettra de suivre votre commande, accéder à votre site événement et recevoir vos QR codes.</p>
+          <p className="text-sm font-semibold text-gray-800">📋 Connectez-vous pour finaliser votre commande</p>
+          <p className="text-xs text-gray-500 leading-relaxed">Votre compte vous permettra de suivre votre commande, accéder à votre site événement et recevoir vos QR codes.</p>
           <div className="flex flex-col sm:flex-row gap-3 pt-1">
             <Button
               onClick={() => base44.auth.redirectToLogin(window.location.href)}
               className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
             >
-              <UserPlus className="w-4 h-4 mr-2" /> Créer mon compte
-            </Button>
-            <Button
-              onClick={() => base44.auth.redirectToLogin(window.location.href)}
-              variant="outline"
-              className="flex-1 h-11 rounded-xl border-rose-300 text-rose-600 hover:bg-rose-50"
-            >
-              <LogIn className="w-4 h-4 mr-2" /> J'ai déjà un compte
+              <LogIn className="w-4 h-4 mr-2" /> Se connecter / Créer un compte
             </Button>
           </div>
         </div>
       ) : (
         <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800 flex items-center gap-2">
-          ✅ <span>Connecté en tant que <strong>{user?.email}</strong></span>
+          ✅ <span>Connecté en tant que <strong>{user?.email}</strong> — vos informations sont pré-remplies</span>
         </div>
       )}
 
@@ -158,17 +153,24 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
           <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Téléphone</Label>
           <Input type="tel" value={customerInfo.phone} onChange={e => set("phone", e.target.value)} placeholder="06 12 34 56 78" className="h-11 rounded-xl" />
         </div>
-        <div>
-          <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">
-            Date de votre événement * <span className="font-normal text-gray-400">(pour la planification)</span>
-          </Label>
-          <Input type="date" value={customerInfo.eventDate} onChange={e => set("eventDate", e.target.value)} className="h-11 rounded-xl w-full sm:w-64" />
-          {days !== null && days >= 0 && days < 14 && (
-            <p className="text-amber-600 text-sm mt-2 flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4" /> Commande tardive — livraison à confirmer
-            </p>
-          )}
-        </div>
+        {/* Date d'événement : pré-remplie depuis la personnalisation, affichée en lecture seule si disponible */}
+        {customerInfo.eventDate ? (
+          <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 flex items-center gap-2">
+            📅 <span>Date de l'événement : <strong>{new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</strong></span>
+          </div>
+        ) : (
+          <div>
+            <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">
+              Date de votre événement * <span className="font-normal text-gray-400">(pour la planification)</span>
+            </Label>
+            <Input type="date" value={customerInfo.eventDate} onChange={e => set("eventDate", e.target.value)} className="h-11 rounded-xl w-full sm:w-64" />
+            {days !== null && days >= 0 && days < 14 && (
+              <p className="text-amber-600 text-sm mt-2 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4" /> Commande tardive — livraison à confirmer
+              </p>
+            )}
+          </div>
+        )}
         
         {/* Adresse séparée en champs */}
         <div className="space-y-3 pt-4 border-t border-gray-100">
