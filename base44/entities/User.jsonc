@@ -33,6 +33,10 @@
       "type": "string",
       "default": "France",
       "description": "Pays"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL de l'avatar du compte"
     }
   },
   "required": []

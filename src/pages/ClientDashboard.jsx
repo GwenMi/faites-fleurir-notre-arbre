@@ -294,6 +294,7 @@ export default function ClientDashboard() {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -329,6 +330,16 @@ export default function ClientDashboard() {
     const doc = await generateInvoicePDF(order);
     doc.save(`Facture-FEF-${(order.id || "").slice(-8).toUpperCase()}.pdf`);
     setDownloadingId(null);
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.auth.updateMe({ avatar_url: file_url });
+    setUser(u => ({ ...u, avatar_url: file_url }));
+    setUploadingAvatar(false);
   };
 
   const handleSaveProfile = async () => {
@@ -376,9 +387,15 @@ export default function ClientDashboard() {
               className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 px-4 py-2 rounded-full transition font-sans-clean">
               <ShoppingBag className="w-3.5 h-3.5" /> Commander
             </a>
-            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-3 py-1.5">
-              <div className="w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center">
-                <User className="w-3.5 h-3.5 text-rose-500" />
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-2 py-1.5 pr-3">
+              <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0">
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-rose-100 flex items-center justify-center">
+                    <span className="font-serif-elegant text-sm font-bold text-rose-500">{(user?.full_name || user?.email || "?")[0].toUpperCase()}</span>
+                  </div>
+                )}
               </div>
               <span className="font-sans-clean text-xs text-gray-600 hidden sm:block max-w-[140px] truncate">
                 {user?.full_name || user?.email}
@@ -617,6 +634,30 @@ export default function ClientDashboard() {
         {tab === "profile" && (
           <div className="max-w-xl space-y-6">
             <h2 className="font-serif-elegant text-2xl font-bold text-gray-800">Mon profil</h2>
+
+            {/* Avatar */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-5">
+              <div className="relative flex-shrink-0">
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="avatar" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-rose-200 to-pink-300 flex items-center justify-center border-4 border-white shadow-md">
+                    <span className="font-serif-elegant text-3xl font-bold text-white">
+                      {(user?.full_name || user?.email || "?")[0].toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-rose-500 hover:bg-rose-600 rounded-full flex items-center justify-center cursor-pointer shadow-md transition">
+                  {uploadingAvatar ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" /> : <span className="text-white text-xs">✎</span>}
+                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploadingAvatar} />
+                </label>
+              </div>
+              <div>
+                <p className="font-sans-clean font-bold text-gray-800">{user?.full_name || "—"}</p>
+                <p className="font-sans-clean text-sm text-gray-400">{user?.email}</p>
+                <p className="font-sans-clean text-xs text-gray-300 mt-1">Cliquez sur ✎ pour changer la photo</p>
+              </div>
+            </div>
 
             {/* Identity (read-only) */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
