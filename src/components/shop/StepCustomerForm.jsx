@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn } from "lucide-react";
-import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function StepCustomerForm({ customerInfo, onChange, selection, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
+  const [validationError, setValidationError] = useState("");
   const { isAuthenticated, user } = useAuth();
 
   // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
@@ -36,14 +36,24 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
   };
 
   const handleNext = () => {
-    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.street || !customerInfo.zipCode || !customerInfo.city || !customerInfo.country) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
+    setValidationError("");
+    const missing = [];
+    if (!customerInfo.firstName) missing.push("prénom");
+    if (!customerInfo.lastName) missing.push("nom");
+    if (!customerInfo.email) missing.push("email");
+    if (!customerInfo.street) missing.push("rue");
+    if (!customerInfo.zipCode) missing.push("code postal");
+    if (!customerInfo.city) missing.push("ville");
+    if (!customerInfo.country) missing.push("pays");
+    if (missing.length > 0) {
+      setValidationError(`Champs manquants : ${missing.join(", ")}`);
       return;
     }
     if (customerInfo.isCompany && (!customerInfo.companyName || !customerInfo.vatNumber)) {
-      toast.error("Veuillez renseigner la raison sociale et le n° de TVA intracommunautaire");
+      setValidationError("Veuillez renseigner la raison sociale et le n° de TVA");
       return;
     }
+
     // Sync name synchronously before advancing
     const fullName = `${customerInfo.firstName} ${customerInfo.lastName}`.trim();
     const days = daysUntilEvent();
@@ -216,6 +226,12 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
               </Button>
             </div>
           </div>
+        </div>
+      )}
+
+      {validationError && (
+        <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" /> {validationError}
         </div>
       )}
 
