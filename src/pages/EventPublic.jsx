@@ -17,14 +17,15 @@ import BestOfSection from "@/components/public/BestOfSection";
 import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection";
 import WishlistSection from "@/components/public/WishlistSection";
 import SeatingPlanSection from "@/components/public/SeatingPlanSection";
-import CoupleStorySection from "@/components/public/CoupleStorySection.jsx";
-import MapSection from "@/components/public/MapSection.jsx";
-import CagnotteSection from "@/components/public/CagnotteSection.jsx"
+import CoupleStorySection from "@/components/public/sections/CoupleStorySection";
+import MapSection from "@/components/public/sections/MapSection";
+import CagnotteSection from "@/components/public/sections/CagnotteSection";
 import ReviewsList from "@/components/review/ReviewsList";
 import ReviewForm from "@/components/review/ReviewForm";
 
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
+  const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -43,7 +44,15 @@ export default function EventPublic() {
       return;
     }
     setEvent(events[0]);
+    loadFAQs(events[0].id);
     setLoading(false);
+  };
+
+  const loadFAQs = async (eventId) => {
+    try {
+      const data = await base44.entities.FAQItem.filter({ event_id: eventId }, "order");
+      setFaqs(data || []);
+    } catch {}
   };
 
   if (loading) return (
@@ -95,40 +104,40 @@ export default function EventPublic() {
 
   const SECTION_RENDERS = {
     couple_story: isPremium && event.show_couple_story && event.couple_story && (
-      <div key="couple_story" className="max-w-2xl mx-auto px-4"><CoupleStorySection event={event} primaryColor={primaryColor} /></div>
+      <div key="couple_story" className="max-w-2xl mx-auto px-4"><CoupleStorySection event={event} /></div>
     ),
-    day_schedule: isPremium && (
-      <div key="day_schedule" className="max-w-2xl mx-auto px-4"><DayScheduleSection event={event} primaryColor={primaryColor} /></div>
+    day_schedule: isPremium && event.event_date && (
+      <div key="day_schedule" className="max-w-2xl mx-auto px-4"><DayScheduleSection event={event} /></div>
     ),
     rsvp: isPremium && (
-      <div key="rsvp" className="max-w-2xl mx-auto px-4"><RSVPSection event={event} primaryColor={primaryColor} /></div>
+      <div key="rsvp" className="max-w-2xl mx-auto px-4"><RSVPSection event={event} /></div>
     ),
     best_of: isPremium && (
-      <div key="best_of" className="max-w-2xl mx-auto"><BestOfSection event={event} primaryColor={primaryColor} /></div>
+      <div key="best_of" className="max-w-2xl mx-auto px-4"><BestOfSection event={event} /></div>
     ),
     photo_gallery: isPremium && event.show_photo_gallery !== false && (
       <div key="photo_gallery" className="max-w-2xl mx-auto px-4"><PhotoGallerySection event={event} /></div>
     ),
     wishlist: isPremium && event.show_wishlist !== false && (
-      <div key="wishlist" className="max-w-2xl mx-auto"><WishlistSection event={event} primaryColor={primaryColor} /></div>
+      <div key="wishlist" className="max-w-2xl mx-auto px-4"><WishlistSection event={event} /></div>
     ),
     seating_plan: isPremium && (
-      <div key="seating_plan" className="max-w-2xl mx-auto"><SeatingPlanSection event={event} primaryColor={primaryColor} /></div>
+      <div key="seating_plan" className="max-w-2xl mx-auto px-4"><SeatingPlanSection event={event} /></div>
     ),
     faq: isPremium && event.show_faq !== false && (
-      <div key="faq" className="max-w-2xl mx-auto px-4"><FAQSectionNew event={event} faqs={[]} /></div>
+      <div key="faq" className="max-w-2xl mx-auto px-4"><FAQSectionNew event={event} faqs={faqs} /></div>
     ),
     map: isPremium && event.show_map && event.map_address && (
-      <div key="map" className="max-w-2xl mx-auto px-4"><MapSection event={event} primaryColor={primaryColor} /></div>
+      <div key="map" className="max-w-2xl mx-auto px-4"><MapSection event={event} /></div>
     ),
     guest_photos: isPremium && (
-      <div key="guest_photos" className="max-w-2xl mx-auto"><GuestPhotoUploadSection event={event} primaryColor={primaryColor} /></div>
+      <div key="guest_photos" className="max-w-2xl mx-auto px-4"><GuestPhotoUploadSection event={event} /></div>
     ),
     guestbook: isPremium && event.show_guestbook !== false && (
       <div key="guestbook" className="max-w-2xl mx-auto border-t border-gray-100 px-4"><GuestbookSection event={event} /></div>
     ),
     cagnotte: isPremium && event.show_cagnotte && event.cagnotte_url && (
-      <div key="cagnotte" className="max-w-2xl mx-auto border-t border-gray-100"><CagnotteSection event={event} primaryColor={primaryColor} /></div>
+      <div key="cagnotte" className="max-w-2xl mx-auto px-4 border-t border-gray-100"><CagnotteSection event={event} /></div>
     ),
   };
   

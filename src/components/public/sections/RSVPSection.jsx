@@ -1,26 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Heart, CheckCircle2 } from "lucide-react";
 
 export default function RSVPSection({ event }) {
   const [formOpen, setFormOpen] = useState(false);
+  const [form, setForm] = useState({ guest_name: "", email: "", attending: null, party_size: 1, notes: "" });
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    guest_name: "",
-    email: "",
-    attending: null,
-    party_size: 1,
-    notes: "",
-  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.guest_name || !formData.email || formData.attending === null) {
-      toast.error("Veuillez remplir tous les champs");
+    if (!form.guest_name || form.attending === null) {
+      toast.error("Veuillez remplir les champs requis");
       return;
     }
 
@@ -28,16 +22,16 @@ export default function RSVPSection({ event }) {
     try {
       await base44.entities.RSVPResponse.create({
         event_id: event.id,
-        guest_name: formData.guest_name,
-        email: formData.email,
-        attending: formData.attending,
-        party_size: parseInt(formData.party_size),
-        notes: formData.notes,
+        guest_name: form.guest_name,
+        email: form.email,
+        attending: form.attending,
+        party_size: form.party_size,
+        notes: form.notes,
       });
-      toast.success("RSVP enregistré ! Merci 🎉");
-      setFormData({ guest_name: "", email: "", attending: null, party_size: 1, notes: "" });
+      toast.success("RSVP enregistré ! 🎉");
+      setForm({ guest_name: "", email: "", attending: null, party_size: 1, notes: "" });
       setFormOpen(false);
-    } catch (err) {
+    } catch {
       toast.error("Erreur lors de l'enregistrement");
     } finally {
       setLoading(false);
@@ -45,82 +39,71 @@ export default function RSVPSection({ event }) {
   };
 
   return (
-    <section>
-      <h2 className="font-serif-elegant text-3xl font-bold mb-6 text-gray-900">💬 RSVP</h2>
-      <p className="text-gray-600 mb-6">
-        Confirmez votre présence pour que nous puissions mieux vous accueillir.
-      </p>
+    <section className="py-12">
+      <h2 className="font-serif-elegant text-3xl font-bold mb-6 text-gray-900">📍 Confirmer votre présence</h2>
 
       {!formOpen ? (
-        <Button onClick={() => setFormOpen(true)} size="lg" className="w-full rounded-xl h-12 font-semibold">
-          <Heart className="w-4 h-4 mr-2" /> Répondre à l'invitation
+        <Button onClick={() => setFormOpen(true)} size="lg" className="w-full rounded-xl h-12 mb-6 font-semibold">
+          ✍️ Répondre au RSVP
         </Button>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-gray-50 rounded-xl">
+        <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-gray-50 rounded-xl mb-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Votre nom *</label>
             <Input
-              value={formData.guest_name}
-              onChange={(e) => setFormData({ ...formData, guest_name: e.target.value })}
-              placeholder="Emma Martin"
+              value={form.guest_name}
+              onChange={(e) => setForm({ ...form, guest_name: e.target.value })}
+              placeholder="Prénom Nom"
               className="h-11 rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
             <Input
               type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="email@example.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="votre@email.com"
               className="h-11 rounded-lg"
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Présence *</label>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, attending: true })}
-                className={`flex-1 py-2 px-3 rounded-lg border-2 font-semibold transition ${
-                  formData.attending === true
-                    ? "border-green-400 bg-green-50 text-green-700"
-                    : "border-gray-200 hover:border-green-200"
-                }`}
-              >
-                ✓ Je viens
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, attending: false })}
-                className={`flex-1 py-2 px-3 rounded-lg border-2 font-semibold transition ${
-                  formData.attending === false
-                    ? "border-red-400 bg-red-50 text-red-700"
-                    : "border-gray-200 hover:border-red-200"
-                }`}
-              >
-                ✕ Je ne peux pas
-              </button>
+            <label className="block text-sm font-semibold text-gray-700 mb-3">Confirmation *</label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={form.attending === true}
+                  onCheckedChange={() => setForm({ ...form, attending: true })}
+                />
+                <span className="text-gray-700">Oui, je serai présent(e) 🎉</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={form.attending === false}
+                  onCheckedChange={() => setForm({ ...form, attending: false })}
+                />
+                <span className="text-gray-700">Non, je ne peux pas 😢</span>
+              </label>
             </div>
           </div>
-          {formData.attending && (
+          {form.attending === true && (
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre de personnes</label>
               <Input
                 type="number"
                 min="1"
-                value={formData.party_size}
-                onChange={(e) => setFormData({ ...formData, party_size: e.target.value })}
+                value={form.party_size}
+                onChange={(e) => setForm({ ...form, party_size: parseInt(e.target.value) || 1 })}
                 className="h-11 rounded-lg"
               />
             </div>
           )}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Message</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Remarques</label>
             <Textarea
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              placeholder="Allergies, régimes particuliers..."
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder="Allergies, régimes spéciaux, etc..."
               rows={3}
               className="rounded-lg"
             />
@@ -135,7 +118,7 @@ export default function RSVPSection({ event }) {
               Annuler
             </Button>
             <Button type="submit" disabled={loading} className="flex-1 rounded-lg h-11">
-              {loading ? "Enregistrement..." : "Envoyer"}
+              {loading ? "Envoi..." : "Confirmer"}
             </Button>
           </div>
         </form>
