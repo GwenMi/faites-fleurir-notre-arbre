@@ -31,7 +31,7 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
         customerName: customerInfo.name,
       });
 
-      const { clientSecret, paymentIntentId } = response;
+      const { clientSecret, paymentIntentId } = response.data;
 
       // Confirmer le paiement avec Stripe
       const paymentResult = await stripe.confirmCardPayment(clientSecret, {

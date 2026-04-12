@@ -57,6 +57,8 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           company_name: customerInfo.companyName || null,
           vat_number: customerInfo.vatNumber || null,
           siret: customerInfo.siret || null,
+          slug: selection.slug || null,
+          site_public_url: selection.slug ? `https://fleursdefete.fr/${selection.slug}` : null,
         }
       });
 
@@ -171,6 +173,9 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           <strong>Événement :</strong> {new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
         </p>
         <p className="text-gray-700"><strong>Livraison :</strong> {[customerInfo.street, customerInfo.zipCode, customerInfo.city, customerInfo.country].filter(Boolean).join(', ') || customerInfo.address || '—'}</p>
+        {selection.slug && (
+          <p className="text-gray-700"><strong>Site événement :</strong> <a href={`https://fleursdefete.fr/${selection.slug}`} target="_blank" rel="noreferrer" className="text-rose-500 underline">fleursdefete.fr/{selection.slug}</a></p>
+        )}
       </div>
 
       {/* Budget savings block */}
