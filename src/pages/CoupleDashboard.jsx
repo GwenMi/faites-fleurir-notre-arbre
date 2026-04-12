@@ -67,12 +67,28 @@ function ScheduleManagerWrapper({ event }) {
 
 export default function CoupleDashboard() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [event, setEvent] = useState(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("guests");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+
+  // Auto-login si connecté et event_id en URL
+  useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get("event_id");
+    if (!eventId) { setLoading(false); return; }
+    base44.auth.me().then(async (me) => {
+      if (!me) { setLoading(false); return; }
+      const events = await base44.entities.Event.filter({ id: eventId, created_by: me.email });
+      if (events && events.length > 0) {
+        setEvent(events[0]);
+        setAuthenticated(true);
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -105,6 +121,14 @@ export default function CoupleDashboard() {
     }
     setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-rose-50">
+        <Loader2 className="w-10 h-10 text-rose-400 animate-spin" />
+      </div>
+    );
+  }
 
   if (!authenticated) {
     return (
