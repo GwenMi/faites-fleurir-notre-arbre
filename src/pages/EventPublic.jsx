@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
+import ClassicTemplate from "@/components/public/templates/ClassicTemplate";
+import RusticTemplate from "@/components/public/templates/RusticTemplate";
+import MinimalTemplate from "@/components/public/templates/MinimalTemplate";
+import ElegantTemplate from "@/components/public/templates/ElegantTemplate";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/RSVPSection";
@@ -55,6 +59,33 @@ export default function EventPublic() {
     </div>
   );
 
+  const getTemplateComponent = (templateKey) => {
+    const map = {
+      classique: ClassicTemplate,
+      champetre: RusticTemplate,
+      minimal: MinimalTemplate,
+      elegant: ElegantTemplate,
+      boheme: RusticTemplate,
+      floral: RusticTemplate,
+      moderne: MinimalTemplate,
+      joyeux: ClassicTemplate,
+      festif: ClassicTemplate,
+      vintage_anni: RusticTemplate,
+      douceur: ClassicTemplate,
+      nuage: MinimalTemplate,
+      nature_bebe: RusticTemplate,
+      lumiere: ElegantTemplate,
+      azur: ElegantTemplate,
+      rose_communion: ClassicTemplate,
+      corporate: MinimalTemplate,
+      dynamique: ElegantTemplate,
+      nature: RusticTemplate,
+      provencal: RusticTemplate,
+      sobre: MinimalTemplate,
+    };
+    return map[templateKey] || ClassicTemplate;
+  };
+
   const isPremium = event.plan === "premium";
   const primaryColor = event.primary_color || "#f43f5e";
 
@@ -99,64 +130,16 @@ export default function EventPublic() {
       <div key="cagnotte" className="max-w-2xl mx-auto border-t border-gray-100"><CagnotteSection event={event} primaryColor={primaryColor} /></div>
     ),
   };
+  
   const secondaryColor = event.secondary_color || "#86efac";
   const fontHeading = event.font_heading || "Cormorant Garamond";
   const fontBody = event.font_body || "Lato";
   const fontImportUrl = `https://fonts.googleapis.com/css2?family=${fontHeading.replace(/ /g, "+")}:wght@400;600;700&family=${fontBody.replace(/ /g, "+")}:wght@300;400;700&display=swap`;
 
-  return (
-    <div className="min-h-screen bg-white">
-      <style>{`
-        @import url('${fontImportUrl}');
-        .font-serif-elegant { font-family: '${fontHeading}', Georgia, serif; }
-        .font-sans-clean { font-family: '${fontBody}', system-ui, sans-serif; }
-        .gold-line { background: linear-gradient(90deg, transparent, ${primaryColor}88, transparent); height: 1px; }
-      `}</style>
+  const TemplateComponent = getTemplateComponent(event.template || "classique");
 
-      {/* Hero */}
-      <div className="relative text-center py-20 px-6 overflow-hidden"
-        style={{ background: `linear-gradient(160deg, ${primaryColor}15 0%, #fff 60%, ${secondaryColor}15 100%)` }}>
-        {event.cover_image && (
-          <div className="absolute inset-0 z-0">
-            <img src={event.cover_image} className="w-full h-full object-cover opacity-20" alt="" />
-            <div className="absolute inset-0 bg-white/60" />
-          </div>
-        )}
-        <div className="relative z-10">
-          <p className="font-sans-clean text-xs tracking-[0.3em] uppercase mb-4" style={{ color: primaryColor }}>
-            {event.event_type === "mariage" ? "Mariage" :
-             event.event_type === "anniversaire" ? "Anniversaire" :
-             event.event_type === "bapteme" ? "Baptême" :
-             event.event_type === "fete_entreprise" ? "Fête d'entreprise" :
-             event.event_type === "maison_hote" ? "Maison d'hôte" :
-             "Événement"}
-          </p>
-          <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 mb-4">
-            {event.couple_names}
-          </h1>
-          <div className="gold-line max-w-xs mx-auto mb-5" />
-          {event.welcome_message && (
-            <p className="font-sans-clean text-gray-600 text-base max-w-lg mx-auto leading-relaxed font-light mb-4">
-              {event.welcome_message}
-            </p>
-          )}
-          {event.event_date && (
-            <p className="font-sans-clean text-sm text-gray-400">
-              {new Date(event.event_date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-            </p>
-          )}
-          {event.seed_type && (
-            <div className="inline-block mt-4 px-5 py-2 rounded-full border text-sm font-sans-clean text-gray-500"
-              style={{ borderColor: primaryColor + "44", background: primaryColor + "11" }}>
-              🌱 Graine offerte : {event.seed_type}
-            </div>
-          )}
-          {event.event_date && (
-            <CountdownWidget eventDate={event.event_date} primaryColor={primaryColor} />
-          )}
-        </div>
-      </div>
-
+  const templateContent = (
+    <>
       {/* Sections dans l'ordre personnalisé */}
       {sectionsOrder.map(key => SECTION_RENDERS[key] || null)}
 
@@ -177,18 +160,19 @@ export default function EventPublic() {
         </div>
         <ReviewsList eventId={event.id} />
       </div>
+    </>
+  );
 
-      {/* Footer */}
-      <footer className="py-8 px-4 border-t border-gray-100 text-center">
-        <p className="font-sans-clean text-xs text-gray-300 mb-3">Créé avec Fleurs en fête 🌸</p>
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-300 font-sans-clean">
-          <a href="/app/cgv" className="hover:text-rose-300 transition">CGV</a>
-          <span>·</span>
-          <a href="/app/mentionslegales" className="hover:text-rose-300 transition">Mentions légales</a>
-          <span>·</span>
-          <a href="/app/contact" className="hover:text-rose-300 transition">Contact</a>
-        </div>
-      </footer>
-    </div>
+  return (
+    <TemplateComponent
+      event={event}
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      fontHeading={fontHeading}
+      fontBody={fontBody}
+      fontImportUrl={fontImportUrl}
+    >
+      {templateContent}
+    </TemplateComponent>
   );
 }
