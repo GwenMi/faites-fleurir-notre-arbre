@@ -2,6 +2,7 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import TemplatePreviewModal from "@/components/admin/TemplatePreviewModal";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -63,6 +64,7 @@ export default function EventForm({ event, onSave, onCancel }) {
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(event?.cover_image || null);
   const [saving, setSaving] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const handleSetPlan = (newPlan) => {
@@ -214,17 +216,16 @@ export default function EventForm({ event, onSave, onCancel }) {
           <p className="text-sm text-gray-400">Aucun template disponible pour ce type d'événement.</p>
         ) : (
           <div className="space-y-4">
-            {/* Aperçu visuel du template sélectionné */}
+            {/* Bouton de prévisualisation interactive */}
             {TEMPLATES[form.template] && (
-              <div>
-                <p className="text-xs text-gray-400 mb-3 tracking-widest uppercase">Aperçu interactif</p>
-                <div className="overflow-hidden rounded-2xl border border-gray-200 max-h-96">
-                  <TemplatePreview
-                    templateKey={form.template}
-                    coupleName={form.couple_names}
-                    eventType={form.event_type}
-                  />
-                </div>
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={() => setPreviewOpen(true)}
+                  className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-rose-500 text-white font-semibold rounded-xl hover:shadow-lg transition"
+                >
+                  🎨 Voir l'aperçu complet du template
+                </button>
               </div>
             )}
 
@@ -311,6 +312,13 @@ export default function EventForm({ event, onSave, onCancel }) {
           {saving ? "Enregistrement..." : isEdit ? "Mettre à jour" : "Créer l'événement"}
         </Button>
       </div>
+
+      <TemplatePreviewModal
+        isOpen={previewOpen}
+        templateKey={form.template}
+        event={form}
+        onOpenChange={setPreviewOpen}
+      />
     </div>
   );
 }
