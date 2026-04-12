@@ -19,14 +19,24 @@ function generateSlug(coupleNames) {
     .replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
+const NO_DATE_TYPES = ["fete_entreprise", "maison_hote"];
+
 export default function EventForm({ event, onSave, onCancel }) {
   const isEdit = !!event;
   const [form, setForm] = useState(event || {
     couple_names: "", event_name: "", event_type: "mariage", event_date: "",
+    birth_date: "",
     welcome_message: "", seed_type: "", template: "classique",
     primary_color: "#c084fc", secondary_color: "#86efac", plan: "basic",
     cover_image: "", status: "active",
   });
+
+  const isNoDate = NO_DATE_TYPES.includes(form.event_type);
+
+  // Calculate age for anniversaire
+  const ageAtEvent = form.event_type === "anniversaire" && form.birth_date && form.event_date
+    ? new Date(form.event_date).getFullYear() - new Date(form.birth_date).getFullYear()
+    : null;
 
   const availableTemplates = getTemplatesForEventType(form.event_type);
   const freeTemplates = availableTemplates.filter(([, v]) => v.plan === "basic");
@@ -59,8 +69,12 @@ export default function EventForm({ event, onSave, onCancel }) {
   };
 
   const handleSave = async () => {
-    if (!form.couple_names || !form.event_date) {
-      toast.error("Merci de renseigner les prénoms et la date");
+    if (!form.couple_names) {
+      toast.error("Merci de renseigner le nom/prénom");
+      return;
+    }
+    if (!isNoDate && !form.event_date) {
+      toast.error("Merci de renseigner la date de l'événement");
       return;
     }
     setSaving(true);
@@ -100,7 +114,7 @@ export default function EventForm({ event, onSave, onCancel }) {
           <Input
             placeholder={
               form.event_type === "mariage" || form.event_type === "fiançailles" ? "Emma & Lucas" :
-              form.event_type === "anniversaire" ? "Sophie - 30 ans" :
+              form.event_type === "anniversaire" ? "Sophie" :
               form.event_type === "bapteme" ? "Chloé" :
               form.event_type === "fete_entreprise" ? "Acme & Co." :
               form.event_type === "maison_hote" ? "Le Mas des Roses" :
@@ -123,10 +137,29 @@ export default function EventForm({ event, onSave, onCancel }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1">
-          <Label>Date *</Label>
-          <Input type="date" value={form.event_date} onChange={(e) => set("event_date", e.target.value)} className="rounded-xl h-11" />
-        </div>
+
+        {/* Anniversaire: date de naissance */}
+        {form.event_type === "anniversaire" && (
+          <div className="space-y-1">
+            <Label>Date de naissance *</Label>
+            <Input type="date" value={form.birth_date} onChange={(e) => set("birth_date", e.target.value)} className="rounded-xl h-11" />
+          </div>
+        )}
+
+        {/* Date de l'événement (masquée pour entreprises/maisons d'hôtes) */}
+        {!isNoDate && (
+          <div className="space-y-1">
+            <Label>Date de l'événement *</Label>
+            <Input type="date" value={form.event_date} onChange={(e) => set("event_date", e.target.value)} className="rounded-xl h-11" />
+          </div>
+        )}
+
+        {/* Affichage de l'âge calculé */}
+        {ageAtEvent !== null && (
+          <div className="col-span-2 bg-rose-50 border border-rose-100 rounded-xl p-3 text-sm text-rose-700 font-medium">
+            🎂 {form.couple_names} fêtera ses <strong>{ageAtEvent} ans</strong> lors de cet événement
+          </div>
+        )}
       </div>
 
       <div className="space-y-1">
