@@ -9,27 +9,22 @@ import { useAuth } from "@/lib/AuthContext";
 
 export default function StepCustomerForm({ customerInfo, onChange, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
-  const { isAuthenticated } = useAuth();
-  const [authUser, setAuthUser] = useState(null);
+  const { isAuthenticated, user } = useAuth();
 
+  // Pré-remplir depuis le compte connecté
   useEffect(() => {
-    if (isAuthenticated) {
-      base44.auth.me().then(user => {
-        setAuthUser(user);
-        // Pré-remplir email si vide
-        if (user?.email && !customerInfo.email) {
-          onChange(info => ({ ...info, email: user.email }));
-        }
-        // Pré-remplir prénom/nom depuis full_name
-        if (user?.full_name && !customerInfo.firstName) {
-          const parts = user.full_name.split(" ");
-          const firstName = parts[0] || "";
-          const lastName = parts.slice(1).join(" ") || "";
-          onChange(info => ({ ...info, firstName, lastName, name: user.full_name }));
-        }
-      }).catch(() => {});
-    }
-  }, [isAuthenticated]);
+    if (!user) return;
+    const parts = (user.full_name || "").split(" ");
+    const firstName = parts[0] || "";
+    const lastName = parts.slice(1).join(" ") || "";
+    onChange(info => ({
+      ...info,
+      email: info.email || user.email || "",
+      firstName: info.firstName || firstName,
+      lastName: info.lastName || lastName,
+      name: info.name || user.full_name || "",
+    }));
+  }, [user]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
 
@@ -47,13 +42,14 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
       toast.error("Veuillez renseigner la raison sociale et le n° de TVA intracommunautaire");
       return;
     }
-    // Combine firstName + lastName → name (compat downstream)
-    onChange(info => ({ ...info, name: `${customerInfo.firstName} ${customerInfo.lastName}`.trim() }));
+    // Sync name synchronously before advancing
+    const fullName = `${customerInfo.firstName} ${customerInfo.lastName}`.trim();
     const days = daysUntilEvent();
     if (days !== null && days < 14) {
       setShowLateWarning(true);
       return;
     }
+    onChange(info => ({ ...info, name: fullName }));
     onNext();
   };
 
@@ -89,7 +85,7 @@ export default function StepCustomerForm({ customerInfo, onChange, onNext, onBac
         </div>
       ) : (
         <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800 flex items-center gap-2">
-          ✅ <span>Connecté en tant que <strong>{authUser?.email || authUser?.full_name}</strong></span>
+          ✅ <span>Connecté en tant que <strong>{user?.email}</strong></span>
         </div>
       )}
 
