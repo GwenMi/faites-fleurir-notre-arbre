@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Lock, Download, Link2, LogIn } from "lucide-react";
+import { Loader2, Lock, Download, Link2, LogIn, ArrowRight, Flower2 } from "lucide-react";
 import EventForm from "@/components/admin/EventForm";
 
 export default function CreateMyEvent() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [createdEvent, setCreatedEvent] = useState(null);
+  const [existingEvent, setExistingEvent] = useState(null);
 
-  // standalone mode (no order_id)
   const [user, setUser] = useState(null);
   const [unlinkableOrders, setUnlinkableOrders] = useState([]);
   const [linkedOrderId, setLinkedOrderId] = useState("");
@@ -37,10 +37,17 @@ export default function CreateMyEvent() {
     try {
       const me = await base44.auth.me();
       setUser(me);
-      const allOrders = await base44.entities.Order.filter({ customer_email: me.email });
+      // Check if user already has an event
+      const [allOrders, existingEvents] = await Promise.all([
+        base44.entities.Order.filter({ customer_email: me.email }),
+        base44.entities.Event.filter({ created_by: me.email }, "-created_date", 1),
+      ]);
+      if (existingEvents?.length > 0) {
+        setExistingEvent(existingEvents[0]);
+      }
       setUnlinkableOrders((allOrders || []).filter(o => !o.event_id && o.payment_status === "paid"));
     } catch {
-      // not authenticated — user will be shown login prompt
+      // not authenticated
     } finally {
       setLoading(false);
     }
@@ -82,7 +89,7 @@ export default function CreateMyEvent() {
     </div>
   );
 
-  // No order_id AND not authenticated → prompt login
+  // Not authenticated → prompt login/register
   if (!order && !user) return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex flex-col items-center justify-center p-8 text-center">
       <style>{`
@@ -91,19 +98,58 @@ export default function CreateMyEvent() {
       `}</style>
       <span className="text-5xl block mb-4">🌸</span>
       <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Créez votre site événementiel</h1>
-      <p className="text-gray-500 text-sm max-w-xs mb-8">
-        Connectez-vous pour créer votre site et relier votre commande à votre espace personnalisé.
+      <p className="text-gray-500 text-sm max-w-xs mb-2">
+        Votre site est <strong>gratuit</strong> — il vous suffit d'un compte pour le créer et y accéder à tout moment.
+      </p>
+      <p className="text-gray-400 text-xs max-w-xs mb-8">
+        Un compte vous permet de gérer votre site, vos invités et vos commandes depuis un seul espace.
       </p>
       <button
         onClick={() => base44.auth.redirectToLogin(window.location.href)}
         className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full px-6 py-3 font-semibold text-sm transition"
       >
         <LogIn className="w-4 h-4" />
-        Se connecter / Créer un compte
+        Se connecter / Créer un compte gratuitement
       </button>
-      <a href={createPageUrl("Shop")} className="mt-4 text-sm text-gray-400 hover:text-rose-400 underline">
-        Passer une commande d'abord
+      <a href={createPageUrl("Home")} className="mt-4 text-sm text-gray-400 hover:text-rose-400 underline">
+        ← Retour à l'accueil
       </a>
+    </div>
+  );
+
+  // User already has an event → redirect to existing
+  if (!order && existingEvent) return (
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex flex-col items-center justify-center p-8 text-center">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap');
+        .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
+      `}</style>
+      <Flower2 className="w-12 h-12 text-rose-300 mx-auto mb-4" />
+      <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Vous avez déjà un site !</h1>
+      <p className="text-gray-500 text-sm max-w-sm mb-2">
+        Un seul site est inclus par compte. Votre site <strong>{existingEvent.couple_names || existingEvent.event_name}</strong> est déjà actif.
+      </p>
+      {existingEvent.public_url && (
+        <p className="text-xs text-gray-400 font-mono mb-6">{existingEvent.public_url}</p>
+      )}
+      <div className="flex flex-col gap-3 w-full max-w-xs">
+        <a href={`${createPageUrl("CoupleDashboard")}?event_id=${existingEvent.id}`}
+          className="inline-flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full px-6 py-3 font-semibold text-sm transition">
+          Gérer mon site <ArrowRight className="w-4 h-4" />
+        </a>
+        {existingEvent.public_url && (
+          <a href={existingEvent.public_url} target="_blank" rel="noreferrer"
+            className="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full px-6 py-3 font-semibold text-sm transition">
+            Voir le site public
+          </a>
+        )}
+        {existingEvent.plan !== "premium" && (
+          <a href={`${createPageUrl("CreateMyEvent")}?plan=premium&event_id=${existingEvent.id}`}
+            className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-white rounded-full px-6 py-3 font-semibold text-sm transition">
+            ✨ Passer en Premium
+          </a>
+        )}
+      </div>
     </div>
   );
 
