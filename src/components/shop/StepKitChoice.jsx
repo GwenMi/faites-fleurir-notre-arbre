@@ -2,19 +2,13 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
-const EVENT_FILTERS = [
-  { id: "mariage", label: "💍 Mariage" },
-  { id: "bapteme", label: "👶 Baptême" },
-  { id: "communion", label: "✨ Communion" },
-  { id: "anniversaire", label: "🎂 Anniversaire" },
-  { id: "entreprise", label: "🏢 Entreprise" },
-  { id: "maison_hotes", label: "🏡 Maison d'hôtes" },
-];
+
 
 const KITS = [
   // === FLEURS ===
   {
     id: "compose",
+    popular: "💍 Très commandé pour les baptêmes & communions",
     emoji: "🌱",
     name: "Kit à composer",
     price: 3.90,
@@ -37,6 +31,7 @@ const KITS = [
     price: 5.90,
     unit: "/ invité",
     badge: "Le plus choisi ✨",
+    popular: "💍 N°1 des mariages & anniversaires",
     color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
     desc: "Tout arrive assemblé et emballé. Posez simplement les pots sur les tables le jour J.",
     features: [
@@ -53,6 +48,7 @@ const KITS = [
     id: "entreprise_standard",
     emoji: "📋",
     name: 'Pack Standard "Bureau"',
+    popular: "🏢 Idéal pour les équipes & séminaires",
     price: 15,
     unit: "HT / collaborateur",
     badge: null,
@@ -70,6 +66,7 @@ const KITS = [
     id: "entreprise_premium",
     emoji: "🖥️",
     name: 'Pack Premium "Moniteur"',
+    popular: "🏢 Le préféré des grandes entreprises",
     price: 20,
     unit: "HT / collaborateur",
     badge: "Premium ✨",
@@ -88,6 +85,7 @@ const KITS = [
     id: "naturel_essentiel",
     emoji: "🐝",
     name: "Kit Naturel Essentiel",
+    popular: "🏡 Coup de cœur des maisons d'hôtes",
     price: 5,
     unit: "/ unité",
     badge: "100% naturel",
@@ -104,6 +102,7 @@ const KITS = [
     id: "naturel_douceur",
     emoji: "🌿",
     name: "Kit Naturel Douceur",
+    popular: "🏡 Le plus offert en maisons d'hôtes & spas",
     price: 13,
     unit: "/ unité",
     badge: "Coup de cœur",
@@ -120,13 +119,11 @@ const KITS = [
 ];
 
 export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
-  const [activeEvent, setActiveEvent] = useState(selection.eventType || null);
-
   const handleSelectKit = (kit) => {
     if (kit.href) {
       window.location.href = createPageUrl(kit.href);
     } else {
-      onUpdate({ kitType: kit.id, ...(activeEvent ? { eventType: activeEvent } : {}) });
+      onUpdate({ kitType: kit.id });
       onNext();
     }
   };
@@ -144,22 +141,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
         <p className="font-sans-shop text-sm text-gray-400">Sélectionnez le type qui correspond à votre besoin</p>
       </div>
 
-      {/* Filtre événement (optionnel, cosmétique uniquement ici) */}
-      <div className="flex flex-wrap gap-2 justify-center mb-9">
-        {EVENT_FILTERS.map(ev => (
-          <button
-            key={ev.id}
-            onClick={() => { setActiveEvent(ev.id); onUpdate({ eventType: ev.id }); }}
-            className={`px-4 py-1.5 rounded-full font-sans-shop text-sm font-semibold border transition ${
-              activeEvent === ev.id
-                ? "bg-rose-400 text-white border-rose-400"
-                : "bg-white text-gray-500 border-gray-200 hover:border-rose-300 hover:text-rose-400"
-            }`}
-          >
-            {ev.label}
-          </button>
-        ))}
-      </div>
+
 
       {/* Cartes kits — 2 par 2 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -170,11 +152,18 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
             className={`text-left rounded-2xl border-2 ${kit.color} hover:shadow-md transition-all p-6 relative group flex flex-col`}
           >
             <span className="text-4xl block mb-4">{kit.emoji}</span>
-            {kit.badge && (
-              <span className="inline-block bg-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full font-sans-shop mb-3 w-fit">
-                {kit.badge}
-              </span>
-            )}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {kit.badge && (
+                <span className="inline-block bg-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full font-sans-shop w-fit">
+                  {kit.badge}
+                </span>
+              )}
+              {kit.popular && (
+                <span className="inline-block bg-gray-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full font-sans-shop w-fit">
+                  {kit.popular}
+                </span>
+              )}
+            </div>
             <h3 className="font-sans-shop font-bold text-gray-900 text-lg mb-1">{kit.name}</h3>
             <p className="font-sans-shop text-2xl font-bold text-rose-500 mb-3">
               {kit.price.toFixed(2)} €<span className="text-sm font-normal text-gray-400"> {kit.unit}</span>
