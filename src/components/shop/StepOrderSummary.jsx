@@ -53,6 +53,18 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         }
       });
 
+      // Envoyer l'email de confirmation
+      try {
+        await base44.functions.invoke('sendOrderConfirmation', {
+          orderId: order.id,
+          customerInfo,
+          selection,
+          pricing,
+        });
+      } catch (emailError) {
+        console.log('Email confirmation warning:', emailError.message);
+      }
+
       // Generate and send PDF quote
       try {
         await base44.functions.invoke('generateQuotePDF', {
