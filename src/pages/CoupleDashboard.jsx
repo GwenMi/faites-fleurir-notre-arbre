@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail, Lock } from "lucide-react";
-import UpgradeModal from "@/components/UpgradeModal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import GuestListManager from "@/components/couple/GuestListManager";
@@ -30,6 +29,7 @@ import SiteEditorManager from "@/components/couple/SiteEditorManager";
 import CoupleCalendar from "@/components/couple/CoupleCalendar";
 import ThankYouCardGenerator from "@/components/couple/ThankYouCardGenerator";
 import GuestAccessManager from "@/components/couple/GuestAccessManager";
+import PremiumFeaturePreview from "@/components/couple/PremiumFeaturePreview";
 
 const TABS = [
   { key: "stats",          label: "Statistiques",    icon: BarChart2,        premium: false },
@@ -72,7 +72,6 @@ export default function CoupleDashboard() {
   const [event, setEvent] = useState(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("guests");
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   // Auto-login si connecté et event_id en URL
   useState(() => {
@@ -217,10 +216,7 @@ export default function CoupleDashboard() {
               return (
                 <button
                   key={tab.key}
-                  onClick={() => {
-                    if (locked) { setUpgradeModalOpen(true); return; }
-                    setActiveTab(tab.key);
-                  }}
+                  onClick={() => setActiveTab(tab.key)}
                   title={locked ? "Fonctionnalité Premium — cliquez pour débloquer" : undefined}
                   className={`flex-shrink-0 flex items-center gap-2 px-5 py-3.5 text-sm font-sans-clean font-semibold border-b-2 transition ${
                     activeTab === tab.key
@@ -242,17 +238,22 @@ export default function CoupleDashboard() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ActiveTab event={event} />
+        {(() => {
+          const currentTab = TABS.find(t => t.key === activeTab);
+          const isLocked = currentTab?.premium && !isPremium;
+          if (isLocked) {
+            return (
+              <PremiumFeaturePreview
+                tabKey={activeTab}
+                event={event}
+                customerEmail={email}
+                onUpgraded={() => setEvent(e => ({ ...e, plan: "premium" }))}
+              />
+            );
+          }
+          return <ActiveTab event={event} />;
+        })()}
       </div>
-
-      {upgradeModalOpen && (
-        <UpgradeModal
-          event={event}
-          customerEmail={email}
-          onClose={() => setUpgradeModalOpen(false)}
-          onUpgraded={() => setEvent(e => ({ ...e, plan: "premium" }))}
-        />
-      )}
     </div>
   );
 }
