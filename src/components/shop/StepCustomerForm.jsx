@@ -14,20 +14,21 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
 
   // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
   useEffect(() => {
+    if (!user) return;
     const parts = (user?.full_name || "").split(" ");
     const firstName = parts[0] || "";
     const lastName = parts.slice(1).join(" ") || "";
-    // Date de l'événement depuis la personnalisation (selection.customization.date)
     const eventDateFromSelection = selection?.customization?.date || "";
     onChange(info => ({
       ...info,
+      // Ne pré-remplir que si le champ est vide
       email: info.email || user?.email || "",
       firstName: info.firstName || firstName,
       lastName: info.lastName || lastName,
       name: info.name || user?.full_name || "",
       eventDate: info.eventDate || eventDateFromSelection,
     }));
-  }, [user, selection]);
+  }, [user?.email]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
 

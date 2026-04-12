@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShopBanner from "@/components/shop/ShopBanner";
 import WizardProgress from "@/components/shop/WizardProgress";
 import StepKitChoice from "@/components/shop/StepKitChoice";
@@ -43,10 +43,19 @@ export default function Shop() {
     containerType: null,
   });
 
-  const [customerInfo, setCustomerInfo] = useState({
-    name: "", email: "", phone: "", address: "", eventDate: "",
-    firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France"
+  const [customerInfo, setCustomerInfo] = useState(() => {
+    try {
+      const saved = localStorage.getItem("shop_customer_info");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { name: "", email: "", phone: "", address: "", eventDate: "",
+      firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France" };
   });
+
+  // Persist customerInfo to localStorage whenever it changes
+  useEffect(() => {
+    try { localStorage.setItem("shop_customer_info", JSON.stringify(customerInfo)); } catch {}
+  }, [customerInfo]);
   const [shippingMethod, setShippingMethod] = useState(null);
 
   const baseKitPrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
