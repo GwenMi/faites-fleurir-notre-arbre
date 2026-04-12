@@ -9,6 +9,7 @@ import { TEMPLATES, getTemplatesForEventType, getDefaultTemplateForEventType, EV
 import TemplatePreview from "@/components/admin/TemplatePreview";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
+import SectionOrderEditor from "@/components/public/SectionOrderEditor";
 
 function generateSlug(coupleNames) {
   return coupleNames
@@ -31,6 +32,10 @@ export default function EventForm({ event, onSave, onCancel }) {
     welcome_message: "", seed_type: "", template: "classique",
     primary_color: "#c084fc", secondary_color: "#86efac", plan: "basic",
     cover_image: "", status: "active",
+    sections_order: [
+      "couple_story", "day_schedule", "rsvp", "best_of", "photo_gallery",
+      "wishlist", "seating_plan", "faq", "map", "guest_photos", "guestbook", "cagnotte"
+    ],
   });
 
   const isNoDate = NO_DATE_TYPES.includes(form.event_type);
@@ -60,6 +65,16 @@ export default function EventForm({ event, onSave, onCancel }) {
   const [saving, setSaving] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const handleSetPlan = (newPlan) => {
+    set("plan", newPlan);
+    // Si passage à premium, initialiser sections_order par défaut
+    if (newPlan === "premium" && !form.sections_order) {
+      set("sections_order", [
+        "couple_story", "day_schedule", "rsvp", "best_of", "photo_gallery",
+        "wishlist", "seating_plan", "faq", "map", "guest_photos", "guestbook", "cagnotte"
+      ]);
+    }
+  };
 
   const handleCover = (e) => {
     const file = e.target.files[0];
@@ -264,12 +279,24 @@ export default function EventForm({ event, onSave, onCancel }) {
         </div>
       </div>
 
+      {/* Sections (Premium seulement) */}
+      {form.plan === "premium" && (
+        <div className="space-y-2 border-t pt-4">
+          <Label>Ordre des sections</Label>
+          <p className="text-xs text-gray-500 mb-3">Glissez pour réorganiser, cliquez sur l'œil pour masquer</p>
+          <SectionOrderEditor
+            order={form.sections_order || []}
+            onChange={(newOrder) => set("sections_order", newOrder)}
+          />
+        </div>
+      )}
+
       {/* Plan */}
       <div className="space-y-2">
         <Label>Plan</Label>
         <div className="grid grid-cols-2 gap-3">
           {[{ key: "basic", label: "Basic", desc: "Gratuit", color: "green" }, { key: "premium", label: "Premium", desc: "19 €", color: "amber" }].map(p => (
-            <button key={p.key} type="button" onClick={() => set("plan", p.key)}
+            <button key={p.key} type="button" onClick={() => handleSetPlan(p.key)}
               className={`p-4 rounded-xl border-2 text-left transition ${form.plan === p.key ? `border-${p.color}-400 bg-${p.color}-50` : "border-gray-200 bg-white"}`}>
               <p className="font-bold text-gray-800">{p.label}</p>
               <p className={`text-sm font-semibold text-${p.color}-600`}>{p.desc}</p>
