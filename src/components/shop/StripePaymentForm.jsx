@@ -1,14 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Loader2, CheckCircle2, ChevronLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-
-const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
-  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
-  : null;
 
 function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
   const stripe = useStripe();
@@ -145,17 +141,41 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
 }
 
 export default function StripePaymentForm({ customerInfo, total, onSuccess, onBack }) {
-  if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
+  const [stripePromise, setStripePromise] = useState(null);
+  const [loadingKey, setLoadingKey] = useState(true);
+  const [keyError, setKeyError] = useState(null);
+
+  useEffect(() => {
+    base44.functions.invoke("getStripePublicKey", {})
+      .then((res) => {
+        const key = res?.data?.publicKey;
+        if (!key) throw new Error("Clé publique Stripe manquante");
+        setStripePromise(loadStripe(key));
+      })
+      .catch((err) => setKeyError(err.message))
+      .finally(() => setLoadingKey(false));
+  }, []);
+
+  if (loadingKey) {
     return (
       <div className="px-6 py-10 text-center">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-        <p className="text-red-600 font-semibold">Erreur de configuration</p>
-        <p className="text-sm text-gray-500">Stripe n'est pas correctement configuré. Contactez l'administrateur.</p>
+        <Loader2 className="w-8 h-8 animate-spin text-rose-400 mx-auto mb-3" />
+        <p className="text-sm text-gray-500">Chargement du module de paiement…</p>
       </div>
     );
   }
 
-  return stripePromise ? (
+  if (keyError || !stripePromise) {
+    return (
+      <div className="px-6 py-10 text-center">
+        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+        <p className="text-red-600 font-semibold">Erreur de configuration</p>
+        <p className="text-sm text-gray-500">{keyError || "Stripe n'est pas correctement configuré."}</p>
+      </div>
+    );
+  }
+
+  return (
     <Elements stripe={stripePromise}>
       <PaymentForm
         customerInfo={customerInfo}
@@ -164,11 +184,5 @@ export default function StripePaymentForm({ customerInfo, total, onSuccess, onBa
         onBack={onBack}
       />
     </Elements>
-  ) : (
-    <div className="px-6 py-10 text-center">
-      <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-      <p className="text-red-600 font-semibold">Erreur de configuration</p>
-      <p className="text-sm text-gray-500">Stripe n'est pas correctement configuré. Contactez l'administrateur.</p>
-    </div>
   );
 }
