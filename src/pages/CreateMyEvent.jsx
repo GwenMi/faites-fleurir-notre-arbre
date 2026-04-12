@@ -184,6 +184,13 @@ export default function CreateMyEvent() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap');
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
       `}</style>
+      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-gray-100 bg-white">
+        <a href={createPageUrl("Home")}>
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
+            alt="Fleurs de fête" className="h-10" />
+        </a>
+        <a href={createPageUrl("Home")} className="text-sm text-gray-400 hover:text-rose-400 transition">← Retour à l'accueil</a>
+      </nav>
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="text-center mb-8">
           <span className="text-4xl block mb-3">🌸</span>
