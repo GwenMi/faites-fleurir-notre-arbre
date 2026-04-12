@@ -26,6 +26,7 @@ import ReviewForm from "@/components/review/ReviewForm";
 export default function EventPublic() {
   const [event, setEvent] = useState(null);
   const [faqs, setFaqs] = useState([]);
+  const [hasPotOrder, setHasPotOrder] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -45,6 +46,7 @@ export default function EventPublic() {
     }
     setEvent(events[0]);
     loadFAQs(events[0].id);
+    checkPotOrders(events[0].id);
     setLoading(false);
   };
 
@@ -53,6 +55,19 @@ export default function EventPublic() {
       const data = await base44.entities.FAQItem.filter({ event_id: eventId }, "order");
       setFaqs(data || []);
     } catch {}
+  };
+
+  const checkPotOrders = async (eventId) => {
+    try {
+      const orders = await base44.entities.Order.filter({ event_id: eventId });
+      const hasPot = orders?.some(order => {
+        const category = order.product_id ? (order.product_name?.toLowerCase().includes('pot') || order.product_name?.toLowerCase().includes('kit')) : false;
+        return category && order.status !== 'cancelled';
+      });
+      setHasPotOrder(hasPot || false);
+    } catch {
+      setHasPotOrder(false);
+    }
   };
 
   if (loading) return (
@@ -153,10 +168,12 @@ export default function EventPublic() {
       {/* Sections dans l'ordre personnalisé */}
       {sectionsOrder.map(key => SECTION_RENDERS[key] || null)}
 
-      {/* Flower Challenge Section */}
-      <div className="max-w-2xl mx-auto px-4 pb-16">
-        <FlowerChallengeSection event={event} />
-      </div>
+      {/* Flower Challenge Section - only if flower pot was ordered */}
+      {hasPotOrder && (
+        <div className="max-w-2xl mx-auto px-4 pb-16">
+          <FlowerChallengeSection event={event} />
+        </div>
+      )}
 
       {/* Reviews Section */}
       <div className="max-w-2xl mx-auto px-4 py-16 border-t border-gray-100">
