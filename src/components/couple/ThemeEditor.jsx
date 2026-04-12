@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Save, Loader2, Palette, Type, ExternalLink, Check } from "lucide-react";
+import { Save, Loader2, Palette, Type, ExternalLink, Check, Eye, Layout } from "lucide-react";
 import { toast } from "sonner";
+import TemplatePreviewModal from "@/components/admin/TemplatePreviewModal";
 
 const PRESET_THEMES = [
   { key: "classique",  label: "Classique",     primary: "#f43f5e", secondary: "#86efac", font_heading: "Cormorant Garamond", font_body: "Lato",       emoji: "💍" },
@@ -15,6 +16,106 @@ const PRESET_THEMES = [
   { key: "douceur",   label: "Douceur",          primary: "#c084fc", secondary: "#fda4af", font_heading: "Cormorant Garamond", font_body: "Raleway",    emoji: "🩷" },
   { key: "nature",    label: "Nature",            primary: "#059669", secondary: "#a7f3d0", font_heading: "Playfair Display",   font_body: "Lato",       emoji: "🍃" },
   { key: "festif",    label: "Festif",            primary: "#f59e0b", secondary: "#fde68a", font_heading: "Dancing Script",     font_body: "Montserrat", emoji: "🎉" },
+];
+
+const TEMPLATES = [
+  {
+    key: "classique",
+    label: "Classique",
+    desc: "Romantique & chaleureux",
+    thumbnail: ({ primary, secondary }) => (
+      <div className="w-full h-full relative overflow-hidden rounded-xl" style={{ background: "#FEFCF5" }}>
+        <div className="absolute inset-x-0 top-0 h-2/3 flex flex-col items-center justify-center px-2">
+          <div className="w-8 h-px mb-1" style={{ background: primary + "66" }} />
+          <div className="text-[10px] font-bold text-center leading-tight mb-1" style={{ color: "#2c2c2c", fontFamily: "Georgia" }}>Sophie & Thomas</div>
+          <div className="w-full h-px mb-1" style={{ background: `linear-gradient(90deg, transparent, ${primary}88, transparent)` }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: primary + "44" }} />
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-1/3 flex items-center justify-center gap-1 px-2">
+          <div className="h-5 flex-1 rounded" style={{ background: primary }} />
+          <div className="h-5 flex-1 rounded" style={{ background: secondary + "66", border: `1px solid ${secondary}` }} />
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "champetre",
+    label: "Champêtre",
+    desc: "Botanique & naturel",
+    thumbnail: ({ primary, secondary }) => (
+      <div className="w-full h-full relative overflow-hidden rounded-xl" style={{ background: "#F5F0E8" }}>
+        <div className="absolute top-1 left-1 text-[14px]">🌿</div>
+        <div className="absolute top-1 right-1 text-[14px]">🌿</div>
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col items-center px-2">
+          <div className="w-12 h-px mb-1.5" style={{ background: primary }} />
+          <div className="text-[9px] font-bold text-center" style={{ color: primary, fontFamily: "Georgia" }}>Sophie & Thomas</div>
+          <div className="text-[6px] mt-0.5" style={{ color: "#8B7355" }}>le 24 juin 2025</div>
+          <div className="w-12 h-px mt-1.5" style={{ background: primary }} />
+        </div>
+        <div className="absolute bottom-2 left-0 right-0 text-center text-[11px]">🌿 ❧ 🌿</div>
+      </div>
+    ),
+  },
+  {
+    key: "minimal",
+    label: "Minimaliste",
+    desc: "Épuré & photographique",
+    thumbnail: ({ primary }) => (
+      <div className="w-full h-full relative overflow-hidden rounded-xl" style={{ background: "#fff" }}>
+        <div className="absolute inset-0 flex flex-col">
+          <div className="flex-1 relative" style={{ background: "#1a1a1a" }}>
+            <div className="absolute inset-0 flex flex-col justify-end p-2">
+              <div className="text-[11px] font-light text-white leading-none mb-0.5" style={{ letterSpacing: "-0.02em", fontFamily: "Georgia" }}>Sophie & Thomas</div>
+              <div className="text-[6px] text-white/50 uppercase tracking-widest">24 JUIN 2025</div>
+            </div>
+          </div>
+          <div className="flex-none px-2 py-1.5 flex gap-1">
+            <div style={{ width: 1, background: "#eee" }} className="self-stretch" />
+            <div className="text-[6px] text-gray-300 uppercase tracking-widest ml-1">Défiler</div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "elegant",
+    label: "Élégant",
+    desc: "Luxueux & sophistiqué",
+    thumbnail: () => (
+      <div className="w-full h-full relative overflow-hidden rounded-xl" style={{ background: "#1A1A2E" }}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-2">
+          <div className="w-8 h-px mb-2" style={{ background: "#C9A96E66" }} />
+          <div className="text-[7px] uppercase tracking-widest mb-2" style={{ color: "#C9A96E", opacity: 0.7 }}>Mariage</div>
+          <div className="text-[10px] italic font-bold text-center" style={{ color: "#C9A96E", fontFamily: "Georgia" }}>Sophie & Thomas</div>
+          <div className="text-[6px] mt-1.5 uppercase tracking-widest" style={{ color: "rgba(255,255,255,.3)" }}>24 JUIN 2025</div>
+          <div className="w-8 h-px mt-2" style={{ background: "#C9A96E66" }} />
+        </div>
+        <div className="absolute bottom-2 inset-x-0 flex flex-col items-center gap-0.5">
+          <div style={{ width: 1, height: 8, background: "#C9A96E" }} />
+          <div className="text-[5px] uppercase tracking-widest" style={{ color: "#C9A96E" }}>Défiler</div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "festif",
+    label: "Festif",
+    desc: "Coloré & plein de joie",
+    thumbnail: ({ primary, secondary }) => (
+      <div className="w-full h-full relative overflow-hidden rounded-xl" style={{ background: `linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)` }}>
+        {/* Polka dots */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle, rgba(255,255,255,.25) 1px, transparent 1px)`,
+          backgroundSize: "10px 10px",
+        }} />
+        <div className="relative z-10 flex flex-col items-center justify-center h-full px-2">
+          <div className="text-[8px] font-bold text-white text-center mb-0.5" style={{ fontFamily: "Georgia" }}>Sophie & Thomas</div>
+          <div className="text-[6px] text-white/70">24 juin 2025</div>
+          <div className="text-[11px] mt-1">🎉✨🎊</div>
+        </div>
+      </div>
+    ),
+  },
 ];
 
 const HEADING_FONTS = [
@@ -34,6 +135,8 @@ export default function ThemeEditor({ event }) {
     font_heading: event.font_heading || "Cormorant Garamond",
     font_body: event.font_body || "Lato",
   });
+  const [selectedTemplate, setSelectedTemplate] = useState(event.template || "classique");
+  const [previewTemplateKey, setPreviewTemplateKey] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -52,7 +155,7 @@ export default function ThemeEditor({ event }) {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.Event.update(event.id, theme);
+    await base44.entities.Event.update(event.id, { ...theme, template: selectedTemplate });
     setSaving(false);
     setSaved(true);
     toast.success("Thème enregistré ! Votre site public est mis à jour. 🎨");
@@ -67,6 +170,45 @@ export default function ThemeEditor({ event }) {
   return (
     <div className="space-y-6">
       <style>{`@import url('${fontsUrl}');`}</style>
+
+      {/* Template selector */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <Layout className="w-4 h-4 text-rose-400" /> Mise en page du site
+        </h3>
+        <div className="grid grid-cols-5 gap-3">
+          {TEMPLATES.map(tpl => {
+            const isActive = selectedTemplate === tpl.key;
+            const Thumb = tpl.thumbnail;
+            return (
+              <div key={tpl.key} className="flex flex-col gap-1.5">
+                <button
+                  onClick={() => { setSelectedTemplate(tpl.key); setSaved(false); }}
+                  className={`relative rounded-xl border-2 overflow-hidden transition hover:scale-105 ${
+                    isActive ? "border-rose-400 shadow-md" : "border-transparent hover:border-gray-200"
+                  }`}
+                  style={{ aspectRatio: "3/4" }}
+                  title={tpl.label}
+                >
+                  {isActive && (
+                    <div className="absolute top-1.5 right-1.5 z-10 w-4 h-4 bg-rose-400 rounded-full flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 text-white" />
+                    </div>
+                  )}
+                  <Thumb primary={theme.primary_color} secondary={theme.secondary_color} />
+                </button>
+                <p className="text-[10px] font-semibold text-gray-700 text-center leading-tight">{tpl.label}</p>
+                <button
+                  onClick={() => setPreviewTemplateKey(tpl.key)}
+                  className="flex items-center justify-center gap-1 text-[10px] text-gray-400 hover:text-rose-500 transition py-0.5"
+                >
+                  <Eye className="w-3 h-3" /> Aperçu
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Preset grid */}
       <div>
@@ -225,6 +367,16 @@ export default function ThemeEditor({ event }) {
           </a>
         )}
       </div>
+
+      {/* Template preview modal */}
+      {previewTemplateKey && (
+        <TemplatePreviewModal
+          isOpen={!!previewTemplateKey}
+          templateKey={previewTemplateKey}
+          event={{ ...event, primary_color: theme.primary_color, secondary_color: theme.secondary_color, font_heading: theme.font_heading, font_body: theme.font_body }}
+          onOpenChange={(open) => { if (!open) setPreviewTemplateKey(null); }}
+        />
+      )}
     </div>
   );
 }
