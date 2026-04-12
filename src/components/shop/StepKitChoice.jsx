@@ -151,19 +151,17 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
             onClick={() => handleSelectKit(kit)}
             className={`text-left rounded-2xl border-2 ${kit.color} hover:shadow-md transition-all p-6 relative group flex flex-col`}
           >
-            <span className="text-4xl block mb-4">{kit.emoji}</span>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {kit.badge && (
-                <span className="inline-block bg-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full font-sans-shop w-fit">
-                  {kit.badge}
-                </span>
-              )}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-4xl">{kit.emoji}</span>
               {kit.popular && (
-                <span className="inline-block bg-gray-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full font-sans-shop w-fit">
-                  {kit.popular}
-                </span>
+                <span className="text-xs font-semibold text-gray-400 font-sans-shop leading-tight">{kit.popular}</span>
               )}
             </div>
+            {kit.badge && (
+              <span className="inline-block bg-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full font-sans-shop mb-3 w-fit">
+                {kit.badge}
+              </span>
+            )}
             <h3 className="font-sans-shop font-bold text-gray-900 text-lg mb-1">{kit.name}</h3>
             <p className="font-sans-shop text-2xl font-bold text-rose-500 mb-3">
               {kit.price.toFixed(2)} €<span className="text-sm font-normal text-gray-400"> {kit.unit}</span>
