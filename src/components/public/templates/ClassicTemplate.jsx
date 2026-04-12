@@ -5,53 +5,83 @@ export default function ClassicTemplate({ event, primaryColor, secondaryColor, f
         @import url('${fontImportUrl}');
         .font-serif-elegant { font-family: '${fontHeading}', Georgia, serif; }
         .font-sans-clean { font-family: '${fontBody}', system-ui, sans-serif; }
-        .gold-line { background: linear-gradient(90deg, transparent, ${primaryColor}88, transparent); height: 1px; }
+        
+        .gold-divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, ${primaryColor}88, transparent);
+          margin: 16px 0;
+        }
+        
+        .accent-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background: ${primaryColor};
+          border-radius: 50%;
+          margin: 0 8px;
+        }
       `}</style>
 
-      {/* Hero classique */}
-      <div className="relative text-center py-20 px-6 overflow-hidden"
-        style={{ background: `linear-gradient(160deg, ${primaryColor}15 0%, #fff 60%, ${secondaryColor}15 100%)` }}>
-        {event.cover_image && (
-          <div className="absolute inset-0 z-0">
-            <img src={event.cover_image} className="w-full h-full object-cover opacity-20" alt="" />
-            <div className="absolute inset-0 bg-white/60" />
+      {/* Header classique élégant */}
+      <div className="border-b" style={{ borderColor: primaryColor + "22" }}>
+        <div className="max-w-2xl mx-auto px-6 py-12">
+          <div className="text-center">
+            <p className="font-sans-clean text-xs tracking-[0.3em] uppercase mb-6" style={{ color: primaryColor }}>
+              ✨ Un moment précieux ✨
+            </p>
+            <h1 className="font-serif-elegant text-6xl md:text-7xl font-bold text-gray-900 mb-2">
+              {event.couple_names}
+            </h1>
+            <div className="gold-divider max-w-xs mx-auto"></div>
+            {event.welcome_message && (
+              <p className="font-sans-clean text-gray-700 text-lg max-w-lg mx-auto leading-relaxed mt-6">
+                {event.welcome_message}
+              </p>
+            )}
+            {event.event_date && (
+              <div className="flex items-center justify-center gap-2 mt-6">
+                <span style={{ color: primaryColor }}>✦</span>
+                <p className="font-sans-clean text-sm text-gray-500">
+                  {new Date(event.event_date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                </p>
+                <span style={{ color: primaryColor }}>✦</span>
+              </div>
+            )}
           </div>
-        )}
-        <div className="relative z-10">
-          <p className="font-sans-clean text-xs tracking-[0.3em] uppercase mb-4" style={{ color: primaryColor }}>
-            {event.event_type === "mariage" ? "Mariage" :
-             event.event_type === "anniversaire" ? "Anniversaire" :
-             event.event_type === "bapteme" ? "Baptême" :
-             event.event_type === "communion" ? "Communion" :
-             event.event_type === "fete_entreprise" ? "Fête d'entreprise" :
-             event.event_type === "maison_hote" ? "Maison d'hôte" :
-             "Événement"}
-          </p>
-          <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 mb-4">
-            {event.couple_names}
-          </h1>
-          <div className="gold-line max-w-xs mx-auto mb-5" />
-          {event.welcome_message && (
-            <p className="font-sans-clean text-gray-600 text-base max-w-lg mx-auto leading-relaxed font-light mb-4">
-              {event.welcome_message}
-            </p>
-          )}
-          {event.event_date && (
-            <p className="font-sans-clean text-sm text-gray-400">
-              {new Date(event.event_date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-            </p>
-          )}
         </div>
       </div>
 
-      {/* Contenu */}
-      <div className="space-y-12 py-12">
-        {children}
+      {/* Image de couverture si existante */}
+      {event.cover_image && (
+        <div className="h-64 md:h-80 overflow-hidden">
+          <img src={event.cover_image} className="w-full h-full object-cover" alt="" />
+        </div>
+      )}
+
+      {/* Contenu principal */}
+      <div className="max-w-2xl mx-auto px-6 py-16">
+        <div className="space-y-12">
+          {/* Wrapper élégant des sections */}
+          {children && typeof children === 'function' 
+            ? children() 
+            : Array.isArray(children) 
+              ? children.map((child, i) => (
+                  <div key={i}>
+                    {i > 0 && <div className="gold-divider my-8"></div>}
+                    {child}
+                  </div>
+                ))
+              : <div>{children}</div>
+          }
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer className="py-8 px-4 border-t border-gray-100 text-center">
-        <p className="font-sans-clean text-xs text-gray-300 mb-3">Créé avec Fleurs en fête 🌸</p>
+      {/* Footer classique */}
+      <footer className="py-12 px-6 border-t text-center" style={{ borderColor: primaryColor + "22" }}>
+        <p className="font-serif-elegant text-lg text-gray-800 mb-2">
+          <span style={{ color: primaryColor }}>✿</span> Merci <span style={{ color: primaryColor }}>✿</span>
+        </p>
+        <p className="font-sans-clean text-sm text-gray-500">Créé avec Fleurs en fête 🌸</p>
       </footer>
     </div>
   );

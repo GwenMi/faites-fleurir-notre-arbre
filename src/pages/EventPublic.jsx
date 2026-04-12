@@ -5,6 +5,7 @@ import ClassicTemplate from "@/components/public/templates/ClassicTemplate";
 import RusticTemplate from "@/components/public/templates/RusticTemplate";
 import MinimalTemplate from "@/components/public/templates/MinimalTemplate";
 import ElegantTemplate from "@/components/public/templates/ElegantTemplate";
+import FestiveTemplate from "@/components/public/templates/FestiveTemplate";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/RSVPSection";
@@ -68,15 +69,15 @@ export default function EventPublic() {
       boheme: RusticTemplate,
       floral: RusticTemplate,
       moderne: MinimalTemplate,
-      joyeux: ClassicTemplate,
-      festif: ClassicTemplate,
+      joyeux: FestiveTemplate,
+      festif: FestiveTemplate,
       vintage_anni: RusticTemplate,
       douceur: ClassicTemplate,
       nuage: MinimalTemplate,
       nature_bebe: RusticTemplate,
       lumiere: ElegantTemplate,
       azur: ElegantTemplate,
-      rose_communion: ClassicTemplate,
+      rose_communion: FestiveTemplate,
       corporate: MinimalTemplate,
       dynamique: ElegantTemplate,
       nature: RusticTemplate,
