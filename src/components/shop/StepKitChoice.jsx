@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { Check } from "lucide-react";
-import { createPageUrl } from "@/utils";
 
 
 
 const KITS = [
-  // === FLEURS ===
   {
     id: "compose",
     popular: "💍 Très commandé pour les baptêmes & communions",
@@ -16,13 +13,7 @@ const KITS = [
     badge: null,
     color: "border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100",
     desc: "Les éléments sont envoyés séparément pour que vous puissiez assembler vos cadeaux à votre rythme.",
-    features: [
-      "Graines de fleur",
-      "Pastille de semis",
-      "Étiquette personnalisée",
-      "QR code galerie photos",
-      "Notice de plantation",
-    ],
+    features: ["Graines de fleur", "Pastille de semis", "Étiquette personnalisée", "QR code galerie photos", "Notice de plantation"],
   },
   {
     id: "pret",
@@ -34,53 +25,32 @@ const KITS = [
     popular: "💍 N°1 des mariages & anniversaires",
     color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
     desc: "Tout arrive assemblé et emballé. Posez simplement les pots sur les tables le jour J.",
-    features: [
-      "Graines de fleur",
-      "Pastille de semis",
-      "Étiquette personnalisée",
-      "QR code galerie photos",
-      "Notice de plantation",
-      "Assemblé & prêt à offrir ✓",
-    ],
+    features: ["Graines de fleur", "Pastille de semis", "Étiquette personnalisée", "QR code galerie photos", "Notice de plantation", "Assemblé & prêt à offrir ✓"],
   },
-  // === ENTREPRISE ===
   {
     id: "entreprise_standard",
     emoji: "📋",
-    name: 'Pack Standard "Bureau"',
+    name: 'Pack Standard “Bureau”',
     popular: "🏢 Idéal pour les équipes & séminaires",
     price: 15,
     unit: "HT / collaborateur",
     badge: null,
     color: "border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100",
     desc: "Clip mémo en bois, carte planning effaçable, timer flip et stylo. Tout pour s'organiser au bureau.",
-    features: [
-      "Clip mémo en bois naturel",
-      "Carte planning A5 plastifiée",
-      "Timer flip 4 positions",
-      "Stylo effaçable",
-    ],
-    href: "KitFocusOrganisation",
+    features: ["Clip mémo en bois naturel", "Carte planning A5 plastifiée", "Timer flip 4 positions", "Stylo effaçable"],
   },
   {
     id: "entreprise_premium",
     emoji: "🖥️",
-    name: 'Pack Premium "Moniteur"',
+    name: 'Pack Premium “Moniteur”',
     popular: "🏢 Le préféré des grandes entreprises",
     price: 20,
     unit: "HT / collaborateur",
     badge: "Premium ✨",
     color: "border-emerald-300 bg-gradient-to-br from-emerald-100 to-emerald-200",
     desc: "Clip moniteur 360° pour écrans, carte planning, timer flip et stylo. La version premium.",
-    features: [
-      "Clip moniteur orientable 360°",
-      "Carte planning A5 plastifiée",
-      "Timer flip 4 positions",
-      "Stylo effaçable",
-    ],
-    href: "KitFocusOrganisation",
+    features: ["Clip moniteur orientable 360°", "Carte planning A5 plastifiée", "Timer flip 4 positions", "Stylo effaçable"],
   },
-  // === NATUREL ===
   {
     id: "naturel_essentiel",
     emoji: "🐝",
@@ -91,12 +61,7 @@ const KITS = [
     badge: "100% naturel",
     color: "border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100",
     desc: "Galet de cire d'abeille gravé à votre logo, dessous de verre en bois, carte 6 usages.",
-    features: [
-      "Galet cire d'abeille",
-      "Dessous de verre en bois laser",
-      "Carte kraft 6 usages",
-    ],
-    href: "KitNaturel",
+    features: ["Galet cire d'abeille", "Dessous de verre en bois laser", "Carte kraft 6 usages"],
   },
   {
     id: "naturel_douceur",
@@ -108,24 +73,14 @@ const KITS = [
     badge: "Coup de cœur",
     color: "border-amber-300 bg-gradient-to-br from-amber-100 to-amber-200",
     desc: "Galet de cire gravé, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
-    features: [
-      "Galet cire d'abeille",
-      "Dessous de verre en bois laser",
-      "Carte kraft 6 usages",
-      "Sac en coton recyclé",
-    ],
-    href: "KitNaturel",
+    features: ["Galet cire d'abeille", "Dessous de verre en bois laser", "Carte kraft 6 usages", "Sac en coton recyclé"],
   },
 ];
 
 export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
   const handleSelectKit = (kit) => {
-    if (kit.href) {
-      window.location.href = createPageUrl(kit.href);
-    } else {
-      onUpdate({ kitType: kit.id });
-      onNext();
-    }
+    onUpdate({ kitType: kit.id });
+    onNext();
   };
 
   return (

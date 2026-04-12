@@ -17,6 +17,10 @@ export const PRICING = {
   KIT_COMPOSE: 3.90,
   KIT_PRET: 5.90,
   SAC_CADEAU: 0.40,
+  entreprise_standard: 15,
+  entreprise_premium: 20,
+  naturel_essentiel: 5,
+  naturel_douceur: 13,
 };
 
 const SEEDS = [
@@ -58,7 +62,7 @@ export default function Shop() {
   }, [customerInfo]);
   const [shippingMethod, setShippingMethod] = useState(null);
 
-  const baseKitPrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
+  const baseKitPrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
   const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
   const totalPackCount = (selection.packs || []).reduce((sum, p) => sum + p.qty, 0);
   const subtotal = baseKitPrice * totalPots;
