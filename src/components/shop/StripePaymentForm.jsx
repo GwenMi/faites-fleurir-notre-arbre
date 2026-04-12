@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
@@ -140,24 +140,46 @@ function PaymentForm({ customerInfo, total, onSuccess, onBack }) {
   );
 }
 
-const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-const stripePromiseGlobal = stripeKey ? loadStripe(stripeKey) : null;
+let stripePromiseCache = null;
 
 export default function StripePaymentForm({ customerInfo, total, onSuccess, onBack }) {
-  const keyError = !stripeKey ? "Clé publique Stripe manquante (VITE_STRIPE_PUBLIC_KEY)" : null;
+  const [stripePromise, setStripePromise] = useState(stripePromiseCache);
+  const [keyError, setKeyError] = useState(null);
 
-  if (keyError || !stripePromiseGlobal) {
+  useEffect(() => {
+    if (stripePromiseCache) return;
+    base44.functions.invoke("getStripePublicKey", {}).then(res => {
+      const key = res?.data?.publicKey;
+      if (key) {
+        stripePromiseCache = loadStripe(key);
+        setStripePromise(stripePromiseCache);
+      } else {
+        setKeyError("Clé Stripe non configurée.");
+      }
+    }).catch(() => setKeyError("Impossible de charger la configuration Stripe."));
+  }, []);
+
+  if (keyError) {
     return (
       <div className="px-6 py-10 text-center">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
         <p className="text-red-600 font-semibold">Erreur de configuration</p>
-        <p className="text-sm text-gray-500">{keyError || "Stripe n'est pas correctement configuré."}</p>
+        <p className="text-sm text-gray-500">{keyError}</p>
+      </div>
+    );
+  }
+
+  if (!stripePromise) {
+    return (
+      <div className="px-6 py-10 text-center">
+        <Loader2 className="w-8 h-8 text-rose-400 animate-spin mx-auto mb-3" />
+        <p className="text-sm text-gray-500">Chargement du paiement…</p>
       </div>
     );
   }
 
   return (
-    <Elements stripe={stripePromiseGlobal}>
+    <Elements stripe={stripePromise}>
       <PaymentForm
         customerInfo={customerInfo}
         total={total}
