@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TEMPLATES, getTemplatesForEventType, EVENT_TYPE_LABELS } from "@/components/public/TemplateConfig";
+import { TEMPLATES, getTemplatesForEventType, getDefaultTemplateForEventType, EVENT_TYPE_LABELS } from "@/components/public/TemplateConfig";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
 
@@ -20,6 +20,7 @@ function generateSlug(coupleNames) {
 }
 
 const NO_DATE_TYPES = ["fete_entreprise", "maison_hote"];
+const BIRTH_DATE_TYPES = ["anniversaire", "bapteme", "communion"];
 
 export default function EventForm({ event, onSave, onCancel }) {
   const isEdit = !!event;
@@ -33,8 +34,8 @@ export default function EventForm({ event, onSave, onCancel }) {
 
   const isNoDate = NO_DATE_TYPES.includes(form.event_type);
 
-  // Calculate age for anniversaire
-  const ageAtEvent = form.event_type === "anniversaire" && form.birth_date && form.event_date
+  // Calculate age for anniversaire/bapteme/communion
+  const ageAtEvent = BIRTH_DATE_TYPES.includes(form.event_type) && form.birth_date && form.event_date
     ? new Date(form.event_date).getFullYear() - new Date(form.birth_date).getFullYear()
     : null;
 
@@ -43,9 +44,7 @@ export default function EventForm({ event, onSave, onCancel }) {
   const premiumTemplates = availableTemplates.filter(([, v]) => v.plan === "premium");
 
   const handleEventTypeChange = (v) => {
-    const newTemplates = getTemplatesForEventType(v);
-    const firstFree = newTemplates.find(([, t]) => t.plan === "basic");
-    const defaultTpl = firstFree ? firstFree[0] : newTemplates[0]?.[0] || "classique";
+    const defaultTpl = getDefaultTemplateForEventType(v);
     const tplData = TEMPLATES[defaultTpl];
     setForm(f => ({
       ...f,
@@ -107,6 +106,7 @@ export default function EventForm({ event, onSave, onCancel }) {
             form.event_type === "mariage" || form.event_type === "fiançailles" ? "Prénoms des mariés *" :
             form.event_type === "anniversaire" ? "Prénom du/de la fêté(e) *" :
             form.event_type === "bapteme" ? "Prénom de l'enfant *" :
+            form.event_type === "communion" ? "Prénom du communiant(e) *" :
             form.event_type === "fete_entreprise" ? "Nom de l'entreprise *" :
             form.event_type === "maison_hote" ? "Nom de la maison d'hôte *" :
             "Nom de l'événement *"
@@ -116,6 +116,7 @@ export default function EventForm({ event, onSave, onCancel }) {
               form.event_type === "mariage" || form.event_type === "fiançailles" ? "Emma & Lucas" :
               form.event_type === "anniversaire" ? "Sophie" :
               form.event_type === "bapteme" ? "Chloé" :
+              form.event_type === "communion" ? "Léa" :
               form.event_type === "fete_entreprise" ? "Acme & Co." :
               form.event_type === "maison_hote" ? "Le Mas des Roses" :
               "Mon événement"
@@ -138,8 +139,8 @@ export default function EventForm({ event, onSave, onCancel }) {
           </Select>
         </div>
 
-        {/* Anniversaire: date de naissance */}
-        {form.event_type === "anniversaire" && (
+        {/* Anniversaire / Baptême / Communion: date de naissance */}
+        {BIRTH_DATE_TYPES.includes(form.event_type) && (
           <div className="space-y-1">
             <Label>Date de naissance *</Label>
             <Input type="date" value={form.birth_date} onChange={(e) => set("birth_date", e.target.value)} className="rounded-xl h-11" />
@@ -157,7 +158,7 @@ export default function EventForm({ event, onSave, onCancel }) {
         {/* Affichage de l'âge calculé */}
         {ageAtEvent !== null && (
           <div className="col-span-2 bg-rose-50 border border-rose-100 rounded-xl p-3 text-sm text-rose-700 font-medium">
-            🎂 {form.couple_names} fêtera ses <strong>{ageAtEvent} ans</strong> lors de cet événement
+            {form.event_type === "anniversaire" ? "🎂" : form.event_type === "communion" ? "✝️" : "🕊️"} {form.couple_names} aura <strong>{ageAtEvent} an{ageAtEvent > 1 ? "s" : ""}</strong> lors de cet événement
           </div>
         )}
       </div>

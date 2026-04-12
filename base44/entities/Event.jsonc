@@ -15,6 +15,7 @@
         "fian\u00e7ailles",
         "anniversaire",
         "bapteme",
+        "communion",
         "fete_entreprise",
         "maison_hote",
         "autre"
@@ -58,10 +59,20 @@
         "floral",
         "moderne",
         "joyeux",
-        "corporate",
+        "festif",
+        "vintage_anni",
         "douceur",
+        "nuage",
+        "nature_bebe",
+        "lumiere",
+        "azur",
+        "rose_communion",
+        "corporate",
+        "dynamique",
         "nature",
-        "festif"
+        "provencal",
+        "sobre",
+        "minimal"
       ],
       "default": "classique"
     },
