@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TEMPLATES, getTemplatesForEventType, getDefaultTemplateForEventType, EVENT_TYPE_LABELS } from "@/components/public/TemplateConfig";
+import TemplatePreview from "@/components/admin/TemplatePreview";
 import { toast } from "sonner";
 import { Camera, X } from "lucide-react";
 
@@ -169,8 +170,6 @@ export default function EventForm({ event, onSave, onCancel }) {
           onChange={(e) => set("welcome_message", e.target.value)} className="rounded-xl" rows={3} />
       </div>
 
-
-
       {/* Cover image */}
       <div className="space-y-1">
         <Label>Photo de couverture</Label>
@@ -193,28 +192,29 @@ export default function EventForm({ event, onSave, onCancel }) {
         </label>
       </div>
 
-      {/* Template avec aperçu */}
-      <div className="space-y-3">
+      {/* Template avec aperçu visuel */}
+      <div className="space-y-4">
         <Label>Template <span className="text-gray-400 font-normal text-xs">— adaptés à votre type d'événement</span></Label>
         {availableTemplates.length === 0 ? (
           <p className="text-sm text-gray-400">Aucun template disponible pour ce type d'événement.</p>
         ) : (
-          <div className="space-y-3">
-            {/* Aperçu du template sélectionné */}
+          <div className="space-y-4">
+            {/* Aperçu visuel du template sélectionné */}
             {TEMPLATES[form.template] && (
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-2xl p-6 text-center">
-                <p className="text-xs text-gray-400 mb-2">APERÇU</p>
-                <div className="text-5xl mb-4">{TEMPLATES[form.template].emoji}</div>
-                <h3 className="font-serif-elegant text-2xl font-bold mb-4" style={{ color: form.primary_color }}>{form.couple_names || "Votre événement"}</h3>
-                <div className="flex gap-2 justify-center mb-4">
-                  <div className="w-12 h-12 rounded-lg shadow" style={{ backgroundColor: form.primary_color }}></div>
-                  <div className="w-12 h-12 rounded-lg shadow" style={{ backgroundColor: form.secondary_color }}></div>
+              <div>
+                <p className="text-xs text-gray-400 mb-3 tracking-widest uppercase">Aperçu interactif</p>
+                <div className="overflow-hidden rounded-2xl border border-gray-200 max-h-96">
+                  <TemplatePreview
+                    templateKey={form.template}
+                    coupleName={form.couple_names}
+                    eventType={form.event_type}
+                  />
                 </div>
-                <p className="font-sans-clean text-sm text-gray-600">{TEMPLATES[form.template].description}</p>
               </div>
             )}
+
             {/* Grid de sélection */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-gray-100">
               {freeTemplates.map(([key, tpl]) => (
                 <button key={key} type="button"
                   onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
