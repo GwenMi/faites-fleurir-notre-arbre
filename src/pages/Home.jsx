@@ -66,9 +66,13 @@ export default function Home() {
             className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition hidden sm:block">
             Boutique 🌸
           </a>
-          <a href={createPageUrl("KitFocusOrganisation")}
+          <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
             className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition hidden sm:block">
-            Cadeaux entreprise 🌿
+            Cadeaux entreprise 🏢
+          </a>
+          <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
+            className="font-sans-clean text-sm font-semibold text-amber-600 hover:text-amber-700 transition hidden sm:block">
+            Maisons d'hôtes 🏡
           </a>
           <a href={createPageUrl("ClientDashboard")}
             className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition hidden sm:block">

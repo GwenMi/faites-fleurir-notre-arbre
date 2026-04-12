@@ -90,10 +90,14 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
         .font-sans-shop { font-family: 'Lato', system-ui, sans-serif; }
       `}</style>
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <p className="font-sans-shop text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Étape 1</p>
         <h2 className="font-serif-shop text-3xl font-bold text-gray-800 mb-2">Choisissez votre kit</h2>
-        <p className="font-sans-shop text-sm text-gray-400">Sélectionnez le type qui correspond à votre besoin</p>
+        <p className="font-sans-shop text-sm text-gray-400 mb-4">Sélectionnez le type qui correspond à votre besoin</p>
+        <div className="inline-flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-700 text-left max-w-lg">
+          <span className="text-base flex-shrink-0">💡</span>
+          <p>Les suggestions ci-dessous sont à titre indicatif. Vous êtes libre de choisir n'importe quel kit pour tous les types d'événements !</p>
+        </div>
       </div>
 
 
