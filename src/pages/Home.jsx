@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
-import { ChevronRight, Sparkles, Check } from "lucide-react";
+import { ChevronRight, Sparkles, Check, ShoppingCart } from "lucide-react";
 
 const SHOP_URL = () => createPageUrl("Shop");
 
@@ -32,6 +32,15 @@ const FEATURES_PREMIUM = [
 
 export default function Home() {
   const [slugInput, setSlugInput] = useState("");
+  const [cartInProgress, setCartInProgress] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedStep = parseInt(localStorage.getItem("shop_step") || "1");
+      const savedSelection = JSON.parse(localStorage.getItem("shop_selection") || "{}");
+      if (savedStep >= 2 && savedSelection?.kitType) setCartInProgress(true);
+    } catch {}
+  }, []);
 
   const handleGoToEvent = () => {
     if (slugInput.trim()) {
@@ -41,6 +50,20 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      {cartInProgress && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-amber-800">
+            <ShoppingCart className="w-4 h-4 flex-shrink-0" />
+            <span>Vous avez un panier en cours de création.</span>
+          </div>
+          <a
+            href={createPageUrl("Shop")}
+            className="flex-shrink-0 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 transition px-4 py-1.5 rounded-full"
+          >
+            Reprendre mon panier →
+          </a>
+        </div>
+      )}
       <SEOHead
         title="Cadeaux de mariage, baptême & événements — Pots de graines personnalisés"
         description="Offrez un souvenir vivant à vos invités : petits pots de graines personnalisés avec vos prénoms, la date et un QR code galerie photos. À partir de 3,90 € / invité."

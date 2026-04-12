@@ -77,27 +77,40 @@ export default function Shop() {
     try { localStorage.setItem("shop_step", String(step)); } catch {}
   }, [step]);
 
-  // Save cart to DB when user is logged in and has made meaningful progress
+  // Save cart to DB; for anonymous users save when we have their email (step 6+)
+  const reminderSentRef = useRef(false);
   useEffect(() => {
-    if (!user?.email || step < 3) return;
+    const cartEmail = user?.email || (step >= 6 && customerInfo.email ? customerInfo.email : null);
+    if (!cartEmail || step < 3) return;
     const save = async () => {
       try {
+        const payload = { step, selection, customer_info: customerInfo, status: 'active', customer_email: cartEmail };
         if (cartIdRef.current) {
-          await base44.entities.AbandonedCart.update(cartIdRef.current, { step, selection, customer_info: customerInfo, status: 'active' });
+          await base44.entities.AbandonedCart.update(cartIdRef.current, payload);
         } else {
-          const existing = await base44.entities.AbandonedCart.filter({ user_email: user.email, status: 'active' });
+          const existing = await base44.entities.AbandonedCart.filter({ customer_email: cartEmail, status: 'active' });
           if (existing?.length > 0) {
             cartIdRef.current = existing[0].id;
-            await base44.entities.AbandonedCart.update(existing[0].id, { step, selection, customer_info: customerInfo });
+            await base44.entities.AbandonedCart.update(existing[0].id, payload);
           } else {
-            const cart = await base44.entities.AbandonedCart.create({ user_email: user.email, step, selection, customer_info: customerInfo, status: 'active' });
+            const cart = await base44.entities.AbandonedCart.create({ user_email: user?.email || null, ...payload });
             cartIdRef.current = cart.id;
           }
+        }
+        // Envoyer l'email de relance une seule fois quand on a l'email du client
+        if (!reminderSentRef.current && customerInfo.email && step >= 6) {
+          reminderSentRef.current = true;
+          base44.functions.invoke('sendAbandonedCartEmail', {
+            customerEmail: customerInfo.email,
+            customerName: customerInfo.firstName || customerInfo.name || "",
+            cartStep: step,
+            shopUrl: window.location.origin + createPageUrl("Shop"),
+          }).catch(() => {});
         }
       } catch {}
     };
     save();
-  }, [step, user?.email]);
+  }, [step, user?.email, customerInfo.email]);
 
   const handleOrderComplete = async () => {
     try {
