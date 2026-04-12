@@ -15,10 +15,13 @@ Deno.serve(async (req) => {
 
     const credentials = btoa(`${publicKey}:${secretKey}`);
 
+    // Sendcloud API expects weight in kg, not grams
+    const weightKg = weightGrams / 1000;
+
     const url = new URL('https://panel.sendcloud.sc/api/v2/shipping_methods');
     url.searchParams.set('from_country', 'FR');
     url.searchParams.set('to_country', toCountry);
-    url.searchParams.set('weight', String(weightGrams));
+    url.searchParams.set('weight', weightKg.toFixed(3));
 
     const response = await fetch(url.toString(), {
       headers: {
@@ -37,9 +40,10 @@ Deno.serve(async (req) => {
 
     const methods = (data.shipping_methods || [])
       .filter((m) => {
+        // min_weight and max_weight from Sendcloud are in kg
         const min = m.min_weight ?? 0;
         const max = m.max_weight ?? Infinity;
-        return weightGrams >= min && weightGrams <= max;
+        return weightKg >= min && weightKg <= max;
       })
       .map((m) => ({
         id: m.id,
