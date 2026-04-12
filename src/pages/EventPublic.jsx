@@ -8,18 +8,18 @@ import ElegantTemplate from "@/components/public/templates/ElegantTemplate";
 import FestiveTemplate from "@/components/public/templates/FestiveTemplate";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
-import RSVPSection from "@/components/public/RSVPSection";
+import RSVPSection from "@/components/public/sections/RSVPSection";
+import GuestbookSection from "@/components/public/sections/GuestbookSection";
+import PhotoGallerySection from "@/components/public/sections/PhotoGallerySection";
+import FAQSectionNew from "@/components/public/sections/FAQSection";
 import DayScheduleSection from "@/components/public/DayScheduleSection";
 import BestOfSection from "@/components/public/BestOfSection";
-import PhotoGallery from "@/components/public/PhotoGallery";
 import GuestPhotoUploadSection from "@/components/public/GuestPhotoUploadSection";
 import WishlistSection from "@/components/public/WishlistSection";
-import FAQSection from "@/components/public/FAQSection";
 import SeatingPlanSection from "@/components/public/SeatingPlanSection";
 import CoupleStorySection from "@/components/public/CoupleStorySection.jsx";
 import MapSection from "@/components/public/MapSection.jsx";
-import GuestbookSection from "@/components/public/GuestbookSection.jsx";
-import CagnotteSection from "@/components/public/CagnotteSection.jsx";
+import CagnotteSection from "@/components/public/CagnotteSection.jsx"
 import ReviewsList from "@/components/review/ReviewsList";
 import ReviewForm from "@/components/review/ReviewForm";
 
@@ -107,7 +107,7 @@ export default function EventPublic() {
       <div key="best_of" className="max-w-2xl mx-auto"><BestOfSection event={event} primaryColor={primaryColor} /></div>
     ),
     photo_gallery: isPremium && event.show_photo_gallery !== false && (
-      <div key="photo_gallery" className="max-w-2xl mx-auto"><PhotoGallery event={event} primaryColor={primaryColor} /></div>
+      <div key="photo_gallery" className="max-w-2xl mx-auto px-4"><PhotoGallerySection event={event} /></div>
     ),
     wishlist: isPremium && event.show_wishlist !== false && (
       <div key="wishlist" className="max-w-2xl mx-auto"><WishlistSection event={event} primaryColor={primaryColor} /></div>
@@ -116,7 +116,7 @@ export default function EventPublic() {
       <div key="seating_plan" className="max-w-2xl mx-auto"><SeatingPlanSection event={event} primaryColor={primaryColor} /></div>
     ),
     faq: isPremium && event.show_faq !== false && (
-      <div key="faq" className="max-w-2xl mx-auto"><FAQSection event={event} primaryColor={primaryColor} /></div>
+      <div key="faq" className="max-w-2xl mx-auto px-4"><FAQSectionNew event={event} faqs={[]} /></div>
     ),
     map: isPremium && event.show_map && event.map_address && (
       <div key="map" className="max-w-2xl mx-auto px-4"><MapSection event={event} primaryColor={primaryColor} /></div>
@@ -125,7 +125,7 @@ export default function EventPublic() {
       <div key="guest_photos" className="max-w-2xl mx-auto"><GuestPhotoUploadSection event={event} primaryColor={primaryColor} /></div>
     ),
     guestbook: isPremium && event.show_guestbook !== false && (
-      <div key="guestbook" className="max-w-2xl mx-auto border-t border-gray-100"><GuestbookSection event={event} primaryColor={primaryColor} /></div>
+      <div key="guestbook" className="max-w-2xl mx-auto border-t border-gray-100 px-4"><GuestbookSection event={event} /></div>
     ),
     cagnotte: isPremium && event.show_cagnotte && event.cagnotte_url && (
       <div key="cagnotte" className="max-w-2xl mx-auto border-t border-gray-100"><CagnotteSection event={event} primaryColor={primaryColor} /></div>
