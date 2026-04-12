@@ -150,13 +150,33 @@ export default function Shop() {
             <StepPackSelector selection={selection} onUpdate={updateSelection} pricing={pricing} onNext={() => setStep(4)} onBack={() => setStep(2)} />
           )}
           {step === 4 && (
-            <StepCustomization selection={selection} onUpdate={updateSelection} onNext={() => setStep(5)} onBack={() => setStep(3)} seeds={SEEDS} />
+            <StepCustomization
+              selection={selection}
+              onUpdate={updateSelection}
+              onNext={() => {
+                // Sauter l'étape slug si déjà défini
+                if (selection.slug) setStep(6);
+                else setStep(5);
+              }}
+              onBack={() => setStep(3)}
+              seeds={SEEDS}
+            />
           )}
           {step === 5 && (
             <StepEventSlug selection={selection} onUpdate={updateSelection} onNext={() => setStep(6)} onBack={() => setStep(4)} />
           )}
           {step === 6 && (
-            <StepCustomerForm customerInfo={customerInfo} onChange={setCustomerInfo} selection={selection} onNext={() => setStep(7)} onBack={() => setStep(5)} />
+            <StepCustomerForm
+              customerInfo={customerInfo}
+              onChange={setCustomerInfo}
+              selection={selection}
+              onNext={() => setStep(7)}
+              onBack={() => {
+                // Revenir à l'étape slug seulement si elle n'était pas sautée
+                if (selection.slug) setStep(4);
+                else setStep(5);
+              }}
+            />
           )}
           {step === 7 && (
             <StepShipping totalPots={pricing.totalPots} shippingMethod={shippingMethod} onSelect={setShippingMethod} onNext={() => setStep(8)} onBack={() => setStep(6)} />
