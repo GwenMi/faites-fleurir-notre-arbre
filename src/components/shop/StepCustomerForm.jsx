@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, Mail } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -21,12 +21,16 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
     const eventDateFromSelection = selection?.customization?.date || "";
     onChange(info => ({
       ...info,
-      // Ne pré-remplir que si le champ est vide
       email: info.email || user?.email || "",
       firstName: info.firstName || firstName,
       lastName: info.lastName || lastName,
       name: info.name || user?.full_name || "",
       eventDate: info.eventDate || eventDateFromSelection,
+      phone: info.phone || user?.phone || "",
+      street: info.street || user?.street || "",
+      zipCode: info.zipCode || user?.zip_code || "",
+      city: info.city || user?.city || "",
+      country: info.country || user?.country || "France",
     }));
   }, [user?.email]);
 
@@ -122,7 +126,7 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
         </div>
       ) : (
         <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800 flex items-center gap-2">
-          ✅ <span>Connecté en tant que <strong>{user?.email}</strong> — vos informations sont pré-remplies</span>
+          <Mail className="w-4 h-4 flex-shrink-0" /> <span>Connecté en tant que <strong>{user?.email}</strong> — vos informations sont pré-remplies</span>
         </div>
       )}
 

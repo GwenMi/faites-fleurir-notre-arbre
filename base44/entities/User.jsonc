@@ -1,0 +1,39 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "manager",
+        "viewer",
+        "user"
+      ],
+      "default": "user",
+      "description": "admin: acc\u00e8s complet | manager: commandes+CRM+stats+devis | viewer: stats seules | user: espace mari\u00e9s"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Num\u00e9ro de t\u00e9l\u00e9phone"
+    },
+    "street": {
+      "type": "string",
+      "description": "Rue / adresse"
+    },
+    "zip_code": {
+      "type": "string",
+      "description": "Code postal"
+    },
+    "city": {
+      "type": "string",
+      "description": "Ville"
+    },
+    "country": {
+      "type": "string",
+      "default": "France",
+      "description": "Pays"
+    }
+  },
+  "required": []
+}

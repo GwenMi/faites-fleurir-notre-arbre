@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { LogOut, User, Package, BarChart2 } from "lucide-react";
+import { LogOut, User, Package, BarChart2, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import OrderTracking from "@/components/account/OrderTracking";
 import ActivityDashboard from "@/components/account/ActivityDashboard";
@@ -10,12 +12,22 @@ export default function AccountSettings() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("profile");
+  const [form, setForm] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        setForm({
+          phone: currentUser.phone || "",
+          street: currentUser.street || "",
+          zip_code: currentUser.zip_code || "",
+          city: currentUser.city || "",
+          country: currentUser.country || "France",
+        });
       } finally {
         setLoading(false);
       }
@@ -25,6 +37,15 @@ export default function AccountSettings() {
 
   const handleLogout = async () => {
     await base44.auth.logout(createPageUrl("Home"));
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    await base44.auth.updateMe(form);
+    setUser(u => ({ ...u, ...form }));
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
   };
 
   if (loading) {
@@ -113,20 +134,50 @@ export default function AccountSettings() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
             <h2 className="font-serif-shop text-2xl font-bold text-gray-800 mb-6">Informations personnelles</h2>
             
-            <div className="space-y-4 mb-8">
+            <div className="space-y-4 mb-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="font-sans-shop text-sm text-gray-500">Nom complet</Label>
+                  <p className="font-sans-shop text-base text-gray-800 mt-1">{user.full_name || "Non défini"}</p>
+                </div>
+                <div>
+                  <Label className="font-sans-shop text-sm text-gray-500">Email</Label>
+                  <p className="font-sans-shop text-base text-gray-800 mt-1">{user.email}</p>
+                </div>
+              </div>
+
               <div>
-                <label className="font-sans-shop text-sm text-gray-600">Nom complet</label>
-                <p className="font-sans-shop text-lg text-gray-800">{user.full_name || "Non défini"}</p>
+                <Label className="font-sans-shop text-sm font-semibold text-gray-700 block mb-1">Téléphone</Label>
+                <Input value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))} placeholder="06 12 34 56 78" className="h-10 rounded-xl" />
               </div>
               <div>
-                <label className="font-sans-shop text-sm text-gray-600">Email</label>
-                <p className="font-sans-shop text-lg text-gray-800">{user.email}</p>
+                <Label className="font-sans-shop text-sm font-semibold text-gray-700 block mb-1">Rue / Adresse</Label>
+                <Input value={form.street} onChange={e => setForm(f => ({...f, street: e.target.value}))} placeholder="12 rue des Roses" className="h-10 rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="font-sans-shop text-sm font-semibold text-gray-700 block mb-1">Code postal</Label>
+                  <Input value={form.zip_code} onChange={e => setForm(f => ({...f, zip_code: e.target.value}))} placeholder="75001" className="h-10 rounded-xl" />
+                </div>
+                <div>
+                  <Label className="font-sans-shop text-sm font-semibold text-gray-700 block mb-1">Ville</Label>
+                  <Input value={form.city} onChange={e => setForm(f => ({...f, city: e.target.value}))} placeholder="Paris" className="h-10 rounded-xl" />
+                </div>
               </div>
               <div>
-                <label className="font-sans-shop text-sm text-gray-600">Rôle</label>
-                <p className="font-sans-shop text-lg text-gray-800 capitalize">{user.role || "Utilisateur"}</p>
+                <Label className="font-sans-shop text-sm font-semibold text-gray-700 block mb-1">Pays</Label>
+                <Input value={form.country} onChange={e => setForm(f => ({...f, country: e.target.value}))} placeholder="France" className="h-10 rounded-xl" />
               </div>
             </div>
+
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2 mb-3"
+            >
+              <Save className="w-4 h-4" />
+              {saved ? "✅ Enregistré !" : saving ? "Enregistrement..." : "Enregistrer mes informations"}
+            </button>
 
             <button
               onClick={handleLogout}
