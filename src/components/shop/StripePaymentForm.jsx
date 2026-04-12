@@ -161,10 +161,17 @@ export default function StripePaymentForm({ customerInfo, total, onSuccess, onBa
 
   if (keyError) {
     return (
-      <div className="px-6 py-10 text-center">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-        <p className="text-red-600 font-semibold">Erreur de configuration</p>
-        <p className="text-sm text-gray-500">{keyError}</p>
+      <div className="px-6 py-10 text-center space-y-4">
+        <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-3" />
+        <p className="text-amber-700 font-semibold">Mode test — Stripe non configuré</p>
+        <p className="text-sm text-gray-500 mb-4">{keyError}</p>
+        <Button
+          onClick={() => onSuccess?.()}
+          className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white h-11"
+        >
+          ✅ Simuler un paiement réussi (test)
+        </Button>
+        <p className="text-xs text-gray-400">Ce bouton ne débite rien — uniquement pour tester le tunnel</p>
       </div>
     );
   }
