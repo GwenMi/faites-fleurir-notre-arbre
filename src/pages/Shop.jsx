@@ -44,7 +44,8 @@ export default function Shop() {
   });
 
   const [customerInfo, setCustomerInfo] = useState({
-    name: "", email: "", phone: "", address: "", eventDate: ""
+    name: "", email: "", phone: "", address: "", eventDate: "",
+    firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France"
   });
   const [shippingMethod, setShippingMethod] = useState(null);
 
