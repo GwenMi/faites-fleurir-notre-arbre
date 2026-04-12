@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/AuthContext";
 export default function StepCustomerForm({ customerInfo, onChange, selection, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [diffBilling, setDiffBilling] = useState(false);
   const { isAuthenticated, user } = useAuth();
 
   // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
@@ -48,6 +49,26 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
     if (missing.length > 0) {
       setValidationError(`Champs manquants : ${missing.join(", ")}`);
       return;
+    }
+    // Adresse de facturation
+    if (diffBilling) {
+      const billingMissing = [];
+      if (!customerInfo.billingStreet) billingMissing.push("rue (facturation)");
+      if (!customerInfo.billingZipCode) billingMissing.push("code postal (facturation)");
+      if (!customerInfo.billingCity) billingMissing.push("ville (facturation)");
+      if (!customerInfo.billingCountry) billingMissing.push("pays (facturation)");
+      if (billingMissing.length > 0) {
+        setValidationError(`Champs manquants : ${billingMissing.join(", ")}`);
+        return;
+      }
+    } else {
+      // Copier l'adresse de livraison comme adresse de facturation
+      onChange(info => ({ ...info,
+        billingStreet: info.street,
+        billingZipCode: info.zipCode,
+        billingCity: info.city,
+        billingCountry: info.country,
+      }));
     }
     if (customerInfo.isCompany && (!customerInfo.companyName || !customerInfo.vatNumber)) {
       setValidationError("Veuillez renseigner la raison sociale et le n° de TVA");
@@ -182,8 +203,9 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
           </div>
         )}
         
-        {/* Adresse séparée en champs */}
+        {/* Adresse de livraison */}
         <div className="space-y-3 pt-4 border-t border-gray-100">
+          <p className="text-xs font-semibold text-rose-500 uppercase tracking-wide flex items-center gap-1.5">🚚 Adresse de livraison</p>
           <div>
             <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Rue / Adresse *</Label>
             <Input value={customerInfo.street || ""} onChange={e => set("street", e.target.value)} placeholder="12 rue des Roses" className="h-11 rounded-xl" />
@@ -202,6 +224,43 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
             <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Pays *</Label>
             <Input value={customerInfo.country || "France"} onChange={e => set("country", e.target.value)} placeholder="France" className="h-11 rounded-xl" />
           </div>
+        </div>
+
+        {/* Adresse de facturation différente */}
+        <div className="pt-4 border-t border-gray-100">
+          <label className="flex items-center gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={diffBilling}
+              onChange={e => setDiffBilling(e.target.checked)}
+              className="w-4 h-4 accent-rose-500"
+            />
+            <span className="text-sm font-semibold text-gray-700">Adresse de facturation différente de la livraison</span>
+          </label>
+
+          {diffBilling && (
+            <div className="mt-4 space-y-3">
+              <p className="text-xs font-semibold text-rose-500 uppercase tracking-wide flex items-center gap-1.5">🧾 Adresse de facturation</p>
+              <div>
+                <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Rue / Adresse *</Label>
+                <Input value={customerInfo.billingStreet || ""} onChange={e => set("billingStreet", e.target.value)} placeholder="12 rue des Roses" className="h-11 rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Code postal *</Label>
+                  <Input value={customerInfo.billingZipCode || ""} onChange={e => set("billingZipCode", e.target.value)} placeholder="75001" className="h-11 rounded-xl" />
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Ville *</Label>
+                  <Input value={customerInfo.billingCity || ""} onChange={e => set("billingCity", e.target.value)} placeholder="Paris" className="h-11 rounded-xl" />
+                </div>
+              </div>
+              <div>
+                <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Pays *</Label>
+                <Input value={customerInfo.billingCountry || "France"} onChange={e => set("billingCountry", e.target.value)} placeholder="France" className="h-11 rounded-xl" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
