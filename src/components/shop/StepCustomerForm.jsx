@@ -1,4 +1,17 @@
 import { useState, useEffect } from "react";
+
+const EUROPEAN_COUNTRIES = [
+  "france", "belgique", "belgium", "luxembourg", "suisse", "switzerland", "allemagne", "germany",
+  "espagne", "spain", "italie", "italy", "portugal", "pays-bas", "netherlands", "hollande",
+  "autriche", "austria", "pologne", "poland", "suède", "sweden", "norvège", "norway",
+  "danemark", "denmark", "finlande", "finland", "irlande", "ireland", "grèce", "greece",
+  "république tchèque", "czech republic", "slovaquie", "slovakia", "hongrie", "hungary",
+  "roumanie", "romania", "bulgarie", "bulgaria", "croatie", "croatia", "slovénie", "slovenia",
+  "estonie", "estonia", "lettonie", "latvia", "lituanie", "lithuania", "malte", "malta",
+  "chypre", "cyprus", "monaco", "andorre", "andorra", "liechtenstein", "islande", "iceland",
+  "fr", "be", "lu", "ch", "de", "es", "it", "pt", "nl", "at", "pl", "se", "no", "dk",
+  "fi", "ie", "gr", "cz", "sk", "hu", "ro", "bg", "hr", "si", "ee", "lv", "lt", "mt", "cy",
+];
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,26 +68,14 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
       setValidationError(`Champs manquants : ${missing.join(", ")}`);
       return;
     }
-    // Adresse de facturation
-    if (diffBilling) {
-      const billingMissing = [];
-      if (!customerInfo.billingStreet) billingMissing.push("rue (facturation)");
-      if (!customerInfo.billingZipCode) billingMissing.push("code postal (facturation)");
-      if (!customerInfo.billingCity) billingMissing.push("ville (facturation)");
-      if (!customerInfo.billingCountry) billingMissing.push("pays (facturation)");
-      if (billingMissing.length > 0) {
-        setValidationError(`Champs manquants : ${billingMissing.join(", ")}`);
-        return;
-      }
-    } else {
-      // Copier l'adresse de livraison comme adresse de facturation
-      onChange(info => ({ ...info,
-        billingStreet: info.street,
-        billingZipCode: info.zipCode,
-        billingCity: info.city,
-        billingCountry: info.country,
-      }));
+
+    // Vérification zone europe uniquement
+    const countryNorm = (customerInfo.country || "").trim().toLowerCase();
+    if (!EUROPEAN_COUNTRIES.includes(countryNorm)) {
+      setValidationError("❌ Nous n'expédions qu'en Europe. La livraison vers ce pays n'est pas disponible.");
+      return;
     }
+
     if (customerInfo.isCompany && (!customerInfo.companyName || !customerInfo.vatNumber)) {
       setValidationError("Veuillez renseigner la raison sociale et le n° de TVA");
       return;
