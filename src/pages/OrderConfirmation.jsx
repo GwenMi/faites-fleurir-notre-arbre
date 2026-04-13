@@ -261,7 +261,7 @@ export default function OrderConfirmation() {
             <Download className="w-4 h-4 mr-2" />
             Télécharger facture PDF
           </Button>
-          {order.options_selected?.site_public_url && (
+          {order.event_id && order.options_selected?.site_public_url && (
             <a
               href={order.options_selected.site_public_url}
               target="_blank"
@@ -275,7 +275,7 @@ export default function OrderConfirmation() {
         </div>
 
         {/* Création du site événement */}
-        {isPersonalEventType && !order.options_selected?.site_public_url && siteChoice !== "dismissed" && (
+        {isPersonalEventType && !order.event_id && siteChoice !== "dismissed" && (
           <div className="bg-white rounded-3xl border border-rose-100 shadow-sm p-6 mb-8">
             <div className="flex items-start justify-between mb-3">
               <h3 className="font-serif-elegant text-xl font-bold text-gray-800">

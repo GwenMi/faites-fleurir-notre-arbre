@@ -13,8 +13,16 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
   const [paymentDone, setPaymentDone] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState(null);
 
-  const kitLabel = selection.kitType === "pret" ? "Kit prêt à offrir" : "Kit à composer";
-  const basePrice = selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE;
+  const KIT_LABELS = {
+    pret: "Kit prêt à offrir",
+    compose: "Kit à composer",
+    entreprise_standard: 'Pack Standard "Bureau"',
+    entreprise_premium: 'Pack Premium "Moniteur"',
+    naturel_essentiel: "Kit Naturel Essentiel",
+    naturel_douceur: "Kit Naturel Douceur",
+  };
+  const kitLabel = KIT_LABELS[selection.kitType] || "Kit";
+  const basePrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
   const containerLabel = selection.containerType === "rond_clip" ? "Pot rond fermoir" : selection.containerType === "carre_liege" ? "Pot carré liège" : null;
   const packs = selection.packs || [];
 
@@ -150,10 +158,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           {shippingMethod && (
             <div className="flex justify-between text-sm text-gray-700">
               <span>Livraison — {shippingMethod.name}</span>
-              <span>
-                {shippingMethod.price !== null
-                  ? `${shippingMethod.price.toFixed(2)}€`
-                  : "Variable"}
+              <span className={shippingMethod.price === 0 ? "text-green-600 font-semibold" : ""}>
+                {shippingMethod.price === 0
+                  ? "Offert 🎁"
+                  : shippingMethod.price !== null
+                    ? `${shippingMethod.price.toFixed(2)}€`
+                    : "Variable"}
               </span>
             </div>
           )}
@@ -170,9 +180,11 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         <p className="text-gray-700"><strong>Nom :</strong> {customerInfo.name}</p>
         <p className="text-gray-700"><strong>Email :</strong> {customerInfo.email}</p>
         {customerInfo.phone && <p className="text-gray-700"><strong>Tél :</strong> {customerInfo.phone}</p>}
-        <p className="text-gray-700">
-          <strong>Événement :</strong> {new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
-        </p>
+        {customerInfo.eventDate && (
+          <p className="text-gray-700">
+            <strong>Événement :</strong> {new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+          </p>
+        )}
         <p className="text-gray-700"><strong>Livraison :</strong> {[customerInfo.street, customerInfo.zipCode, customerInfo.city, customerInfo.country].filter(Boolean).join(', ') || customerInfo.address || '—'}</p>
         {selection.slug && (
           <p className="text-gray-700"><strong>Site événement :</strong> <a href={`https://fleursdefete.fr/${selection.slug}`} target="_blank" rel="noreferrer" className="text-rose-500 underline">fleursdefete.fr/{selection.slug}</a></p>
@@ -201,7 +213,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
-                  onClick={() => window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${createdOrderId}&create_site=1`}
+                  onClick={() => window.location.href = createPageUrl("CreateMyEvent") + `?order_id=${createdOrderId}`}
                   className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold"
                 >
                   🌐 Créer mon site événement

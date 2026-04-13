@@ -9,12 +9,12 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
 
   const handleNext = () => {
     // Validation basée sur le type d'événement
-    if (selection.eventType === "entreprise") {
+    if (isCompanyEvent) {
       if (!selection.customization?.companyName) {
         toast.error("Veuillez entrer le nom de l'entreprise");
         return;
       }
-    } else if (selection.eventType === "chambre_hotes") {
+    } else if (isAccommodationEvent) {
       if (!selection.customization?.accommodationName) {
         toast.error("Veuillez entrer le nom de l'établissement");
         return;
@@ -45,6 +45,8 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
   };
 
   const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
+  const isCompanyEvent = ["fete_entreprise", "entreprise_standard", "entreprise_premium"].includes(selection.eventType);
+  const isAccommodationEvent = selection.eventType === "maison_hote";
 
   const LogoUpload = ({ field, label }) => (
     <div>
@@ -78,8 +80,6 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
       </div>
     </div>
   );
-  const isCompanyEvent = selection.eventType === "entreprise";
-  const isAccommodationEvent = selection.eventType === "chambre_hotes";
 
   return (
     <div className="space-y-8">
