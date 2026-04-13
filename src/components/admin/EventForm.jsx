@@ -25,7 +25,8 @@ function generateSlug(coupleNames) {
 const NO_DATE_TYPES = ["fete_entreprise", "maison_hote"];
 const BIRTH_DATE_TYPES = ["anniversaire", "bapteme", "communion"];
 
-export default function EventForm({ event, onSave, onCancel }) {
+// lockedPlan: quand défini, le plan n'est pas modifiable (création via tunnel post-paiement)
+export default function EventForm({ event, onSave, onCancel, lockedPlan }) {
   const isEdit = !!event;
   const [form, setForm] = useState(event || {
     couple_names: "", event_name: "", event_type: "mariage", event_date: "",
@@ -100,7 +101,17 @@ export default function EventForm({ event, onSave, onCancel }) {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: coverFile });
       coverUrl = file_url;
     }
-    const slug = isEdit ? form.slug : generateSlug(form.couple_names);
+    let slug = isEdit ? form.slug : generateSlug(form.couple_names);
+
+    // Vérification d'unicité du slug (création uniquement)
+    if (!isEdit) {
+      const existing = await base44.entities.Event.filter({ slug });
+      if (existing.length > 0) {
+        // Ajouter un suffixe aléatoire pour éviter la collision
+        slug = `${slug}-${Math.random().toString(36).slice(2, 5)}`;
+      }
+    }
+
     const origin = window.location.origin;
     const publicUrl = `${origin}/EventPublic?slug=${slug}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(publicUrl)}&margin=10`;
@@ -108,12 +119,14 @@ export default function EventForm({ event, onSave, onCancel }) {
     if (isEdit) {
       await base44.entities.Event.update(event.id, data);
       toast.success("Événement mis à jour !");
+      setSaving(false);
+      onSave && onSave(data);
     } else {
-      await base44.entities.Event.create(data);
+      const created = await base44.entities.Event.create(data);
       toast.success("Événement créé avec succès !");
+      setSaving(false);
+      onSave && onSave(created);
     }
-    setSaving(false);
-    onSave && onSave();
   };
 
   return (
@@ -292,19 +305,25 @@ export default function EventForm({ event, onSave, onCancel }) {
         </div>
       )}
 
-      {/* Plan */}
-      <div className="space-y-2">
-        <Label>Plan</Label>
-        <div className="grid grid-cols-2 gap-3">
-          {[{ key: "basic", label: "Basic", desc: "Gratuit", color: "green" }, { key: "premium", label: "Premium", desc: "19 €", color: "amber" }].map(p => (
-            <button key={p.key} type="button" onClick={() => handleSetPlan(p.key)}
-              className={`p-4 rounded-xl border-2 text-left transition ${form.plan === p.key ? `border-${p.color}-400 bg-${p.color}-50` : "border-gray-200 bg-white"}`}>
-              <p className="font-bold text-gray-800">{p.label}</p>
-              <p className={`text-sm font-semibold text-${p.color}-600`}>{p.desc}</p>
-            </button>
-          ))}
+      {/* Plan — masqué si lockedPlan est défini (création via tunnel post-paiement) */}
+      {!lockedPlan ? (
+        <div className="space-y-2">
+          <Label>Plan</Label>
+          <div className="grid grid-cols-2 gap-3">
+            {[{ key: "basic", label: "Basic", desc: "Gratuit", color: "green" }, { key: "premium", label: "Premium", desc: "39,99 €", color: "amber" }].map(p => (
+              <button key={p.key} type="button" onClick={() => handleSetPlan(p.key)}
+                className={`p-4 rounded-xl border-2 text-left transition ${form.plan === p.key ? `border-${p.color}-400 bg-${p.color}-50` : "border-gray-200 bg-white"}`}>
+                <p className="font-bold text-gray-800">{p.label}</p>
+                <p className={`text-sm font-semibold text-${p.color}-600`}>{p.desc}</p>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={`rounded-xl border-2 px-4 py-3 text-sm font-semibold ${lockedPlan === "premium" ? "border-amber-300 bg-amber-50 text-amber-700" : "border-green-300 bg-green-50 text-green-700"}`}>
+          {lockedPlan === "premium" ? "⭐ Plan Premium activé" : "✓ Plan Gratuit"}
+        </div>
+      )}
 
       <div className="flex gap-3 pt-2">
         {onCancel && <Button type="button" variant="outline" className="flex-1 rounded-xl h-12" onClick={onCancel}>Annuler</Button>}

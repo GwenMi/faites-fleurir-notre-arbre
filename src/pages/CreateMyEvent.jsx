@@ -52,32 +52,29 @@ export default function CreateMyEvent() {
     }
   };
 
-  const handleEventSaved = async () => {
-    const events = await base44.entities.Event.list("-created_date", 1);
-    if (events.length > 0) {
-      const ev = events[0];
-      setCreatedEvent(ev);
-      if (order) {
-        // linked via order_id param
-        await base44.entities.Order.update(order.id, {
+  const handleEventSaved = async (ev) => {
+    if (!ev?.id) return;
+    setCreatedEvent(ev);
+    if (order) {
+      // linked via order_id param
+      await base44.entities.Order.update(order.id, {
+        event_id: ev.id,
+        options_selected: {
+          ...(order.options_selected || {}),
+          site_public_url: ev.public_url,
+        },
+      });
+    } else if (linkedOrderId) {
+      // standalone: user chose an order to link
+      const targetOrder = unlinkableOrders.find(o => o.id === linkedOrderId);
+      if (targetOrder) {
+        await base44.entities.Order.update(targetOrder.id, {
           event_id: ev.id,
           options_selected: {
-            ...(order.options_selected || {}),
+            ...(targetOrder.options_selected || {}),
             site_public_url: ev.public_url,
           },
         });
-      } else if (linkedOrderId) {
-        // standalone: user chose an order to link
-        const targetOrder = unlinkableOrders.find(o => o.id === linkedOrderId);
-        if (targetOrder) {
-          await base44.entities.Order.update(targetOrder.id, {
-            event_id: ev.id,
-            options_selected: {
-              ...(targetOrder.options_selected || {}),
-              site_public_url: ev.public_url,
-            },
-          });
-        }
       }
     }
   };
@@ -209,20 +206,30 @@ export default function CreateMyEvent() {
 
   // Prefill: try to gather data from order, existing orders, and user profile
   const bestOrder = order || unlinkableOrders[0] || null;
+  // options_selected stocke eventType (camelCase) dans les nouvelles commandes
+  const eventTypeFromOrder = bestOrder?.options_selected?.eventType || bestOrder?.options_selected?.event_type || "mariage";
+  const lockedPlan = planFromUrl === "premium" ? "premium" : "basic";
   const prefill = {
     couple_names: bestOrder?.customer_name || user?.full_name || "",
     event_date: bestOrder?.options_selected?.event_date || "",
-    event_type: bestOrder?.options_selected?.event_type || "mariage",
+    event_type: eventTypeFromOrder,
     primary_color: "#c084fc",
     secondary_color: "#86efac",
     template: "classique",
-    plan: planFromUrl === "premium" ? "premium" : "basic",
+    plan: lockedPlan,
     welcome_message: "",
     seed_type: bestOrder?.options_selected?.seed_type || "",
     event_name: "",
     cover_image: "",
     status: "active",
   };
+
+  const EVENT_TYPE_TITLE = {
+    mariage: "de mariage", fiançailles: "de fiançailles", anniversaire: "d'anniversaire",
+    bapteme: "de baptême", communion: "de communion", fete_entreprise: "d'entreprise",
+    maison_hote: "pour votre maison d'hôte", autre: "de votre événement",
+  };
+  const eventTitle = EVENT_TYPE_TITLE[eventTypeFromOrder] || "de votre événement";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
@@ -240,7 +247,7 @@ export default function CreateMyEvent() {
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="text-center mb-8">
           <span className="text-4xl block mb-3">🌸</span>
-          <h1 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-2">Créez votre site de mariage</h1>
+          <h1 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-2">Créez votre site {eventTitle}</h1>
           <p className="text-gray-500 text-sm">Personnalisez votre page, choisissez votre template et générez votre QR code</p>
         </div>
 
@@ -275,6 +282,7 @@ export default function CreateMyEvent() {
           <EventForm
             event={prefill}
             onSave={handleEventSaved}
+            lockedPlan={lockedPlan}
           />
         </div>
       </div>
