@@ -193,10 +193,10 @@ export default function CreateMyEvent() {
               <Download className="w-4 h-4" /> Télécharger le QR code
             </a>
             <a
-              href={createPageUrl("ClientDashboard")}
+              href={`${createPageUrl("CoupleDashboard")}?event_id=${createdEvent.id}`}
               className="py-3 px-6 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full font-semibold transition text-sm"
             >
-              Mon espace client →
+              Gérer mon site →
             </a>
           </div>
         </div>

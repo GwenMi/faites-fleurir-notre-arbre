@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Loader2, Users, CheckCircle, Heart, Camera, Gift, HelpCircle, LayoutGrid, CalendarDays, BellRing, PiggyBank, Paintbrush, ClipboardCheck, ClipboardList, HandHeart, BarChart2, Smartphone, MailCheck, BookOpen, Handshake, CalendarCheck, UtensilsCrossed, FolderOpen, Layers, CalendarRange, Mail, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -74,7 +74,7 @@ export default function CoupleDashboard() {
   const [activeTab, setActiveTab] = useState("guests");
 
   // Auto-login si connecté et event_id en URL
-  useState(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const eventId = params.get("event_id");
     if (!eventId) { setLoading(false); return; }
@@ -87,7 +87,7 @@ export default function CoupleDashboard() {
       }
       setLoading(false);
     }).catch(() => setLoading(false));
-  });
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

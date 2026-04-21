@@ -34,31 +34,38 @@ export default function Shop() {
   const urlParams = new URLSearchParams(window.location.search);
   const initEventType = urlParams.get("eventType");
   const initKitType = urlParams.get("kitType");
+  const shouldResume = urlParams.get("resume") === "true";
   const cartIdRef = useRef(null);
 
   const [step, setStep] = useState(() => {
     if (initKitType && initEventType) return 3;
     if (initKitType) return 2;
-    try { const s = localStorage.getItem("shop_step"); if (s) return parseInt(s); } catch {}
+    if (shouldResume) {
+      try { const s = localStorage.getItem("shop_step"); if (s) return parseInt(s); } catch {}
+    }
     return 1;
   });
 
   const [selection, setSelection] = useState(() => {
-    try {
-      const saved = localStorage.getItem("shop_selection");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return { ...parsed, eventType: initEventType || parsed.eventType || null, kitType: initKitType || parsed.kitType || null };
-      }
-    } catch {}
+    if (shouldResume) {
+      try {
+        const saved = localStorage.getItem("shop_selection");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return { ...parsed, eventType: initEventType || parsed.eventType || null, kitType: initKitType || parsed.kitType || null };
+        }
+      } catch {}
+    }
     return { eventType: initEventType || null, kitType: initKitType || null, seedType: "tournesol_nain", sacCadeau: false, packs: [], containerType: null };
   });
 
   const [customerInfo, setCustomerInfo] = useState(() => {
-    try {
-      const saved = localStorage.getItem("shop_customer_info");
-      if (saved) return JSON.parse(saved);
-    } catch {}
+    if (shouldResume) {
+      try {
+        const saved = localStorage.getItem("shop_customer_info");
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
     return { name: "", email: "", phone: "", address: "", eventDate: "", firstName: "", lastName: "", street: "", zipCode: "", city: "", country: "France" };
   });
 
@@ -97,15 +104,22 @@ export default function Shop() {
             cartIdRef.current = cart.id;
           }
         }
-        // Envoyer l'email de relance une seule fois quand on a l'email du client
+        // Envoyer l'email de relance max 1 fois par jour
         if (!reminderSentRef.current && customerInfo.email && step >= 6) {
-          reminderSentRef.current = true;
-          base44.functions.invoke('sendAbandonedCartEmail', {
-            customerEmail: customerInfo.email,
-            customerName: customerInfo.firstName || customerInfo.name || "",
-            cartStep: step,
-            shopUrl: window.location.origin + createPageUrl("Shop"),
-          }).catch(() => {});
+          try {
+            const lastSent = parseInt(localStorage.getItem("shop_reminder_sent_at") || "0");
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            if (Date.now() - lastSent > oneDayMs) {
+              reminderSentRef.current = true;
+              localStorage.setItem("shop_reminder_sent_at", String(Date.now()));
+              base44.functions.invoke('sendAbandonedCartEmail', {
+                customerEmail: customerInfo.email,
+                customerName: customerInfo.firstName || customerInfo.name || "",
+                cartStep: step,
+                shopUrl: window.location.origin + createPageUrl("Shop") + "?resume=true",
+              }).catch(() => {});
+            }
+          } catch {}
         }
       } catch {}
     };
@@ -116,6 +130,8 @@ export default function Shop() {
     try {
       localStorage.removeItem("shop_step");
       localStorage.removeItem("shop_selection");
+      localStorage.removeItem("shop_customer_info");
+      localStorage.removeItem("shop_reminder_sent_at");
       if (cartIdRef.current) {
         await base44.entities.AbandonedCart.update(cartIdRef.current, { status: 'completed' });
       } else if (user?.email) {
@@ -185,9 +201,10 @@ export default function Shop() {
               selection={selection}
               onNext={() => setStep(7)}
               onBack={() => {
-                // Revenir à l'étape slug seulement si elle n'était pas sautée
-                if (selection.slug) setStep(4);
-                else setStep(5);
+                // Si slug défini → on est passé par l'étape 5, y retourner
+                // Sinon → l'étape 5 a été sautée, retourner à l'étape 4
+                if (selection.slug) setStep(5);
+                else setStep(4);
               }}
             />
           )}

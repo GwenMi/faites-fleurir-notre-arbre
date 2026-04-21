@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
-import { ChevronRight, Sparkles, Check, ShoppingCart } from "lucide-react";
+import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2 } from "lucide-react";
 
 const SHOP_URL = () => createPageUrl("Shop");
 
@@ -56,12 +56,29 @@ export default function Home() {
             <ShoppingCart className="w-4 h-4 flex-shrink-0" />
             <span>Vous avez un panier en cours de création.</span>
           </div>
-          <a
-            href={createPageUrl("Shop")}
-            className="flex-shrink-0 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 transition px-4 py-1.5 rounded-full"
-          >
-            Reprendre mon panier →
-          </a>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => {
+                try {
+                  localStorage.removeItem("shop_step");
+                  localStorage.removeItem("shop_selection");
+                  localStorage.removeItem("shop_customer_info");
+                  localStorage.removeItem("shop_reminder_sent_at");
+                } catch {}
+                setCartInProgress(false);
+              }}
+              className="text-sm text-amber-600 hover:text-amber-800 transition flex items-center gap-1"
+              title="Vider le panier"
+            >
+              <Trash2 className="w-3.5 h-3.5" /> Vider
+            </button>
+            <a
+              href={createPageUrl("Shop") + "?resume=true"}
+              className="text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 transition px-4 py-1.5 rounded-full"
+            >
+              Reprendre mon panier →
+            </a>
+          </div>
         </div>
       )}
       <SEOHead
