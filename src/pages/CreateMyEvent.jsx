@@ -210,8 +210,8 @@ export default function CreateMyEvent() {
   const eventTypeFromOrder = bestOrder?.options_selected?.eventType || bestOrder?.options_selected?.event_type || "mariage";
   const lockedPlan = planFromUrl === "premium" ? "premium" : "basic";
   const prefill = {
-    couple_names: bestOrder?.customer_name || user?.full_name || "",
-    event_date: bestOrder?.options_selected?.event_date || "",
+    couple_names: bestOrder?.options_selected?.customization?.names || bestOrder?.customer_name || user?.full_name || "",
+    event_date: bestOrder?.options_selected?.event_date || bestOrder?.options_selected?.customization?.date || "",
     event_type: eventTypeFromOrder,
     primary_color: "#c084fc",
     secondary_color: "#86efac",
@@ -222,6 +222,7 @@ export default function CreateMyEvent() {
     event_name: "",
     cover_image: "",
     status: "active",
+    slug: bestOrder?.options_selected?.slug || "",
   };
 
   const EVENT_TYPE_TITLE = {

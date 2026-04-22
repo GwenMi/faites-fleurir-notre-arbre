@@ -27,7 +27,7 @@ const BIRTH_DATE_TYPES = ["anniversaire", "bapteme", "communion"];
 
 // lockedPlan: quand défini, le plan n'est pas modifiable (création via tunnel post-paiement)
 export default function EventForm({ event, onSave, onCancel, lockedPlan }) {
-  const isEdit = !!event;
+  const isEdit = !!(event?.id);
   const [form, setForm] = useState(event || {
     couple_names: "", event_name: "", event_type: "mariage", event_date: "",
     birth_date: "",
@@ -101,7 +101,7 @@ export default function EventForm({ event, onSave, onCancel, lockedPlan }) {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: coverFile });
       coverUrl = file_url;
     }
-    let slug = isEdit ? form.slug : generateSlug(form.couple_names);
+    let slug = isEdit ? form.slug : (form.slug || generateSlug(form.couple_names));
 
     // Vérification d'unicité du slug (création uniquement)
     if (!isEdit) {

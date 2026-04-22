@@ -288,7 +288,7 @@ export default function Home() {
           <span className="text-gray-200">·</span>
           <a href={createPageUrl("OrderTracking")} className="hover:text-rose-400 transition">Suivi commande</a>
         </div>
-        <p className="font-sans-clean text-xs text-gray-300">© 2025 Fleurs en fête — Papin Gwenaëlle — contact@fleursdefete.fr</p>
+        <p className="font-sans-clean text-xs text-gray-300">© 2025 Fleurs en fête — Papin Gwenaëlle — RCS Nantes 848 506 861 — contact@fleursdefete.fr</p>
       </footer>
     </div>
   );

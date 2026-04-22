@@ -183,8 +183,8 @@ export default function Shop() {
               selection={selection}
               onUpdate={updateSelection}
               onNext={() => {
-                // Sauter l'étape slug si déjà défini
-                if (selection.slug) setStep(6);
+                const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
+                if (!isPersonalEvent || selection.slug) setStep(6);
                 else setStep(5);
               }}
               onBack={() => setStep(3)}

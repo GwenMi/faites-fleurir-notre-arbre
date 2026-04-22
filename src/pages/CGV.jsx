@@ -47,7 +47,7 @@ export default function CGV() {
             Adresse : 2 Place Jean V, Bureau 3, 44000 Nantes<br />
             E-mail : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a><br />
             Téléphone : 06 30 77 80 36<br />
-            SIRET : en cours d'immatriculation
+            RCS Nantes : 848 506 861
           </p>
 
           <h2>2. Produits</h2>

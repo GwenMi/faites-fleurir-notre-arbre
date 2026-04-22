@@ -75,6 +75,10 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
   };
 
   const handleNext = () => {
+    if (!isPersonalEvent) {
+      onNext();
+      return;
+    }
     if (!slug.trim()) {
       toast.error("Veuillez choisir un permalien");
       return;

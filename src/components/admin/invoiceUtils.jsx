@@ -18,8 +18,10 @@ async function loadImageAsBase64(url) {
 }
 const BUSINESS = {
   name: "Fleurs en fête",
-  email: "contact@fleursenfete.com",
+  email: "contact@fleursdefete.fr",
   tagline: "Des souvenirs qui fleurissent 🌸",
+  rcs: "RCS Nantes 848 506 861",
+  address: "2 Place Jean V, Bureau 3, 44000 Nantes",
 };
 
 export async function generateInvoicePDF(order) {
@@ -225,7 +227,7 @@ export async function generateInvoicePDF(order) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(160, 160, 160);
-  doc.text(`${BUSINESS.name} — ${BUSINESS.email} — ${BUSINESS.tagline}`, pageW / 2, footY, { align: "center" });
+  doc.text(`${BUSINESS.name} — ${BUSINESS.rcs} — ${BUSINESS.email}`, pageW / 2, footY, { align: "center" });
   doc.text("Droit de rétractation : 14 jours à compter de la réception (hors produits personnalisés).", pageW / 2, footY + 5.5, { align: "center" });
 
   return doc;
