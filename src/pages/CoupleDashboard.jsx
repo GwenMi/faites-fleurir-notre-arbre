@@ -95,15 +95,24 @@ export default function CoupleDashboard() {
     setLoading(true);
     setError("");
     try {
+      // Try to find event by created_by (standalone users) first
+      const eventsByEmail = await base44.entities.Event.filter({ created_by: email.trim() }, "-created_date", 1);
+      if (eventsByEmail && eventsByEmail.length > 0) {
+        setEvent(eventsByEmail[0]);
+        setAuthenticated(true);
+        setLoading(false);
+        return;
+      }
+      // Fallback: find via order (users who ordered kits)
       const orders = await base44.entities.Order.filter({ customer_email: email.trim() }, "-created_date", 1);
       if (!orders || orders.length === 0) {
-        setError("Aucune commande trouvée pour cet email.");
+        setError("Aucun site trouvé pour cet email. Vérifiez l'adresse utilisée lors de votre inscription ou commande.");
         setLoading(false);
         return;
       }
       const order = orders[0];
       if (!order.event_id) {
-        setError("Votre site de mariage n'a pas encore été créé. Créez-le d'abord depuis votre confirmation de commande.");
+        setError("Votre site n'a pas encore été créé. Créez-le depuis votre confirmation de commande.");
         setLoading(false);
         return;
       }

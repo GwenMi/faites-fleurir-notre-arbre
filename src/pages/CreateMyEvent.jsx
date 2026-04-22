@@ -96,11 +96,17 @@ export default function CreateMyEvent() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap');
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
       `}</style>
-      <span className="text-5xl block mb-4">🌸</span>
+      <span className="text-5xl block mb-4">{planFromUrl === "premium" ? "✨" : "🌸"}</span>
       <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Créez votre site événementiel</h1>
-      <p className="text-gray-500 text-sm max-w-xs mb-2">
-        Votre site est <strong>gratuit</strong> — il vous suffit d'un compte pour le créer et y accéder à tout moment.
-      </p>
+      {planFromUrl === "premium" ? (
+        <p className="text-gray-500 text-sm max-w-xs mb-2">
+          Formule <strong>Complète — 39,99€</strong> · Paiement unique · Accès à vie. Connectez-vous pour procéder au paiement.
+        </p>
+      ) : (
+        <p className="text-gray-500 text-sm max-w-xs mb-2">
+          Votre site est <strong>gratuit</strong> — il vous suffit d'un compte pour le créer et y accéder à tout moment.
+        </p>
+      )}
       <p className="text-gray-400 text-xs max-w-xs mb-8">
         Un compte vous permet de gérer votre site, vos invités et vos commandes depuis un seul espace.
       </p>
@@ -109,7 +115,7 @@ export default function CreateMyEvent() {
         className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full px-6 py-3 font-semibold text-sm transition"
       >
         <LogIn className="w-4 h-4" />
-        Se connecter / Créer un compte gratuitement
+        {planFromUrl === "premium" ? "Se connecter / Créer un compte" : "Se connecter / Créer un compte gratuitement"}
       </button>
       <a href={createPageUrl("Home")} className="mt-4 text-sm text-gray-400 hover:text-rose-400 underline">
         ← Retour à l'accueil
@@ -172,9 +178,12 @@ export default function CreateMyEvent() {
     </div>
   );
 
-  // Event created — show QR code + links
+  // Event created — show success screen
   if (createdEvent) {
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(createdEvent.public_url)}&margin=10`;
+    const hasOrder = !!(order || linkedOrderId);
+    const qrUrl = hasOrder
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(createdEvent.public_url)}&margin=10`
+      : null;
     return (
       <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex flex-col items-center justify-center p-8">
         <style>{`
@@ -184,9 +193,28 @@ export default function CreateMyEvent() {
         <div className="max-w-md w-full text-center space-y-6">
           <span className="text-5xl block">🌸</span>
           <h1 className="font-serif-elegant text-4xl font-bold text-gray-800">Votre site est prêt !</h1>
-          <p className="text-gray-500 text-sm">Partagez votre QR code avec vos invités. Quand leur fleur pousse, ils le scannent et partagent leur photo.</p>
-          <img src={qrUrl} alt="QR Code" className="w-52 h-52 mx-auto rounded-2xl border border-gray-100 shadow-md" />
-          <p className="text-xs text-gray-400 font-mono break-all">{createdEvent.public_url}</p>
+          {hasOrder ? (
+            <>
+              <p className="text-gray-500 text-sm">Partagez votre QR code avec vos invités. Quand leur fleur pousse, ils le scannent et partagent leur photo.</p>
+              <img src={qrUrl} alt="QR Code" className="w-52 h-52 mx-auto rounded-2xl border border-gray-100 shadow-md" />
+              <p className="text-xs text-gray-400 font-mono break-all">{createdEvent.public_url}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-500 text-sm">Votre site est en ligne. Personnalisez-le depuis votre espace et partagez le lien avec vos proches.</p>
+              <p className="text-xs text-gray-400 font-mono break-all">{createdEvent.public_url}</p>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left">
+                <p className="text-sm font-semibold text-amber-800 mb-1">🌱 Ajoutez les kits fleurs</p>
+                <p className="text-xs text-amber-700 mb-3">En commandant des pots, vous recevrez un QR code à glisser dans chaque kit pour que vos invités partagent leurs photos.</p>
+                <a
+                  href={createPageUrl("Shop")}
+                  className="inline-block text-xs font-semibold text-amber-700 border border-amber-300 rounded-full px-4 py-1.5 hover:bg-amber-100 transition"
+                >
+                  Commander des kits →
+                </a>
+              </div>
+            </>
+          )}
           <div className="flex flex-col gap-3">
             <a
               href={createdEvent.public_url}
@@ -196,15 +224,17 @@ export default function CreateMyEvent() {
             >
               Voir mon site →
             </a>
-            <a
-              href={qrUrl}
-              download={`qrcode-${createdEvent.slug}.png`}
-              target="_blank"
-              rel="noreferrer"
-              className="py-3 px-6 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full font-semibold transition text-sm flex items-center justify-center gap-2"
-            >
-              <Download className="w-4 h-4" /> Télécharger le QR code
-            </a>
+            {hasOrder && (
+              <a
+                href={qrUrl}
+                download={`qrcode-${createdEvent.slug}.png`}
+                target="_blank"
+                rel="noreferrer"
+                className="py-3 px-6 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full font-semibold transition text-sm flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" /> Télécharger le QR code
+              </a>
+            )}
             <a
               href={`${createPageUrl("CoupleDashboard")}?event_id=${createdEvent.id}`}
               className="py-3 px-6 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-full font-semibold transition text-sm"
@@ -307,7 +337,7 @@ export default function CreateMyEvent() {
         <div className="text-center mb-8">
           <span className="text-4xl block mb-3">🌸</span>
           <h1 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-2">Créez votre site {eventTitle}</h1>
-          <p className="text-gray-500 text-sm">Personnalisez votre page, choisissez votre template et générez votre QR code</p>
+          <p className="text-gray-500 text-sm">Personnalisez votre page et choisissez votre template</p>
         </div>
 
         {/* Standalone: optional order linking */}
