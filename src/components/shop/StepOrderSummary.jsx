@@ -209,7 +209,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 space-y-4">
               <div className="text-center">
                 <p className="text-lg font-bold text-indigo-900 mb-1">✨ Créez votre site personnalisé</p>
-                <p className="text-sm text-indigo-700">Invitez vos convives, partagez les photos, gérez les RSVP… inclus dans votre commande.</p>
+                <p className="text-sm text-indigo-700">Partagez votre histoire, les photos de fleurs et les détails de votre événement — gratuit avec votre commande.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button

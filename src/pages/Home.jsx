@@ -8,10 +8,10 @@ import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2 } from "lucide-reac
 const SHOP_URL = () => createPageUrl("Shop");
 
 const FEATURES_BASIC = [
-  "Défi fleur & galerie photos interactive",
-  "QR code sur vos pots de fleurs",
+  "Page événement en ligne gratuite",
+  "Galerie photos & défi fleur interactif",
   "Compteur de fleurs en temps réel",
-  "Accès gratuit (sans site personnalisé)",
+  "Lien personnalisé à partager avec vos invités",
 ];
 
 const FEATURES_PREMIUM = [
@@ -227,7 +227,7 @@ export default function Home() {
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-gray-400 mb-3">Essentiel</p>
             <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">Gratuit</p>
             <p className="font-sans-clean text-sm text-gray-400 mb-1">Défi fleur simple</p>
-            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Parfait pour les clients qui ne veulent qu'une galerie partagée</p>
+            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Parfait pour partager les photos de fleurs sans fonctionnalités avancées</p>
             <ul className="space-y-3 mb-8">
               {FEATURES_BASIC.map(f => (
                 <li key={f} className="flex items-center gap-3 font-sans-clean text-sm text-gray-600">

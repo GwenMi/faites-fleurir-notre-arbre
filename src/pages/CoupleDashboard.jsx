@@ -148,9 +148,9 @@ export default function CoupleDashboard() {
         `}</style>
         <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <span className="text-4xl block mb-3">💍</span>
-            <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Espace mariés</h1>
-            <p className="font-sans-clean text-sm text-gray-500">Gérez vos invités et suivez les RSVP</p>
+            <span className="text-4xl block mb-3">🌸</span>
+            <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Mon espace événement</h1>
+            <p className="font-sans-clean text-sm text-gray-500">Gérez votre site, vos invités et vos photos</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
