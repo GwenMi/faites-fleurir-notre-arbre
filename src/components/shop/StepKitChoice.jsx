@@ -60,7 +60,7 @@ const KITS = [
     unit: "/ unité",
     badge: "100% naturel",
     color: "border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100",
-    desc: "Galet de cire d'abeille gravé à votre logo, dessous de verre en bois, carte 6 usages.",
+    desc: "Galet de cire d'abeille, dessous de verre en bois, carte 6 usages.",
     features: ["Galet cire d'abeille", "Dessous de verre", "Carte kraft 6 usages"],
   },
   {
@@ -72,7 +72,7 @@ const KITS = [
     unit: "/ unité",
     badge: "Coup de cœur",
     color: "border-amber-300 bg-gradient-to-br from-amber-100 to-amber-200",
-    desc: "Galet de cire gravé, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
+    desc: "Galet de cire d'abeille, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
     features: ["Galet cire d'abeille", "Dessous de verre", "Carte kraft 6 usages", "Sac en coton recyclé"],
   },
 ];

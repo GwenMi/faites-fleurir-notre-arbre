@@ -268,7 +268,7 @@ export default function KitNaturel() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Kit Naturel — Galet de cire d'abeille personnalisé pour maisons d'hôtes & mariages"
-        description="Un galet de cire d'abeille française gravé à votre logo, posé sur son dessous de verre en bambou. Idéal pour maisons d'hôtes, gîtes et mariages champêtres."
+        description="Un galet de cire d'abeille française, posé sur son dessous de verre en bambou. Idéal pour maisons d'hôtes, gîtes et mariages champêtres."
         url="https://fleursdefete.fr/KitNaturel"
       />
       <style>{`
@@ -304,7 +304,7 @@ export default function KitNaturel() {
         </h1>
         <div className="honey-line max-w-xs mx-auto mb-6" />
         <p className="font-sans-nat text-stone-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Un galet de cire d'abeille artisanal gravé à votre logo, posé sur son dessous de verre en bambou. Un cadeau utile, naturel, mémorable.
+          Un galet de cire d'abeille artisanal, posé sur son dessous de verre en bambou. Un cadeau utile, naturel, mémorable.
         </p>
         <button
           onClick={() => setOrderPack("essentiel")}
