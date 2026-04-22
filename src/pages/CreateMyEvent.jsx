@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Loader2, Lock, Download, Link2, LogIn, ArrowRight, Flower2 } from "lucide-react";
+import { Loader2, Lock, Download, Link2, LogIn, ArrowRight, Flower2, Sparkles, Check } from "lucide-react";
 import EventForm from "@/components/admin/EventForm";
+import StripePaymentForm from "@/components/shop/StripePaymentForm";
+import UpgradeModal from "@/components/UpgradeModal";
 
 export default function CreateMyEvent() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [createdEvent, setCreatedEvent] = useState(null);
   const [existingEvent, setExistingEvent] = useState(null);
+  const [premiumPaid, setPremiumPaid] = useState(false);
 
   const [user, setUser] = useState(null);
   const [unlinkableOrders, setUnlinkableOrders] = useState([]);
   const [linkedOrderId, setLinkedOrderId] = useState("");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const planFromUrl = urlParams.get("plan") || "basic";
@@ -140,10 +144,19 @@ export default function CreateMyEvent() {
           </a>
         )}
         {existingEvent.plan !== "premium" && (
-          <a href={`${createPageUrl("CreateMyEvent")}?plan=premium&event_id=${existingEvent.id}`}
+          <button
+            onClick={() => setShowUpgradeModal(true)}
             className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-white rounded-full px-6 py-3 font-semibold text-sm transition">
             ✨ Passer en Premium
-          </a>
+          </button>
+        )}
+        {showUpgradeModal && (
+          <UpgradeModal
+            event={existingEvent}
+            customerEmail={user?.email}
+            onClose={() => setShowUpgradeModal(false)}
+            onUpgraded={() => { setShowUpgradeModal(false); window.location.href = `${createPageUrl("CoupleDashboard")}?event_id=${existingEvent.id}`; }}
+          />
         )}
       </div>
     </div>
@@ -231,6 +244,51 @@ export default function CreateMyEvent() {
     maison_hote: "pour votre maison d'hôte", autre: "de votre événement",
   };
   const eventTitle = EVENT_TYPE_TITLE[eventTypeFromOrder] || "de votre événement";
+
+  // Standalone premium sans commande : paiement 39,99€ requis avant création
+  if (!order && user && !existingEvent && lockedPlan === "premium" && !premiumPaid) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap');
+          .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
+        `}</style>
+        <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-gray-100 bg-white">
+          <a href={createPageUrl("Home")}>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
+              alt="Fleurs de fête" className="h-10" />
+          </a>
+          <a href={createPageUrl("Home")} className="text-sm text-gray-400 hover:text-rose-400 transition">← Retour à l'accueil</a>
+        </nav>
+        <div className="max-w-md mx-auto px-4 py-12">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-rose-50 mb-4">
+              <Sparkles className="w-7 h-7 text-rose-400" />
+            </div>
+            <h1 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2">Formule Complète</h1>
+            <p className="text-gray-500 text-sm">Paiement unique · 39,99€ · Accès à vie</p>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-6">
+            <ul className="space-y-2">
+              {["Site événement personnalisé","RSVP & gestion invités","Programme de la journée","Album photo & galerie","Livre d'or","Liste de cadeaux / cagnotte","Plan de table","Thème & couleurs personnalisés","FAQ, carte & plan d'accès"].map(f => (
+                <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+                  <Check className="w-4 h-4 text-green-500 flex-shrink-0" /> {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <StripePaymentForm
+              customerInfo={{ name: user.full_name || user.email, email: user.email }}
+              total={39.99}
+              onSuccess={() => setPremiumPaid(true)}
+              onBack={() => window.location.href = createPageUrl("Home")}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">

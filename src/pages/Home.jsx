@@ -257,7 +257,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <a href={createPageUrl("Shop")}
+            <a href={createPageUrl("CreateMyEvent") + "?plan=premium"}
               className="block text-center py-3.5 rounded-full font-sans-clean font-semibold text-sm bg-gradient-to-r from-rose-400 to-pink-500 text-white hover:opacity-90 transition shadow-sm">
               Choisir la formule Complète
             </a>
