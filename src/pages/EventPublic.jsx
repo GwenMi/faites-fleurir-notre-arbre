@@ -60,7 +60,10 @@ export default function EventPublic() {
   const checkPotOrders = async (eventId) => {
     try {
       const orders = await base44.entities.Order.filter({ event_id: eventId });
-      const hasPot = orders?.some(order => order.status !== 'cancelled' && order.payment_status === 'paid');
+      const hasPot = orders?.some(order => {
+        const category = order.product_id ? (order.product_name?.toLowerCase().includes('pot') || order.product_name?.toLowerCase().includes('kit')) : false;
+        return category && order.status !== 'cancelled';
+      });
       setHasPotOrder(hasPot || false);
     } catch {
       setHasPotOrder(false);
