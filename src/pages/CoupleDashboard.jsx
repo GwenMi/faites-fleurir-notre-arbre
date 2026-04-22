@@ -155,7 +155,7 @@ export default function CoupleDashboard() {
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
               type="email"
-              placeholder="Votre email de commande"
+              placeholder="Votre email (compte ou commande)"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="rounded-xl h-11"
@@ -172,7 +172,7 @@ export default function CoupleDashboard() {
             </Button>
           </form>
           <p className="text-xs text-gray-400 text-center mt-4 font-sans-clean">
-            Utilisez l'email avec lequel vous avez passé commande
+            Utilisez l'email de votre compte ou de votre commande
           </p>
         </div>
       </div>
