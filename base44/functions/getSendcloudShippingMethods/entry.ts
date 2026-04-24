@@ -40,26 +40,26 @@ Deno.serve(async (req) => {
 
     const methods = (data.shipping_methods || [])
       .filter((m) => {
-        // min_weight and max_weight from Sendcloud are in kg
-        const min = m.min_weight ?? 0;
-        const max = m.max_weight ?? Infinity;
+        const min = parseFloat(m.min_weight ?? 0);
+        const max = parseFloat(m.max_weight ?? 9999);
         return weightKg >= min && weightKg <= max;
       })
-      .map((m) => ({
-        id: m.id,
-        name: m.name,
-        carrier: m.carrier,
-        minWeight: m.min_weight,
-        maxWeight: m.max_weight,
-        price: (() => {
-          const raw = m.price;
-          if (raw === null || raw === undefined) return null;
-          const val = typeof raw === 'object' ? Object.values(raw)[0] : raw;
-          const n = parseFloat(String(val));
-          return isNaN(n) ? null : n;
-        })(),
-        deliveryDays: m.lead_time_hours ? Math.ceil(m.lead_time_hours / 24) : null,
-      }));
+      .map((m) => {
+        // Prix réels dans countries[].price (pas dans m.price qui est toujours 0)
+        const countryData = (m.countries || []).find(c => c.iso_2 === toCountry);
+        const price = countryData?.price ?? null;
+        const leadTimeHours = countryData?.lead_time_hours ?? m.lead_time_hours ?? null;
+        return {
+          id: m.id,
+          name: m.name,
+          carrier: m.carrier,
+          minWeight: m.min_weight,
+          maxWeight: m.max_weight,
+          price: price !== null ? parseFloat(price) : null,
+          deliveryDays: leadTimeHours ? Math.ceil(leadTimeHours / 24) : null,
+          servicePointRequired: m.service_point_input === 'required',
+        };
+      });
 
     return Response.json({ methods });
   } catch (error) {
