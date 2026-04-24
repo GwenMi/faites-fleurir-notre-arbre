@@ -1,30 +1,54 @@
 import { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Loader2, Truck, AlertCircle, Gift } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Truck, MapPin, Gift } from "lucide-react";
 
 const MAX_FREE_SHIPPING = 20;
-
-const CARRIER_LABELS = {
-  colissimo: "Colissimo",
-  chronopost: "Chronopost",
-  dpd: "DPD",
-  ups: "UPS",
-  dhl: "DHL",
-  mondial_relay: "Mondial Relay",
-  bpost: "bpost",
-};
-
-// Estimated weight per pot kit in grams (glass pot + seeds + packaging)
 const WEIGHT_PER_POT_G = 200;
 
+// Tarifs domicile hardcodés (source : tarifs officiels Colissimo & Chronopost 2024)
+// Prix en € pour livraison France métropolitaine
+function getHomeMethods(weightKg) {
+  const w = weightKg;
+  return [
+    {
+      id: "colissimo_home",
+      name: "Colissimo — Livraison à domicile",
+      carrier: "colissimo",
+      description: "Livraison en 48h, sans signature",
+      deliveryDays: 2,
+      servicePointRequired: false,
+      price: w <= 0.25 ? 4.95 : w <= 0.5 ? 6.39 : w <= 1 ? 7.49 : w <= 2 ? 8.75 : w <= 5 ? 11.25 : 15.99,
+    },
+    {
+      id: "colissimo_signature",
+      name: "Colissimo — Signature requise",
+      carrier: "colissimo",
+      description: "Livraison en 48h avec signature",
+      deliveryDays: 2,
+      servicePointRequired: false,
+      price: w <= 0.25 ? 5.99 : w <= 0.5 ? 7.49 : w <= 1 ? 8.65 : w <= 2 ? 9.99 : w <= 5 ? 12.99 : 17.99,
+    },
+    {
+      id: "chronopost_18",
+      name: "Chronopost — Livraison le lendemain avant 18h",
+      carrier: "chronopost",
+      description: "Livraison express J+1 avant 18h",
+      deliveryDays: 1,
+      servicePointRequired: false,
+      price: w <= 0.5 ? 9.99 : w <= 1 ? 11.49 : w <= 2 ? 13.49 : w <= 5 ? 17.49 : 22.99,
+    },
+  ];
+}
+
 export default function StepShipping({ totalPots, shippingMethod, onSelect, onNext, onBack }) {
-  const [methods, setMethods] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [relayMethods, setRelayMethods] = useState([]);
+  const [loadingRelay, setLoadingRelay] = useState(true);
   const [isFreeShipping, setIsFreeShipping] = useState(false);
 
   const weightGrams = Math.max(totalPots * WEIGHT_PER_POT_G, 100);
+  const weightKg = weightGrams / 1000;
+  const homeMethods = getHomeMethods(weightKg);
 
   useEffect(() => {
     base44.entities.Order.list().then(orders => {
@@ -34,113 +58,62 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
+    setLoadingRelay(true);
 
     base44.functions
       .invoke("getSendcloudShippingMethods", { weightGrams, toCountry: "FR" })
       .then((data) => {
         if (cancelled) return;
-        if (data?.error) {
-          setError(data.error);
-        } else {
-          setMethods(data?.methods || []);
-        }
+        // Garder uniquement les relais colis (point relay)
+        const relays = (data?.methods || []).filter(m => m.servicePointRequired && m.price > 0);
+        setRelayMethods(relays);
       })
-      .catch((err) => {
-        if (!cancelled) setError(err.message);
+      .catch(() => {
+        if (!cancelled) setRelayMethods([]);
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setLoadingRelay(false);
       });
 
     return () => { cancelled = true; };
   }, [weightGrams]);
 
   const handleSelect = (method) => {
-    onSelect(isFreeShipping && method.id !== "custom" ? { ...method, price: 0 } : method);
+    onSelect(isFreeShipping ? { ...method, price: 0 } : method);
   };
 
-  const handleNext = () => {
-    if (!shippingMethod) return;
-    onNext();
-  };
+  const allMethods = [...homeMethods, ...relayMethods];
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Mode de livraison</h2>
         <p className="text-sm text-gray-500">
-          Choisissez votre transporteur · Poids estimé&nbsp;: {(weightGrams / 1000).toFixed(2)} kg
+          Choisissez votre transporteur · Poids estimé : {weightKg.toFixed(2)} kg
         </p>
       </div>
 
-      {loading && (
-        <div className="flex items-center justify-center py-12 gap-3 text-gray-400">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span className="text-sm">Récupération des options de livraison…</span>
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
-          <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="font-semibold">Impossible de charger les options Sendcloud</p>
-            <p className="text-red-500 mt-0.5">{error}</p>
-          </div>
-        </div>
-      )}
-
-      {!loading && (error || methods.length === 0) && (
-        <div className="space-y-4">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-700">
-            <p className="font-semibold mb-2">Livraison personnalisée</p>
-            <p>Les tarifs des transporteurs ne sont pas disponibles pour ce poids. Sélectionnez l'option ci-dessous — nous vous recontacterons avec un devis précis.</p>
-          </div>
-          <button
-            onClick={() => handleSelect({ id: "custom", name: "Livraison personnalisée", carrier: "custom", price: 0, deliveryDays: null })}
-            className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
-              shippingMethod?.id === "custom"
-                ? "border-rose-400 bg-rose-50"
-                : "border-gray-200 bg-white hover:border-rose-200"
-            }`}
-          >
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-              shippingMethod?.id === "custom" ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"
-            }`}>
-              <Truck className="w-5 h-5" />
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-gray-800 text-sm">Livraison personnalisée</p>
-              <p className="text-xs text-gray-400 mt-0.5">Nous vous recontacterons avec un devis</p>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <p className="font-bold text-gray-500 text-sm">À confirmer</p>
-            </div>
-          </button>
-        </div>
-      )}
-
-      {!loading && !error && isFreeShipping && (
+      {isFreeShipping && (
         <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800">
           <Gift className="w-4 h-4 flex-shrink-0" />
           <p><strong>Livraison offerte</strong> — Offre de lancement pour les 20 premières commandes 🎉</p>
         </div>
       )}
 
-      {!loading && !error && methods.length > 0 && (
+      {/* Livraisons à domicile */}
+      <div>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <Truck className="w-3.5 h-3.5" /> Livraison à domicile
+        </p>
         <div className="space-y-3">
-          {methods.map((method) => {
+          {homeMethods.map((method) => {
             const selected = shippingMethod?.id === method.id;
             return (
               <button
                 key={method.id}
                 onClick={() => handleSelect(method)}
                 className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
-                  selected
-                    ? "border-rose-400 bg-rose-50"
-                    : "border-gray-200 bg-white hover:border-rose-200"
+                  selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -151,24 +124,69 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-800 text-sm">{method.name}</p>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    {CARRIER_LABELS[method.carrier] || method.carrier}
-                    {method.deliveryDays
-                      ? ` · livraison en ${method.deliveryDays} jour${method.deliveryDays > 1 ? "s" : ""}`
-                      : ""}
+                    {method.description} · {method.deliveryDays} jour{method.deliveryDays > 1 ? "s" : ""}
                   </p>
                 </div>
                 <div className="text-right flex-shrink-0">
                   {isFreeShipping ? (
                     <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p>
-                  ) : method.price !== null ? (
-                    <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>
                   ) : (
-                    <p className="text-xs text-gray-400">Prix variable</p>
+                    <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>
                   )}
                 </div>
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Relais colis (Sendcloud) */}
+      {(loadingRelay || relayMethods.length > 0) && (
+        <div>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5" /> Retrait en point relais
+          </p>
+          {loadingRelay ? (
+            <div className="flex items-center gap-2 text-gray-400 text-sm py-3 px-4">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Chargement des relais…</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {relayMethods.map((method) => {
+                const selected = shippingMethod?.id === method.id;
+                return (
+                  <button
+                    key={method.id}
+                    onClick={() => handleSelect(method)}
+                    className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
+                      selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      selected ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"
+                    }`}>
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm">{method.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {method.carrier}
+                        {method.deliveryDays ? ` · ${method.deliveryDays} jour${method.deliveryDays > 1 ? "s" : ""}` : ""}
+                      </p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      {isFreeShipping ? (
+                        <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p>
+                      ) : (
+                        <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -177,12 +195,10 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
           <ChevronLeft className="w-4 h-4 mr-2" /> Retour
         </Button>
         <Button
-          onClick={handleNext}
+          onClick={() => shippingMethod && onNext()}
           disabled={!shippingMethod}
           className={`flex-1 h-12 rounded-xl font-semibold text-white transition ${
-            shippingMethod
-              ? "bg-rose-500 hover:bg-rose-600"
-              : "bg-gray-300 cursor-not-allowed"
+            shippingMethod ? "bg-rose-500 hover:bg-rose-600" : "bg-gray-300 cursor-not-allowed"
           }`}
         >
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
