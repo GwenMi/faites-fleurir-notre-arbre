@@ -6,37 +6,68 @@ import { ChevronLeft, ChevronRight, Loader2, Truck, MapPin, Gift } from "lucide-
 const MAX_FREE_SHIPPING = 20;
 const WEIGHT_PER_POT_G = 200;
 
-// Tarifs domicile hardcodés (source : tarifs officiels Colissimo & Chronopost 2024)
-// Prix en € pour livraison France métropolitaine
+// Tarifs domicile hardcodés — source : tarifs officiels La Poste 2026
+// Colissimo : https://tarifs-postaux.fr/tarif-colissimo.htm
+// Chronopost Chrono 18 : tarifs officiels bureau de poste 2026
 function getHomeMethods(weightKg) {
   const w = weightKg;
+
+  // Colissimo domicile 2026 (France métropolitaine)
+  const colissimoPrice =
+    w <= 0.25 ? 5.49 :
+    w <= 0.5  ? 7.59 :
+    w <= 0.75 ? 9.29 :
+    w <= 1    ? 9.59 :
+    w <= 2    ? 11.19 :
+    w <= 5    ? 17.39 :
+    w <= 10   ? 25.29 :
+               31.99;
+
+  // Colissimo point de retrait 2026 = domicile - 0,70 €
+  const colissimoRelaisPrice =
+    w <= 0.25 ? 4.79 :
+    w <= 0.5  ? 6.89 :
+    w <= 0.75 ? 8.59 :
+    w <= 1    ? 8.89 :
+    w <= 2    ? 10.49 :
+               16.69; // point retrait limité à 5kg
+
+  // Chronopost Chrono 18 2026 (J+1 avant 18h, France métropolitaine)
+  const chronoPrice =
+    w <= 0.5  ? 12.74 :
+    w <= 1    ? 14.99 :
+    w <= 2    ? 17.49 :
+    w <= 5    ? 22.99 :
+    w <= 10   ? 29.99 :
+               39.99;
+
   return [
     {
       id: "colissimo_home",
       name: "Colissimo — Livraison à domicile",
       carrier: "colissimo",
-      description: "Livraison en 48h, sans signature",
+      description: "Livraison en 48h ouvrées, suivi inclus",
       deliveryDays: 2,
       servicePointRequired: false,
-      price: w <= 0.25 ? 4.95 : w <= 0.5 ? 6.39 : w <= 1 ? 7.49 : w <= 2 ? 8.75 : w <= 5 ? 11.25 : 15.99,
+      price: colissimoPrice,
     },
     {
-      id: "colissimo_signature",
-      name: "Colissimo — Signature requise",
+      id: "colissimo_relais",
+      name: "Colissimo — Point de retrait (bureau de poste / Pickup)",
       carrier: "colissimo",
-      description: "Livraison en 48h avec signature",
+      description: "Retrait sous 48h, économique",
       deliveryDays: 2,
-      servicePointRequired: false,
-      price: w <= 0.25 ? 5.99 : w <= 0.5 ? 7.49 : w <= 1 ? 8.65 : w <= 2 ? 9.99 : w <= 5 ? 12.99 : 17.99,
+      servicePointRequired: true,
+      price: colissimoRelaisPrice,
     },
     {
       id: "chronopost_18",
-      name: "Chronopost — Livraison le lendemain avant 18h",
+      name: "Chronopost — Express J+1 avant 18h",
       carrier: "chronopost",
-      description: "Livraison express J+1 avant 18h",
+      description: "Livraison express le lendemain avant 18h",
       deliveryDays: 1,
       servicePointRequired: false,
-      price: w <= 0.5 ? 9.99 : w <= 1 ? 11.49 : w <= 2 ? 13.49 : w <= 5 ? 17.49 : 22.99,
+      price: chronoPrice,
     },
   ];
 }
@@ -79,7 +110,7 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
   }, [weightGrams]);
 
   const handleSelect = (method) => {
-    onSelect(isFreeShipping ? { ...method, price: 0 } : method);
+    onSelect(isFreeShipping ? { ...method, price: 0, originalPrice: method.price } : method);
   };
 
   const allMethods = [...homeMethods, ...relayMethods];
