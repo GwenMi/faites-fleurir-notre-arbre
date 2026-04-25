@@ -99,7 +99,17 @@
     "flower_reminder_sent_at": {
       "type": "string",
       "format": "date-time",
-      "description": "Date d'envoi du rappel floraison"
+      "description": "Date d'envoi du rappel floraison J+1"
+    },
+    "flower_tree_pdf_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Email de cl\u00f4ture J+45 (arbre fleuri) envoy\u00e9 aux mari\u00e9s"
+    },
+    "flower_tree_pdf_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date d'envoi de l'email de cl\u00f4ture arbre fleuri"
     }
   },
   "required": [
