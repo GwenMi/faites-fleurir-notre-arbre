@@ -20,7 +20,6 @@ import SeatingPlanSection from "@/components/public/SeatingPlanSection";
 import CoupleStorySection from "@/components/public/sections/CoupleStorySection";
 import MapSection from "@/components/public/sections/MapSection";
 import CagnotteSection from "@/components/public/sections/CagnotteSection";
-import ReviewsList from "@/components/review/ReviewsList";
 import ReviewForm from "@/components/review/ReviewForm";
 
 export default function EventPublic() {
@@ -175,18 +174,7 @@ export default function EventPublic() {
         </div>
       )}
 
-      {/* Reviews Section */}
-      <div className="max-w-2xl mx-auto px-4 py-16 border-t border-gray-100">
-        <div className="mb-12">
-          <h2 className="font-serif-elegant text-3xl font-bold text-gray-800 mb-2" style={{ color: primaryColor }}>
-            Avis clients
-          </h2>
-          <p className="font-sans-clean text-sm text-gray-500">
-            Découvrez ce que les invités pensent de nos kits fleurs
-          </p>
-        </div>
-        <ReviewsList eventId={event.id} />
-      </div>
+
     </>
   );
 

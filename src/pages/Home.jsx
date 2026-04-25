@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
 import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2 } from "lucide-react";
+import ReviewsSlider from "@/components/home/ReviewsSlider";
 
 const SHOP_URL = () => createPageUrl("Shop");
 
@@ -265,6 +266,9 @@ export default function Home() {
 
         </div>
       </div>
+
+      {/* Avis clients slider */}
+      <ReviewsSlider />
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-gray-100 text-center">
