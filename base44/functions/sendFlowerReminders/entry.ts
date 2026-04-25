@@ -56,6 +56,16 @@ Deno.serve(async (req) => {
 
       const coupleLabel = coupleNames ? `${coupleNames}` : 'vos mariés';
 
+      // ── Récupérer les emails invités depuis GuestInvitation ──────
+      let guestEmails = order.guest_emails || [];
+      if (guestEmails.length === 0 && order.event_id) {
+        const invitations = await base44.asServiceRole.entities.GuestInvitation.filter({ event_id: order.event_id });
+        guestEmails = (invitations || [])
+          .map(g => g.guest_email)
+          .filter(email => email && email.includes('@'));
+        console.log(`Fetched ${guestEmails.length} guest email(s) from GuestInvitation for event ${order.event_id}`);
+      }
+
       // ── Email aux mariés (acheteur) ──────────────────────────────
       const bodyCouples = `
 Bonjour ${order.customer_name} 🌸
@@ -95,8 +105,7 @@ L'équipe Fleurs de fête
         from_name: 'Fleurs de fête',
       });
 
-      // ── Emails aux invités (si liste fournie) ────────────────────
-      const guestEmails = order.guest_emails || [];
+      // ── Emails aux invités ────────────────────
       for (const guestEmail of guestEmails) {
         if (!guestEmail || !guestEmail.includes('@')) continue;
 
