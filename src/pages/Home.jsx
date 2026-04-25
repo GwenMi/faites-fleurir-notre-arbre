@@ -131,8 +131,8 @@ export default function Home() {
           Cadeaux de mariage · Baptêmes · Anniversaires · Entreprises · Maisons d'hôtes
         </p>
         <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
-          Un souvenir vivant,<br />
-          <span className="text-rose-400">long après le mariage</span>
+          Le cadeau qu'on<br />
+          <span className="text-rose-400">n'oublie pas</span>
         </h1>
         <div className="gold-line max-w-xs mx-auto mb-6" />
         <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
