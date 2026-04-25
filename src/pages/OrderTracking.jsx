@@ -28,18 +28,24 @@ export default function OrderTracking() {
     e.preventDefault();
     setError("");
     
-    if (!orderId.trim() || !email.trim()) {
-      setError("Veuillez entrer un numéro de commande et un email");
+    if (!email.trim()) {
+      setError("Veuillez entrer votre email");
       return;
     }
 
     setLoading(true);
     try {
-      // Chercher par ID de commande ET email pour sécurité
-      const result = await base44.entities.Order.filter({
-        id: orderId.trim(),
+      // Chercher par email (+ filtre sur ID si fourni)
+      let result = await base44.entities.Order.filter({
         customer_email: email.trim().toLowerCase()
-      }, "-created_date", 1);
+      }, "-created_date", 10);
+
+      if (orderId.trim()) {
+        const short = orderId.trim().toUpperCase().replace(/^FEF-?/i, "");
+        result = result?.filter(o => o.id.slice(-8).toUpperCase() === short || o.id === orderId.trim()) || [];
+      }
+      
+      result = result?.filter(o => o.status !== "cancelled") || [];
 
       if (result && result.length > 0) {
         setOrders(result);
@@ -100,17 +106,7 @@ export default function OrderTracking() {
         <form onSubmit={handleSearch} className="bg-white rounded-3xl shadow-lg p-8 mb-8">
           <div className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 font-sans-clean">
-              💡 Entrez le <strong>numéro de commande</strong> (visible dans vos emails) et votre <strong>email</strong> pour retrouver votre commande.
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 font-sans-clean">Numéro de commande *</label>
-              <Input
-                placeholder="Ex: 507a8b2c3d4e5f6g (dans l'URL ou l'email)"
-                value={orderId}
-                onChange={e => setOrderId(e.target.value)}
-                className="rounded-xl h-11 text-sm"
-              />
+              💡 Entrez votre <strong>email de commande</strong> pour retrouver toutes vos commandes. Vous pouvez aussi préciser un numéro de commande (ex: FEF-ABC12345).
             </div>
 
             <div>
@@ -120,6 +116,16 @@ export default function OrderTracking() {
                 placeholder="votre@email.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+                className="rounded-xl h-11 text-sm"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 font-sans-clean">Numéro de commande <span className="text-gray-400 font-normal">(optionnel)</span></label>
+              <Input
+                placeholder="Ex: FEF-ABC12345"
+                value={orderId}
+                onChange={e => setOrderId(e.target.value)}
                 className="rounded-xl h-11 text-sm"
               />
             </div>
@@ -133,7 +139,7 @@ export default function OrderTracking() {
 
             <Button
               type="submit"
-              disabled={loading || !orderId.trim() || !email.trim()}
+              disabled={loading || !email.trim()}
               className="w-full h-12 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
             >
               {loading ? (
@@ -176,7 +182,7 @@ export default function OrderTracking() {
                       <div>
                         <h3 className="font-serif-elegant text-2xl font-bold">{order.product_name}</h3>
                         <p className="font-sans-clean text-sm opacity-90 mt-1">
-                          Commande #{order.id.slice(-8).toUpperCase()} • {new Date(order.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                          Réf. FEF-{order.id.slice(-8).toUpperCase()} • {new Date(order.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                         </p>
                       </div>
                       <div className={`flex items-center gap-2 px-4 py-2 rounded-full font-sans-clean text-sm font-bold bg-white ${statusInfo.color}`}>
@@ -383,14 +389,13 @@ export default function OrderTracking() {
 }
 
 function getTrackingUrl(carrier, trackingNumber) {
-  const carriers = {
-    colissimo: `https://www.colissimo.fr/en/track-a-parcel?parcelnumber=${trackingNumber}`,
-    ups: `https://tracking.ups.com/?tracknum=${trackingNumber}`,
-    dhl: `https://www.dhl.com/en/en/express/tracking.html?AWB=${trackingNumber}`,
-    fedex: `https://tracking.fedex.com/tracking?tracknumbers=${trackingNumber}`,
-    chronopost: `https://www.chronopost.fr/fr/suivi-colis?livraisonsSearch=${trackingNumber}`,
-  };
-  return carriers[carrier?.toLowerCase()] || "#";
+  const c = carrier?.toLowerCase();
+  if (c === "colissimo") return `https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}`;
+  if (c === "chronopost") return `https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=${trackingNumber}`;
+  if (c === "ups") return `https://tracking.ups.com/?tracknum=${trackingNumber}`;
+  if (c === "dhl") return `https://www.dhl.com/fr-fr/home/tracking.html?tracking-id=${trackingNumber}`;
+  if (c === "fedex") return `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`;
+  return `https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}`;
 }
 
 async function generateAndDownloadInvoice(order) {
