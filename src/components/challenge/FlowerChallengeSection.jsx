@@ -181,7 +181,13 @@ export default function FlowerChallengeSection({ event }) {
             </button>
           </div>
 
-          {/* Action buttons */}
+          {/* Action buttons — bloqués si défi terminé */}
+          {isOver && (
+            <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 text-center">
+              <p className="font-sans-clean text-purple-700 font-semibold text-sm">🔒 Le défi est terminé — les ajouts de photos ne sont plus possibles.</p>
+            </div>
+          )}
+
           {isFlowerPhase && (
             <div>
               {hasPostedFlower ? (
@@ -246,7 +252,7 @@ export default function FlowerChallengeSection({ event }) {
             <span className="text-base font-normal text-gray-400 font-sans-clean">({flowerPosts.length})</span>
           </h3>
           <FlowerGallery posts={flowerPosts} />
-          <FlowerTree posts={posts} />
+          <FlowerTree posts={posts} isOver={isOver} coupleNames={event?.couple_names || ""} />
         </div>
       )}
 
@@ -275,8 +281,8 @@ export default function FlowerChallengeSection({ event }) {
         </div>
       )}
 
-      {/* Upload modal */}
-      {showUpload && guest && (
+      {/* Upload modal — désactivé si défi terminé */}
+      {showUpload && guest && !isOver && (
         <PostUploadModal
           type={showUpload}
           eventId={eventId}

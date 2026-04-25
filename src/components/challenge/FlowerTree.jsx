@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { Sparkles, X, RefreshCw } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Sparkles, X, RefreshCw, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const TREES = [
   {
@@ -186,11 +188,20 @@ function FlowerSpots({ tree, posts, size }) {
   });
 }
 
-export default function FlowerTree({ posts }) {
+export default function FlowerTree({ posts, isOver = false, coupleNames = "" }) {
   const flowerPosts = posts.filter(p => p.type === "flower");
   const [showModal, setShowModal] = useState(false);
   const [selectedTree, setSelectedTree] = useState(TREES[0]);
   const [generatedTree, setGeneratedTree] = useState(null);
+  const [downloading, setDownloading] = useState(false);
+  const treeRef = useRef(null);
+
+  // Auto-générer l'arbre dès que le défi est terminé
+  useEffect(() => {
+    if (isOver && flowerPosts.length > 0 && !generatedTree) {
+      setGeneratedTree(TREES[0]);
+    }
+  }, [isOver, flowerPosts.length]);
 
   if (flowerPosts.length === 0) return null;
 
@@ -199,40 +210,79 @@ export default function FlowerTree({ posts }) {
     setShowModal(false);
   };
 
+  const handleDownloadPDF = async () => {
+    if (!treeRef.current) return;
+    setDownloading(true);
+    const canvas = await html2canvas(treeRef.current, { scale: 2, useCORS: true, backgroundColor: null });
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: [canvas.width / 2, canvas.height / 2] });
+    pdf.addImage(imgData, "JPEG", 0, 0, canvas.width / 2, canvas.height / 2);
+    pdf.save(`arbre-fleuri-${coupleNames.replace(/\s+/g, "-").toLowerCase() || "souvenir"}.pdf`);
+    setDownloading(false);
+  };
+
   return (
     <div className="mt-4">
       {!generatedTree ? (
-        <button
-          onClick={() => setShowModal(true)}
-          className="w-full py-4 rounded-2xl border-2 border-dashed border-rose-200 bg-gradient-to-r from-rose-50 to-pink-50 text-rose-500 hover:bg-rose-100 transition font-semibold text-sm flex items-center justify-center gap-2"
-          style={{ fontFamily: "Lato, system-ui, sans-serif" }}
-        >
-          <Sparkles className="w-4 h-4" /> Générer notre arbre fleuri ✨
-        </button>
+        !isOver && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="w-full py-4 rounded-2xl border-2 border-dashed border-rose-200 bg-gradient-to-r from-rose-50 to-pink-50 text-rose-500 hover:bg-rose-100 transition font-semibold text-sm flex items-center justify-center gap-2"
+            style={{ fontFamily: "Lato, system-ui, sans-serif" }}
+          >
+            <Sparkles className="w-4 h-4" /> Générer notre arbre fleuri ✨
+          </button>
+        )
       ) : (
         <div>
-          <div className="text-center mb-3">
-            <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif" }} className="text-xl font-bold text-gray-800">
-              🌳 Notre Arbre Fleuri
-            </p>
-            <p style={{ fontFamily: "Lato, system-ui, sans-serif" }} className="text-xs text-gray-400">
-              {Math.min(flowerPosts.length, generatedTree.spots.length)} fleur{flowerPosts.length > 1 ? "s" : ""} sur l'arbre
-            </p>
-          </div>
+          {isOver && (
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-4 text-center mb-4">
+              <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif" }} className="text-lg font-bold text-purple-800 mb-1">
+                🌳 Votre arbre fleuri est prêt !
+              </p>
+              <p style={{ fontFamily: "Lato, system-ui, sans-serif" }} className="text-xs text-purple-500">
+                Le défi est terminé — {Math.min(flowerPosts.length, generatedTree.spots.length)} fleur{flowerPosts.length > 1 ? "s" : ""} sur l'arbre
+              </p>
+            </div>
+          )}
+          {!isOver && (
+            <div className="text-center mb-3">
+              <p style={{ fontFamily: "Cormorant Garamond, Georgia, serif" }} className="text-xl font-bold text-gray-800">
+                🌳 Notre Arbre Fleuri
+              </p>
+              <p style={{ fontFamily: "Lato, system-ui, sans-serif" }} className="text-xs text-gray-400">
+                {Math.min(flowerPosts.length, generatedTree.spots.length)} fleur{flowerPosts.length > 1 ? "s" : ""} sur l'arbre
+              </p>
+            </div>
+          )}
           <div
+            ref={treeRef}
             className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-b from-sky-100 via-sky-50 to-emerald-50 shadow-inner"
             style={{ paddingBottom: "125%" }}
           >
             <TreeSVG treeId={generatedTree.id} />
             <FlowerSpots tree={generatedTree} posts={flowerPosts} size={44} />
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="mt-3 w-full text-xs text-gray-400 hover:text-rose-500 transition flex items-center justify-center gap-1"
-            style={{ fontFamily: "Lato, system-ui, sans-serif" }}
-          >
-            <RefreshCw className="w-3 h-3" /> Changer de silhouette
-          </button>
+          {isOver ? (
+            <Button
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              className="mt-4 w-full h-12 rounded-xl bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold"
+            >
+              {downloading
+                ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Génération...</>
+                : <><Download className="w-4 h-4 mr-2" /> Télécharger notre arbre fleuri (PDF)</>
+              }
+            </Button>
+          ) : (
+            <button
+              onClick={() => setShowModal(true)}
+              className="mt-3 w-full text-xs text-gray-400 hover:text-rose-500 transition flex items-center justify-center gap-1"
+              style={{ fontFamily: "Lato, system-ui, sans-serif" }}
+            >
+              <RefreshCw className="w-3 h-3" /> Changer de silhouette
+            </button>
+          )}
         </div>
       )}
 
