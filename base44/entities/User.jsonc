@@ -37,6 +37,14 @@
     "avatar_url": {
       "type": "string",
       "description": "URL de l'avatar du compte"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID du mini site \u00e9v\u00e9nementiel cr\u00e9\u00e9 par le client"
+    },
+    "event_slug": {
+      "type": "string",
+      "description": "Slug du mini site \u00e9v\u00e9nementiel (ex: sophie-thomas-2025)"
     }
   },
   "required": []

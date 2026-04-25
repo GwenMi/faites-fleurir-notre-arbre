@@ -43,7 +43,9 @@ export default function CreateMyEvent() {
       setUser(me);
       const [allOrders, existingEvents] = await Promise.all([
         base44.entities.Order.filter({ customer_email: me.email }, "-created_date", 10),
-        base44.entities.Event.filter({ created_by: me.email }, "-created_date", 1),
+        me.event_id
+          ? base44.entities.Event.filter({ id: me.event_id }, "-created_date", 1)
+          : base44.entities.Event.filter({ created_by: me.email }, "-created_date", 1),
       ]);
       if (existingEvents?.length > 0) {
         setExistingEvent(existingEvents[0]);
@@ -59,6 +61,12 @@ export default function CreateMyEvent() {
   const handleEventSaved = async (ev) => {
     if (!ev?.id) return;
     setCreatedEvent(ev);
+
+    // Sauvegarder le slug et l'event_id sur le profil utilisateur
+    if (user) {
+      await base44.auth.updateMe({ event_id: ev.id, event_slug: ev.slug });
+    }
+
     if (order) {
       // linked via order_id param
       await base44.entities.Order.update(order.id, {
