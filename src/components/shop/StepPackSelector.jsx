@@ -1,11 +1,10 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, CheckCircle2, Info, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Info, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-const PACK_SIZES = [30, 50, 70, 100, 120];
 const SAC_CADEAU_PRICE = 0.40;
 
-// ⚠️ Remplacer ces URLs par celles de Supabase après upload des photos
 const CONTAINERS = [
   {
     id: "rond_clip",
@@ -22,86 +21,75 @@ const CONTAINERS = [
 ];
 
 export default function StepPackSelector({ selection, onUpdate, pricing, onNext, onBack }) {
-  const packs = selection.packs || [];
-  const totalPackCount = packs.reduce((sum, p) => sum + p.qty, 0);
+  // Quantité = nombre total de pots commandés (stocké dans packs comme [{size:1, qty: N}])
+  const qty = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
+
+  const setQty = (newQty) => {
+    if (newQty < 1) return;
+    onUpdate({ packs: [{ size: 1, qty: newQty }] });
+  };
 
   const handleNext = () => {
-    if (packs.length === 0) { toast.error("Veuillez sélectionner au moins un pack"); return; }
+    if (qty < 1) { toast.error("Veuillez indiquer une quantité"); return; }
     if (!selection.containerType) { toast.error("Veuillez choisir un contenant"); return; }
     onNext();
-  };
-
-  const addPack = (size) => {
-    const existing = packs.find(p => p.size === size);
-    if (existing) {
-      onUpdate({ packs: packs.map(p => p.size === size ? { ...p, qty: p.qty + 1 } : p) });
-    } else {
-      onUpdate({ packs: [...packs, { size, qty: 1 }] });
-    }
-  };
-
-  const updateQty = (size, delta) => {
-    const newPacks = packs.map(p => p.size === size ? { ...p, qty: p.qty + delta } : p).filter(p => p.qty > 0);
-    onUpdate({ packs: newPacks });
   };
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Choisissez vos packs</h2>
-        <p className="text-sm text-gray-500">Vous pouvez combiner plusieurs tailles — Prix par pot : <strong>{pricing.pricePerPot.toFixed(2)}€</strong></p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">Combien de pots ?</h2>
+        <p className="text-sm text-gray-500">Prix unitaire : <strong>{pricing.pricePerPot.toFixed(2)} €</strong> / pot</p>
       </div>
 
-      {/* Pack size buttons */}
-      <div>
-        <p className="text-sm font-semibold text-gray-700 mb-3">Ajouter un pack</p>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-          {PACK_SIZES.map(size => {
-            const inCart = packs.find(p => p.size === size);
-            const packPrice = pricing.pricePerPot * size;
-            return (
-              <button
-                key={size}
-                onClick={() => addPack(size)}
-                className={`rounded-xl border-2 p-3 text-center transition-all ${
-                  inCart ? "border-rose-400 bg-rose-50 shadow-sm" : "border-gray-200 bg-white hover:border-rose-200"
-                }`}
-              >
-                <p className={`text-2xl font-bold ${inCart ? "text-rose-600" : "text-gray-800"}`}>{size}</p>
-                <p className="text-xs text-gray-500 mb-1">invités</p>
-                <p className="text-xs font-semibold text-gray-700">{packPrice.toFixed(2)}€</p>
-                {inCart && <p className="text-xs text-rose-500 font-bold mt-1">× {inCart.qty} ✓</p>}
-              </button>
-            );
-          })}
+      {/* Sélecteur de quantité */}
+      <div className="flex flex-col items-center gap-6 py-6">
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => setQty(qty - 1)}
+            disabled={qty <= 1}
+            className="w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 hover:bg-rose-50 transition disabled:opacity-30"
+          >
+            <Minus className="w-5 h-5 text-gray-600" />
+          </button>
+
+          <div className="text-center">
+            <input
+              type="number"
+              min={1}
+              value={qty || ""}
+              onChange={(e) => {
+                const v = parseInt(e.target.value);
+                if (!isNaN(v) && v >= 1) setQty(v);
+              }}
+              className="w-24 text-center text-4xl font-bold text-gray-900 border-b-2 border-rose-300 focus:outline-none focus:border-rose-500 bg-transparent pb-1"
+            />
+            <p className="text-sm text-gray-400 mt-1">pots</p>
+          </div>
+
+          <button
+            onClick={() => setQty(qty + 1)}
+            className="w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-rose-300 hover:bg-rose-50 transition"
+          >
+            <Plus className="w-5 h-5 text-gray-600" />
+          </button>
         </div>
-      </div>
 
-      {/* Panier en cours */}
-      {packs.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-3">
-          <p className="font-semibold text-gray-900 text-sm">Votre sélection</p>
-          {packs.map(p => (
-            <div key={p.size} className="flex items-center justify-between gap-4">
-              <span className="text-sm text-gray-700 font-medium">Pack {p.size} invités</span>
-              <div className="flex items-center gap-2">
-                <button onClick={() => updateQty(p.size, -1)} className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 text-lg font-bold text-gray-600">−</button>
-                <span className="w-6 text-center font-bold text-gray-900">{p.qty}</span>
-                <button onClick={() => updateQty(p.size, 1)} className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 text-lg font-bold text-gray-600">+</button>
-                <button onClick={() => onUpdate({ packs: packs.filter(x => x.size !== p.size) })} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-50 text-gray-400 hover:text-red-400 ml-1">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+        {/* Raccourcis */}
+        <div className="flex flex-wrap justify-center gap-2">
+          {[10, 20, 30, 50, 75, 100].map(n => (
+            <button
+              key={n}
+              onClick={() => setQty(n)}
+              className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 transition ${
+                qty === n ? "border-rose-400 bg-rose-50 text-rose-600" : "border-gray-200 text-gray-600 hover:border-rose-200"
+              }`}
+            >
+              {n}
+            </button>
           ))}
-          {totalPackCount >= 2 && (
-            <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 rounded-lg px-3 py-2 mt-2">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <strong>Réduction 10% appliquée</strong> — {totalPackCount} packs commandés
-            </div>
-          )}
         </div>
-      )}
+      </div>
 
       {/* Sélection du contenant */}
       <div>
@@ -136,7 +124,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
       </div>
 
       {/* Sac cadeau */}
-      {packs.length > 0 && (
+      {qty > 0 && (
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
@@ -149,7 +137,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
               </div>
             </div>
             <div className="flex flex-col items-end gap-2 flex-shrink-0">
-              <span className="text-sm text-rose-600 font-semibold">+{(SAC_CADEAU_PRICE * (pricing.totalPots || 0)).toFixed(2)}€</span>
+              <span className="text-sm text-rose-600 font-semibold">+{(SAC_CADEAU_PRICE * qty).toFixed(2)} €</span>
               <button
                 onClick={() => onUpdate({ sacCadeau: !selection.sacCadeau })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
@@ -166,29 +154,23 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
       )}
 
       {/* Récapitulatif prix */}
-      {packs.length > 0 && (
+      {qty > 0 && (
         <div className="bg-rose-50 rounded-2xl p-6 space-y-2">
-          {packs.map(p => (
-            <div key={p.size} className="flex justify-between text-sm text-gray-700">
-              <span>Pack {p.size} × {p.qty} ({p.size * p.qty} pots × {pricing.pricePerPot.toFixed(2)}€)</span>
-              <span>{(p.size * p.qty * pricing.pricePerPot).toFixed(2)}€</span>
-            </div>
-          ))}
-          {selection.sacCadeau && pricing.sacCadeauTotal > 0 && (
+          <div className="flex justify-between text-sm text-gray-700">
+            <span>{qty} pots × {pricing.pricePerPot.toFixed(2)} €</span>
+            <span>{(qty * pricing.pricePerPot).toFixed(2)} €</span>
+          </div>
+          {selection.sacCadeau && (
             <div className="flex justify-between text-sm text-gray-700">
-              <span>Sacs cadeaux ({pricing.totalPots} × {SAC_CADEAU_PRICE.toFixed(2)}€)</span>
-              <span>{pricing.sacCadeauTotal.toFixed(2)}€</span>
-            </div>
-          )}
-          {pricing.discount > 0 && (
-            <div className="flex justify-between text-sm text-green-600">
-              <span>Réduction 10%</span>
-              <span>−{pricing.discount.toFixed(2)}€</span>
+              <span>Sacs cadeaux ({qty} × {SAC_CADEAU_PRICE.toFixed(2)} €)</span>
+              <span>{(SAC_CADEAU_PRICE * qty).toFixed(2)} €</span>
             </div>
           )}
           <div className="flex justify-between font-bold text-lg border-t border-rose-200 pt-3 mt-1">
-            <span>Total pots</span>
-            <span className="text-rose-600">{pricing.total.toFixed(2)}€</span>
+            <span>Sous-total</span>
+            <span className="text-rose-600">
+              {(qty * pricing.pricePerPot + (selection.sacCadeau ? SAC_CADEAU_PRICE * qty : 0)).toFixed(2)} €
+            </span>
           </div>
         </div>
       )}
@@ -207,7 +189,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
         <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
           <ChevronLeft className="w-4 h-4 mr-2" /> Retour
         </Button>
-        <Button onClick={handleNext} disabled={packs.length === 0 || !selection.containerType} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
+        <Button onClick={handleNext} disabled={qty < 1 || !selection.containerType} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>

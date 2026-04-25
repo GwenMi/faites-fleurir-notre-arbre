@@ -13,7 +13,7 @@ import StepShipping from "@/components/shop/StepShipping";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
 import { createPageUrl } from "@/utils";
 
-const STEPS = ["Votre kit", "Votre événement", "Pack invités", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
+const STEPS = ["Votre kit", "Votre événement", "Quantité", "Personnalisation", "Site personnalisé", "Vos informations", "Livraison", "Récapitulatif"];
 
 export const PRICING = {
   KIT_COMPOSE: 3.90,
@@ -143,13 +143,11 @@ export default function Shop() {
 
   const baseKitPrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
   const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
-  const totalPackCount = (selection.packs || []).reduce((sum, p) => sum + p.qty, 0);
   const subtotal = baseKitPrice * totalPots;
   const sacCadeauTotal = selection.sacCadeau ? PRICING.SAC_CADEAU * totalPots : 0;
-  const discount = totalPackCount >= 2 ? (subtotal + sacCadeauTotal) * 0.1 : 0;
   const shippingCost = shippingMethod?.price ?? 0;
-  const total = subtotal + sacCadeauTotal - discount + shippingCost;
-  const pricing = { pricePerPot: baseKitPrice, totalPots, subtotal, sacCadeauTotal, discount, shippingCost, total };
+  const total = subtotal + sacCadeauTotal + shippingCost;
+  const pricing = { pricePerPot: baseKitPrice, totalPots, subtotal, sacCadeauTotal, discount: 0, shippingCost, total };
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
