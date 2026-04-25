@@ -31,6 +31,15 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
     const fullName = `${customerInfo.firstName || ""} ${customerInfo.lastName || ""}`.trim() || customerInfo.name || "";
     try {
       const packsLabel = packs.map(p => `Pack ${p.size} × ${p.qty}`).join(", ");
+      // Résoudre l'event_id depuis le slug si disponible
+      let resolvedEventId = null;
+      if (selection.slug) {
+        try {
+          const events = await base44.entities.Event.filter({ slug: selection.slug });
+          if (events?.length > 0) resolvedEventId = events[0].id;
+        } catch {}
+      }
+
       const order = await base44.entities.Order.create({
         customer_name: fullName,
         customer_email: customerInfo.email,
@@ -40,6 +49,8 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         total_price: pricing.total,
         status: "confirmed",
         payment_status: "paid",
+        event_id: resolvedEventId || undefined,
+        event_date: customerInfo.eventDate || undefined,
         options_selected: {
           kitType: selection.kitType,
           eventType: selection.eventType,
