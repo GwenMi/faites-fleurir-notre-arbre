@@ -76,49 +76,90 @@ Deno.serve(async (req) => {
   // parcel: { weight_kg } — on convertit en grammes
 
   const poids = String(Math.round((parseFloat(parcel.weight_kg) || 1) * 1000)); // kg → g
-  const livRel = recipient.relay_id || '';
+  // LIV_Rel doit être 6 chiffres fixes (padding à gauche avec des 0)
+  const livRel = (recipient.relay_id || '').toString().padStart(6, '0');
   const livRelPays = recipient.country || 'FR';
 
-  // Champs pour le calcul de la clé de sécurité (ordre exact selon doc Mondial Relay)
+  // Valeurs expéditeur fixes
+  const expeAd1 = 'Fleurs en Fete';
+  const expeAd2 = '';
+  const expeAd3 = 'Gwenaelle Papin';
+  const expeAd4 = '';
+  const expeVille = 'Nantes';
+  const expeCP = '44000';
+  const expePays = 'FR';
+  const expeTel1 = '';
+  const expeTel2 = '';
+  const expeMail = 'contact@fleursdefete.fr';
+
+  const destLangage = 'FR';
+  const destAd1 = recipient.name.substring(0, 32);
+  const destAd2 = '';
+  const destAd3 = recipient.address1 || '';
+  const destAd4 = recipient.address2 || '';
+  const destVille = recipient.city || '';
+  const destCP = recipient.zip || '';
+  const destPays = recipient.country || 'FR';
+  const destTel1 = recipient.phone || '';
+  const destTel2 = '';
+  const destMail = recipient.email || '';
+
+  // Champs pour le calcul de la clé de sécurité — ordre EXACT selon doc officielle
   const fields = [
-    ENSEIGNE,
-    'CCC',        // ModeCol: collecte chez expéditeur
-    '24R',        // ModeLiv: livraison point relais 24h
-    '',           // NDossier
-    '',           // NClient
-    recipient.name.substring(0, 32),
-    '',           // Dest_Ad2
-    recipient.address1 || '',
-    recipient.address2 || '',
-    recipient.city,
-    recipient.zip,
-    livRelPays,
-    recipient.phone || '',
-    '',           // Dest_Tel2
-    recipient.email || '',
-    poids,
-    '',           // Longueur
-    '',           // Taille
-    '1',          // NbColis
-    '0',          // CRT_Valeur
-    '',           // CRT_Devise
-    '',           // Exp_Valeur
-    '',           // Exp_Devise
-    '',           // COL_Rel_Pays
-    '',           // COL_Rel
-    livRelPays,
-    livRel,
-    '',           // TAvisage
-    '',           // TReprise
-    '',           // Montage
-    '',           // TRDV
-    '0',          // Assurance
-    '',           // Instructions
-    PRIVATE_KEY,
+    ENSEIGNE,       // Enseigne
+    'CCC',          // ModeCol
+    '24R',          // ModeLiv
+    '',             // NDossier
+    '',             // NClient
+    'FR',           // Expe_Langage
+    expeAd1,        // Expe_Ad1
+    expeAd2,        // Expe_Ad2
+    expeAd3,        // Expe_Ad3
+    expeAd4,        // Expe_Ad4
+    expeVille,      // Expe_Ville
+    expeCP,         // Expe_CP
+    expePays,       // Expe_Pays
+    expeTel1,       // Expe_Tel1
+    expeTel2,       // Expe_Tel2
+    expeMail,       // Expe_Mail
+    destLangage,    // Dest_Langage
+    destAd1,        // Dest_Ad1
+    destAd2,        // Dest_Ad2
+    destAd3,        // Dest_Ad3
+    destAd4,        // Dest_Ad4
+    destVille,      // Dest_Ville
+    destCP,         // Dest_CP
+    destPays,       // Dest_Pays
+    destTel1,       // Dest_Tel1
+    destTel2,       // Dest_Tel2
+    destMail,       // Dest_Mail
+    poids,          // Poids
+    '',             // Longueur
+    '',             // Taille
+    '1',            // NbColis
+    '0',            // CRT_Valeur
+    '',             // CRT_Devise
+    '',             // Exp_Valeur
+    '',             // Exp_Devise
+    '',             // COL_Rel_Pays
+    '',             // COL_Rel
+    livRelPays,     // LIV_Rel_Pays
+    livRel,         // LIV_Rel
+    '',             // TAvisage
+    '',             // TReprise
+    '',             // Montage
+    '',             // TRDV
+    '0',            // Assurance
+    '',             // Instructions
+    PRIVATE_KEY,    // Clé privée en dernier
   ];
 
-  const securityInput = fields.join('').toUpperCase();
-  const security = md5(securityInput);
+  // Concaténation SANS majuscules (MD5 sur la chaîne telle quelle)
+  const securityInput = fields.join('');
+  const security = md5(securityInput).toUpperCase();
+  console.log('DEBUG fields:', JSON.stringify(fields));
+  console.log('DEBUG securityInput:', securityInput);
+  console.log('DEBUG security:', security);
 
   const soapBody = `<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -130,27 +171,27 @@ Deno.serve(async (req) => {
       <NDossier></NDossier>
       <NClient></NClient>
       <Expe_Langage>FR</Expe_Langage>
-      <Expe_Ad1>Fleurs en Fête</Expe_Ad1>
-      <Expe_Ad2></Expe_Ad2>
-      <Expe_Ad3>Gwenaëlle Papin</Expe_Ad3>
-      <Expe_Ad4></Expe_Ad4>
-      <Expe_Ville>Nantes</Expe_Ville>
-      <Expe_CP>44000</Expe_CP>
-      <Expe_Pays>FR</Expe_Pays>
-      <Expe_Tel1></Expe_Tel1>
-      <Expe_Tel2></Expe_Tel2>
-      <Expe_Mail>contact@fleursdefete.fr</Expe_Mail>
-      <Dest_Langage>FR</Dest_Langage>
-      <Dest_Ad1>${recipient.name.substring(0, 32)}</Dest_Ad1>
-      <Dest_Ad2></Dest_Ad2>
-      <Dest_Ad3>${recipient.address1 || ''}</Dest_Ad3>
-      <Dest_Ad4>${recipient.address2 || ''}</Dest_Ad4>
-      <Dest_Ville>${recipient.city}</Dest_Ville>
-      <Dest_CP>${recipient.zip}</Dest_CP>
-      <Dest_Pays>${recipient.country || 'FR'}</Dest_Pays>
-      <Dest_Tel1>${recipient.phone || ''}</Dest_Tel1>
-      <Dest_Tel2></Dest_Tel2>
-      <Dest_Mail>${recipient.email || ''}</Dest_Mail>
+      <Expe_Ad1>${expeAd1}</Expe_Ad1>
+      <Expe_Ad2>${expeAd2}</Expe_Ad2>
+      <Expe_Ad3>${expeAd3}</Expe_Ad3>
+      <Expe_Ad4>${expeAd4}</Expe_Ad4>
+      <Expe_Ville>${expeVille}</Expe_Ville>
+      <Expe_CP>${expeCP}</Expe_CP>
+      <Expe_Pays>${expePays}</Expe_Pays>
+      <Expe_Tel1>${expeTel1}</Expe_Tel1>
+      <Expe_Tel2>${expeTel2}</Expe_Tel2>
+      <Expe_Mail>${expeMail}</Expe_Mail>
+      <Dest_Langage>${destLangage}</Dest_Langage>
+      <Dest_Ad1>${destAd1}</Dest_Ad1>
+      <Dest_Ad2>${destAd2}</Dest_Ad2>
+      <Dest_Ad3>${destAd3}</Dest_Ad3>
+      <Dest_Ad4>${destAd4}</Dest_Ad4>
+      <Dest_Ville>${destVille}</Dest_Ville>
+      <Dest_CP>${destCP}</Dest_CP>
+      <Dest_Pays>${destPays}</Dest_Pays>
+      <Dest_Tel1>${destTel1}</Dest_Tel1>
+      <Dest_Tel2>${destTel2}</Dest_Tel2>
+      <Dest_Mail>${destMail}</Dest_Mail>
       <Poids>${poids}</Poids>
       <Longueur></Longueur>
       <Taille></Taille>
@@ -195,6 +236,8 @@ Deno.serve(async (req) => {
     return Response.json({
       error: `Erreur Mondial Relay (code: ${statMatch[1]})`,
       raw: text,
+      debug_security: security,
+      debug_input: securityInput,
     }, { status: 400 });
   }
 
