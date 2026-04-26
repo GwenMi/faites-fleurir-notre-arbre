@@ -17,7 +17,8 @@
         "kit_compose",
         "kit_pret",
         "pack_invite",
-        "option_emballage"
+        "option_emballage",
+        "autre"
       ]
     },
     "image": {
@@ -30,6 +31,29 @@
     "active": {
       "type": "boolean",
       "default": true
+    },
+    "stock_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Activer la gestion du stock"
+    },
+    "stock_quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Quantit\u00e9 en stock"
+    },
+    "stock_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin de disponibilit\u00e9 (\u00e9dition limit\u00e9e)"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes internes"
     }
   },
   "required": [

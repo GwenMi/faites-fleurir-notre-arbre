@@ -5,14 +5,21 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users } from "lucide-react";
+import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users, ShoppingBag, BarChart2 } from "lucide-react";
 import { toast } from "sonner";
 import AdminGuard from "@/components/admin/AdminGuard";
 import UserManagementPanel from "@/components/admin/UserManagementPanel";
+import ProductManager from "@/components/admin/ProductManager";
 
 const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
+const TABS = [
+  { key: "stats", label: "Stats & Promos", icon: BarChart2 },
+  { key: "products", label: "Produits", icon: ShoppingBag },
+];
+
 export default function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState("stats");
   const [orders, setOrders] = useState([]);
   const [promos, setPromos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,21 +180,45 @@ export default function AdminDashboard() {
     <AdminGuard allowedRoles={["admin"]}>
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-6">
+      <div className="bg-white border-b border-gray-200 px-6 py-5">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">📊 Dashboard Commercial</h1>
-              <p className="text-gray-500 mt-1">Suivi de vos ventes et gestion des promos</p>
+              <h1 className="text-2xl font-bold text-gray-800">🌸 Admin Fleurs de Fête</h1>
+              <p className="text-gray-500 mt-0.5 text-sm">Tableau de bord de gestion</p>
             </div>
-            <a href={createPageUrl("Forecast")} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
-              <TrendingUp className="w-4 h-4" /> Prévisions & Stock
-            </a>
+            <div className="flex items-center gap-2">
+              <a href={createPageUrl("AdminOrders")} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold transition">
+                <Package className="w-4 h-4" /> Commandes
+              </a>
+              <a href={createPageUrl("AdminSuperPanel")} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold transition">
+                <Shield className="w-4 h-4" /> Super Panel
+              </a>
+              <a href={createPageUrl("Forecast")} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold transition">
+                <TrendingUp className="w-4 h-4" /> Prévisions
+              </a>
+            </div>
+          </div>
+          {/* Tabs */}
+          <div className="flex gap-1">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              const active = activeTab === tab.key;
+              return (
+                <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold border-b-2 transition ${active ? "border-rose-400 text-rose-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
+                  <Icon className="w-4 h-4" /> {tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Onglet Produits */}
+        {activeTab === "products" && <ProductManager />}
+        {activeTab !== "products" && (<>
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -474,8 +505,9 @@ export default function AdminDashboard() {
               })
             )}
           </div>
-        </div>
-      </div>
+          </div>
+          </>)}
+          </div>
     </div>
     </AdminGuard>
   );
