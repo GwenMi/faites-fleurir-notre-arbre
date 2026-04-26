@@ -1,0 +1,40 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "kit_compose",
+        "kit_pret",
+        "pack_invite",
+        "option_emballage"
+      ]
+    },
+    "image": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Nombre de pots pour les packs invit\u00e9s"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "price",
+    "category"
+  ]
+}

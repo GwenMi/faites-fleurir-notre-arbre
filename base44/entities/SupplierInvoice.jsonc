@@ -1,0 +1,55 @@
+{
+  "name": "SupplierInvoice",
+  "type": "object",
+  "properties": {
+    "supplier_order_id": {
+      "type": "string"
+    },
+    "invoice_number": {
+      "type": "string"
+    },
+    "supplier_name": {
+      "type": "string"
+    },
+    "amount_ht": {
+      "type": "number"
+    },
+    "tva_rate": {
+      "type": "number",
+      "default": 20
+    },
+    "amount_ttc": {
+      "type": "number"
+    },
+    "invoice_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "paid",
+        "overdue",
+        "disputed"
+      ],
+      "default": "unpaid"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "supplier_name",
+    "invoice_number",
+    "amount_ttc",
+    "invoice_date"
+  ]
+}

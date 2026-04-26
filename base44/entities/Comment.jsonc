@@ -1,0 +1,23 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "photo_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "photo_id",
+    "guest_name",
+    "message"
+  ]
+}

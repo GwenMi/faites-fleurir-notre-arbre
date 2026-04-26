@@ -1,0 +1,23 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "title",
+    "content"
+  ]
+}

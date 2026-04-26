@@ -1,0 +1,63 @@
+{
+  "name": "Promo",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Code promo unique (ex: NOEL2024)"
+    },
+    "discount_percent": {
+      "type": "number",
+      "description": "Pourcentage de r\u00e9duction (0-100)"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Montant fixe de r\u00e9duction en euros"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si le code est actif ou non"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de d\u00e9but de validit\u00e9"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de fin de validit\u00e9"
+    },
+    "max_uses": {
+      "type": "number",
+      "description": "Nombre max d'utilisations (null = illimit\u00e9)"
+    },
+    "uses_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre d'utilisations actuelles"
+    },
+    "min_order_amount": {
+      "type": "number",
+      "description": "Montant minimum de commande pour appliquer (null = aucun)"
+    },
+    "applies_to": {
+      "type": "string",
+      "enum": [
+        "all",
+        "products",
+        "guest_packs"
+      ],
+      "default": "all",
+      "description": "\u00c0 quoi s'applique la promo"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description interne"
+    }
+  },
+  "required": [
+    "code"
+  ]
+}

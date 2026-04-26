@@ -1,0 +1,32 @@
+{
+  "name": "Reaction",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "photo",
+        "comment"
+      ]
+    },
+    "emoji": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "target_id",
+    "target_type",
+    "emoji",
+    "guest_name"
+  ]
+}

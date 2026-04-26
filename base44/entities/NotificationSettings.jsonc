@@ -1,0 +1,35 @@
+{
+  "name": "NotificationSettings",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "notify_email": {
+      "type": "string"
+    },
+    "on_new_photo": {
+      "type": "boolean",
+      "default": true
+    },
+    "on_new_rsvp": {
+      "type": "boolean",
+      "default": true
+    },
+    "on_new_guestbook": {
+      "type": "boolean",
+      "default": true
+    },
+    "on_new_order": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_digest_sent": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "notify_email"
+  ]
+}

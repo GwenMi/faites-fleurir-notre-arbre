@@ -1,0 +1,20 @@
+{
+  "name": "WeddingChecklist",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "completed_tasks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Liste des cl\u00e9s de t\u00e2ches coch\u00e9es"
+    }
+  },
+  "required": [
+    "event_id"
+  ]
+}

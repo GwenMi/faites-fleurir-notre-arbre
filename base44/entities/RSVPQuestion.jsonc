@@ -1,0 +1,39 @@
+{
+  "name": "RSVPQuestion",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "question": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "choice",
+        "yes_no"
+      ],
+      "default": "text"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "event_id",
+    "question"
+  ]
+}

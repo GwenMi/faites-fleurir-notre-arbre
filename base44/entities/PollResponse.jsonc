@@ -1,0 +1,20 @@
+{
+  "name": "PollResponse",
+  "type": "object",
+  "properties": {
+    "poll_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "response": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "poll_id",
+    "guest_name",
+    "response"
+  ]
+}

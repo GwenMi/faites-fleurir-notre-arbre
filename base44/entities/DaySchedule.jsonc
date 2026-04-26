@@ -1,0 +1,38 @@
+{
+  "name": "DaySchedule",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string",
+      "default": "\ud83c\udf38"
+    },
+    "vendor_id": {
+      "type": "string",
+      "description": "ID du prestataire associ\u00e9"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "event_id",
+    "time",
+    "title"
+  ]
+}

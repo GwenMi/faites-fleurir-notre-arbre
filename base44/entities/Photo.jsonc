@@ -1,0 +1,39 @@
+{
+  "name": "Photo",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "flower",
+        "wedding"
+      ],
+      "default": "flower"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": false
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "event_id",
+    "guest_name",
+    "image"
+  ]
+}

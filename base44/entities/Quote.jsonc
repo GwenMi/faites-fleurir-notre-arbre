@@ -1,0 +1,105 @@
+{
+  "name": "Quote",
+  "type": "object",
+  "properties": {
+    "quote_number": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "customer_address": {
+      "type": "string"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_price_ht": {
+            "type": "number"
+          },
+          "options": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "custom_lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_price_ht": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "tva_rate": {
+      "type": "number",
+      "default": 20
+    },
+    "discount_percent": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "validity_days": {
+      "type": "number",
+      "default": 30
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "accepted",
+        "refused",
+        "expired"
+      ],
+      "default": "draft"
+    },
+    "email_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "customer_name",
+    "customer_email"
+  ]
+}

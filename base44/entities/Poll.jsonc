@@ -1,0 +1,44 @@
+{
+  "name": "Poll",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "question": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "single_choice",
+        "multiple_choice",
+        "yes_no",
+        "text"
+      ],
+      "default": "single_choice"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "event_id",
+    "title",
+    "question"
+  ]
+}

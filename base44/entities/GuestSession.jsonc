@@ -1,0 +1,24 @@
+{
+  "name": "GuestSession",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "pseudo": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "password_hash": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "pseudo",
+    "email",
+    "password_hash"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "VendorMessage",
+  "type": "object",
+  "properties": {
+    "vendor_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "from_couple": {
+      "type": "boolean",
+      "default": true,
+      "description": "true = mari\u00e9s, false = prestataire"
+    },
+    "author": {
+      "type": "string",
+      "description": "Nom affich\u00e9"
+    },
+    "content": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "vendor_id",
+    "event_id",
+    "content"
+  ]
+}

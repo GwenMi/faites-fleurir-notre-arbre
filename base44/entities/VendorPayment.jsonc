@@ -1,0 +1,29 @@
+{
+  "name": "VendorPayment",
+  "type": "object",
+  "properties": {
+    "vendor_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Montant vers\u00e9 en \u20ac"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "label": {
+      "type": "string",
+      "description": "Libell\u00e9 (ex: Acompte 1, Solde\u2026)"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "vendor_id",
+    "amount",
+    "payment_date"
+  ]
+}

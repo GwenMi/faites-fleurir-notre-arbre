@@ -1,0 +1,32 @@
+{
+  "name": "FlowerChallenge",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "flower_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "challenge_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "challenge_description": {
+      "type": "string"
+    },
+    "challenge_secret": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "event_id",
+    "flower_deadline",
+    "challenge_deadline"
+  ]
+}

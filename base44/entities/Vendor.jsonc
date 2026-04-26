@@ -1,0 +1,75 @@
+{
+  "name": "Vendor",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "traiteur",
+        "fleuriste",
+        "photographe",
+        "videaste",
+        "musique",
+        "salle",
+        "decoration",
+        "coiffure_maquillage",
+        "transport",
+        "faire_part",
+        "gateau",
+        "autre"
+      ],
+      "default": "autre"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nom du prestataire"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Nom du contact"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "contract_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Montant total du contrat TTC"
+    },
+    "deposit_paid": {
+      "type": "number",
+      "default": 0,
+      "description": "Acompte(s) d\u00e9j\u00e0 vers\u00e9(s)"
+    },
+    "next_payment_amount": {
+      "type": "number",
+      "description": "Montant de la prochaine \u00e9ch\u00e9ance"
+    },
+    "next_payment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la prochaine \u00e9ch\u00e9ance"
+    },
+    "contract_signed": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "name",
+    "category"
+  ]
+}

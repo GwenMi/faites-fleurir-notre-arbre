@@ -1,0 +1,36 @@
+{
+  "name": "GuestbookEntry",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "pseudo": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo optionnelle jointe au message"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": true,
+      "description": "Valid\u00e9 par les mari\u00e9s avant publication"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "event_id",
+    "pseudo",
+    "message"
+  ]
+}

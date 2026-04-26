@@ -1,0 +1,39 @@
+{
+  "name": "SeatingGuest",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "table_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "attending": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "rsvp_response_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "rsvp"
+      ],
+      "default": "manual"
+    }
+  },
+  "required": [
+    "event_id",
+    "name"
+  ]
+}

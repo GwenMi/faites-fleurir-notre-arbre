@@ -1,0 +1,24 @@
+{
+  "name": "FAQItem",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "question": {
+      "type": "string"
+    },
+    "answer": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "event_id",
+    "question",
+    "answer"
+  ]
+}

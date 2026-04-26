@@ -1,0 +1,76 @@
+{
+  "name": "EmailCampaign",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "rsvp_reminder",
+        "event_reminder",
+        "custom"
+      ],
+      "default": "rsvp_reminder"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body_template": {
+      "type": "string"
+    },
+    "schedule_type": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "days_before_event",
+        "specific_date"
+      ],
+      "default": "specific_date"
+    },
+    "days_before_event": {
+      "type": "number"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "target_audience": {
+      "type": "string",
+      "enum": [
+        "pending_rsvp",
+        "confirmed",
+        "all"
+      ],
+      "default": "pending_rsvp"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "sent",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "sent_count": {
+      "type": "number",
+      "default": 0
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "event_id",
+    "name",
+    "subject",
+    "body_template"
+  ]
+}

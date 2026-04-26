@@ -1,0 +1,49 @@
+{
+  "name": "BudgetItem",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "traiteur",
+        "fleurs",
+        "salle",
+        "musique",
+        "photo_video",
+        "tenue",
+        "decoration",
+        "faire_part",
+        "transport",
+        "voyage_noces",
+        "autre"
+      ],
+      "default": "autre"
+    },
+    "label": {
+      "type": "string"
+    },
+    "budget_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "actual_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "paid": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "label",
+    "budget_amount"
+  ]
+}

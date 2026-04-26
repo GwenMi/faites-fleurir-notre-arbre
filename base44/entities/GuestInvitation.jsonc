@@ -1,0 +1,58 @@
+{
+  "name": "GuestInvitation",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "guest_email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "table_note": {
+      "type": "string"
+    },
+    "invitation_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "invitation_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rsvp_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "declined",
+        "maybe"
+      ],
+      "default": "pending"
+    },
+    "party_size": {
+      "type": "number",
+      "default": 1
+    },
+    "dietary_notes": {
+      "type": "string"
+    },
+    "rsvp_response_id": {
+      "type": "string"
+    },
+    "reminder_sent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date du dernier email de relance RSVP envoy\u00e9"
+    }
+  },
+  "required": [
+    "event_id",
+    "guest_name"
+  ]
+}

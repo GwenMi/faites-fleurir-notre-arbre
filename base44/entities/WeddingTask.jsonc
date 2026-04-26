@@ -1,0 +1,89 @@
+{
+  "name": "WeddingTask",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ceremonie",
+        "reception",
+        "traiteur",
+        "decoration",
+        "administratif",
+        "logistique",
+        "tenues",
+        "beaute",
+        "voyage",
+        "communication",
+        "autre"
+      ],
+      "default": "autre"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Nom du responsable de la t\u00e2che"
+    },
+    "assigned_to_email": {
+      "type": "string",
+      "description": "Email pour les rappels automatiques"
+    },
+    "assigned_to_role": {
+      "type": "string",
+      "enum": [
+        "marie_e",
+        "temoin",
+        "famille",
+        "prestataire",
+        "ami"
+      ],
+      "default": "marie_e"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "haute",
+        "moyenne",
+        "basse"
+      ],
+      "default": "moyenne"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "a_faire",
+        "en_cours",
+        "termine"
+      ],
+      "default": "a_faire"
+    },
+    "reminder_days_before": {
+      "type": "number",
+      "default": 3,
+      "description": "Envoyer le rappel N jours avant la date limite"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "title"
+  ]
+}

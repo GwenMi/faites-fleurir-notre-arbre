@@ -1,0 +1,40 @@
+{
+  "name": "SeatingTable",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "shape": {
+      "type": "string",
+      "enum": [
+        "round",
+        "rectangle"
+      ],
+      "default": "round"
+    },
+    "capacity": {
+      "type": "number",
+      "default": 8
+    },
+    "color": {
+      "type": "string",
+      "default": "#a78bfa"
+    },
+    "position_x": {
+      "type": "number",
+      "default": 50
+    },
+    "position_y": {
+      "type": "number",
+      "default": 50
+    }
+  },
+  "required": [
+    "event_id",
+    "name"
+  ]
+}

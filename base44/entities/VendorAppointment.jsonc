@@ -1,0 +1,49 @@
+{
+  "name": "VendorAppointment",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Objet du rendez-vous"
+    },
+    "vendor_id": {
+      "type": "string",
+      "description": "Prestataire concern\u00e9"
+    },
+    "vendor_name": {
+      "type": "string",
+      "description": "Nom du prestataire (copie)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "time": {
+      "type": "string",
+      "description": "Heure HH:MM"
+    },
+    "duration_min": {
+      "type": "number",
+      "default": 60,
+      "description": "Dur\u00e9e en minutes"
+    },
+    "location": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "event_id",
+    "title",
+    "date"
+  ]
+}

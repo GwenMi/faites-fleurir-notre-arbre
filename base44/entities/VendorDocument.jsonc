@@ -1,0 +1,48 @@
+{
+  "name": "VendorDocument",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "vendor_id": {
+      "type": "string"
+    },
+    "vendor_name": {
+      "type": "string",
+      "description": "Copie du nom du prestataire"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "contrat",
+        "devis",
+        "plan",
+        "facture",
+        "autre"
+      ],
+      "default": "contrat"
+    },
+    "title": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "signed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "event_id",
+    "title",
+    "file_url"
+  ]
+}

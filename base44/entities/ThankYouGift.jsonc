@@ -1,0 +1,51 @@
+{
+  "name": "ThankYouGift",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string",
+      "description": "Nom du donateur"
+    },
+    "guest_email": {
+      "type": "string"
+    },
+    "gift_description": {
+      "type": "string",
+      "description": "Description du cadeau ou montant cagnotte"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "cadeau",
+        "cagnotte",
+        "bon_cadeau",
+        "fait_main",
+        "autre"
+      ],
+      "default": "cadeau"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Montant si cagnotte"
+    },
+    "thank_you_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "thank_you_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "guest_name",
+    "gift_description"
+  ]
+}

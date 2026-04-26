@@ -1,0 +1,61 @@
+{
+  "name": "StripePayment",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "amount_cents": {
+      "type": "number",
+      "description": "Amount in cents"
+    },
+    "currency": {
+      "type": "string",
+      "default": "eur"
+    },
+    "payment_type": {
+      "type": "string",
+      "enum": [
+        "deposit",
+        "full",
+        "balance"
+      ],
+      "default": "full"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "receipt_url": {
+      "type": "string"
+    },
+    "charge_id": {
+      "type": "string"
+    },
+    "receipt_email_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "order_id",
+    "customer_email",
+    "stripe_payment_intent_id",
+    "amount_cents"
+  ]
+}

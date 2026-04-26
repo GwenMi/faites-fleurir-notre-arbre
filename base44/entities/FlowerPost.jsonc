@@ -1,0 +1,35 @@
+{
+  "name": "FlowerPost",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "user_pseudo": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "flower",
+        "challenge"
+      ],
+      "default": "flower"
+    },
+    "image": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "user_pseudo",
+    "type",
+    "image"
+  ]
+}

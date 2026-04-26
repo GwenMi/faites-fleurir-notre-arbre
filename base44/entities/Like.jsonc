@@ -1,0 +1,15 @@
+{
+  "name": "Like",
+  "type": "object",
+  "properties": {
+    "photo_id": {
+      "type": "string"
+    },
+    "guest_session": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "photo_id"
+  ]
+}

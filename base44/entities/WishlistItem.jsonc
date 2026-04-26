@@ -1,0 +1,56 @@
+{
+  "name": "WishlistItem",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "link": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "gift",
+        "cagnotte"
+      ],
+      "default": "gift"
+    },
+    "target_amount": {
+      "type": "number",
+      "description": "Objectif cagnotte"
+    },
+    "collected_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "offered": {
+      "type": "boolean",
+      "default": false
+    },
+    "offered_by": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "event_id",
+    "title",
+    "category"
+  ]
+}
