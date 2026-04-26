@@ -292,6 +292,12 @@ contact@fleursenfete.com`,
             >
               <Package className="w-3.5 h-3.5" /> Picking
             </a>
+            <a
+              href={createPageUrl("AdminShipping")}
+              className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 transition"
+            >
+              <Truck className="w-3.5 h-3.5" /> Expédier
+            </a>
             <button onClick={loadOrders} className="p-2 rounded-xl hover:bg-gray-50 transition text-gray-400">
               <RefreshCw className="w-4 h-4" />
             </button>

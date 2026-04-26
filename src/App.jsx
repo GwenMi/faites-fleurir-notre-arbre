@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import KitNaturel from './pages/KitNaturel';
 import FlowerTreePreview from './pages/FlowerTreePreview';
+import AdminShipping from './pages/AdminShipping';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -65,6 +66,7 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/KitNaturel" element={<LayoutWrapper currentPageName="KitNaturel"><KitNaturel /></LayoutWrapper>} />
       <Route path="/FlowerTreePreview" element={<LayoutWrapper currentPageName="FlowerTreePreview"><FlowerTreePreview /></LayoutWrapper>} />
+      <Route path="/AdminShipping" element={<LayoutWrapper currentPageName="AdminShipping"><AdminShipping /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
