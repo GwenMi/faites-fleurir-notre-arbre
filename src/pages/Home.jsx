@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
-import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2 } from "lucide-react";
+import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2, Menu, X } from "lucide-react";
 import ReviewsSlider from "@/components/home/ReviewsSlider";
 
 const SHOP_URL = () => createPageUrl("Shop");
@@ -34,6 +34,7 @@ const FEATURES_PREMIUM = [
 export default function Home() {
   const [slugInput, setSlugInput] = useState("");
   const [cartInProgress, setCartInProgress] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -96,34 +97,77 @@ export default function Home() {
       `}</style>
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-gray-100">
-        <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-          alt="Fleurs de fête"
-          className="h-12"
-        />
-        <div className="flex items-center gap-3">
-          <a href={createPageUrl("Shop")}
-            className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition hidden sm:block">
-            Boutique 🌸
-          </a>
-          <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
-            className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition hidden sm:block">
-            Cadeaux entreprise 🏢
-          </a>
-          <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
-            className="font-sans-clean text-sm font-semibold text-amber-600 hover:text-amber-700 transition hidden sm:block">
-            Maisons d'hôtes 🏡
-          </a>
-          <a href={createPageUrl("ClientDashboard")}
-            className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition hidden sm:block">
-            Mon espace
-          </a>
-          <a href={createPageUrl("Shop")}
-            className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
-            Créer mon événement
-          </a>
+      <nav className="border-b border-gray-100 bg-white relative z-50">
+        <div className="flex items-center justify-between px-6 md:px-12 py-4">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
+            alt="Fleurs de fête"
+            className="h-10 md:h-12"
+          />
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-4">
+            <a href={createPageUrl("Shop")}
+              className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition">
+              Boutique 🌸
+            </a>
+            <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
+              className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">
+              Cadeaux entreprise 🏢
+            </a>
+            <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
+              className="font-sans-clean text-sm font-semibold text-amber-600 hover:text-amber-700 transition">
+              Maisons d'hôtes 🏡
+            </a>
+            <a href={createPageUrl("ClientDashboard")}
+              className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition">
+              Mon espace
+            </a>
+            <a href={createPageUrl("Shop")}
+              className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
+              Créer mon événement
+            </a>
+          </div>
+          {/* Mobile: CTA + burger */}
+          <div className="flex md:hidden items-center gap-2">
+            <a href={createPageUrl("Shop")}
+              className="font-sans-clean text-xs font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-4 py-2 rounded-full shadow-sm">
+              Créer mon événement
+            </a>
+            <button
+              onClick={() => setMobileMenuOpen(o => !o)}
+              className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-4">
+            <a href={createPageUrl("Shop")}
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-sans-clean text-sm font-semibold text-rose-500 py-1">
+              Boutique 🌸
+            </a>
+            <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-sans-clean text-sm font-semibold text-emerald-600 py-1">
+              Cadeaux entreprise 🏢
+            </a>
+            <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-sans-clean text-sm font-semibold text-amber-600 py-1">
+              Maisons d'hôtes 🏡
+            </a>
+            <a href={createPageUrl("ClientDashboard")}
+              onClick={() => setMobileMenuOpen(false)}
+              className="font-sans-clean text-sm text-gray-500 py-1">
+              Mon espace
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
