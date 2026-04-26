@@ -70,6 +70,7 @@ export default function Shop() {
   });
 
   const [shippingMethod, setShippingMethod] = useState(null);
+  const [referral, setReferral] = useState(null); // { code, referralId, discountAmount }
 
   // Persist to localStorage
   useEffect(() => {
@@ -146,8 +147,9 @@ export default function Shop() {
   const subtotal = baseKitPrice * totalPots;
   const sacCadeauTotal = selection.sacCadeau ? PRICING.SAC_CADEAU * totalPots : 0;
   const shippingCost = shippingMethod?.price ?? 0;
-  const total = subtotal + sacCadeauTotal + shippingCost;
-  const pricing = { pricePerPot: baseKitPrice, totalPots, subtotal, sacCadeauTotal, discount: 0, shippingCost, total };
+  const referralDiscount = referral?.discountAmount || 0;
+  const total = Math.max(0, subtotal + sacCadeauTotal + shippingCost - referralDiscount);
+  const pricing = { pricePerPot: baseKitPrice, totalPots, subtotal, sacCadeauTotal, discount: 0, referralDiscount, shippingCost, total };
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
@@ -197,10 +199,10 @@ export default function Shop() {
               customerInfo={customerInfo}
               onChange={setCustomerInfo}
               selection={selection}
+              referral={referral}
+              onReferralChange={setReferral}
               onNext={() => setStep(7)}
               onBack={() => {
-                // Si slug défini → on est passé par l'étape 5, y retourner
-                // Sinon → l'étape 5 a été sautée, retourner à l'étape 4
                 if (selection.slug) setStep(5);
                 else setStep(4);
               }}
@@ -216,6 +218,7 @@ export default function Shop() {
               pricing={pricing}
               PRICING={PRICING}
               shippingMethod={shippingMethod}
+              referral={referral}
               onBack={() => setStep(7)}
               onOrderComplete={handleOrderComplete}
             />

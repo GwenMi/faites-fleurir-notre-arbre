@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateInvoicePDF } from "@/components/admin/invoiceUtils";
+import ReferralTab from "@/components/dashboard/ReferralTab";
 
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
@@ -44,6 +45,7 @@ const TABS = [
   { id: "overview",  label: "Vue d'ensemble", icon: BarChart2 },
   { id: "orders",    label: "Commandes",      icon: ShoppingBag },
   { id: "events",    label: "Événements",     icon: Flower2 },
+  { id: "referral",  label: "Parrainage",     icon: Gift },
   { id: "profile",   label: "Mon profil",     icon: User },
   { id: "support",   label: "Support",        icon: LifeBuoy },
 ];
@@ -809,6 +811,9 @@ export default function ClientDashboard() {
             )}
           </div>
         )}
+
+        {/* === REFERRAL === */}
+        {tab === "referral" && <ReferralTab user={user} />}
 
         {/* === SUPPORT === */}
         {tab === "support" && (

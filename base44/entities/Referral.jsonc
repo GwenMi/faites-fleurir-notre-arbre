@@ -1,0 +1,58 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referrer_email": {
+      "type": "string",
+      "description": "Email du parrain"
+    },
+    "referrer_name": {
+      "type": "string",
+      "description": "Nom du parrain"
+    },
+    "referral_code": {
+      "type": "string",
+      "description": "Code unique du parrain (ex: EMMA2025)"
+    },
+    "referee_email": {
+      "type": "string",
+      "description": "Email du filleul (rempli quand le code est utilis\u00e9)"
+    },
+    "referee_name": {
+      "type": "string",
+      "description": "Nom du filleul"
+    },
+    "order_id": {
+      "type": "string",
+      "description": "ID de la commande du filleul"
+    },
+    "discount_amount": {
+      "type": "number",
+      "default": 5,
+      "description": "R\u00e9duction accord\u00e9e au filleul (\u20ac)"
+    },
+    "reward_amount": {
+      "type": "number",
+      "default": 5,
+      "description": "R\u00e9compense accord\u00e9e au parrain (\u20ac de bon d'achat)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "used",
+        "rewarded"
+      ],
+      "default": "pending",
+      "description": "pending = code cr\u00e9\u00e9, used = filleul a command\u00e9, rewarded = parrain r\u00e9compens\u00e9"
+    },
+    "reward_code": {
+      "type": "string",
+      "description": "Code promo g\u00e9n\u00e9r\u00e9 pour le parrain suite au parrainage r\u00e9ussi"
+    }
+  },
+  "required": [
+    "referrer_email",
+    "referral_code"
+  ]
+}

@@ -7,7 +7,7 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import StripePaymentForm from "./StripePaymentForm";
 
-export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onBack, onOrderComplete }) {
+export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, referral, onBack, onOrderComplete }) {
   const [paymentStarted, setPaymentStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
@@ -80,6 +80,18 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           site_public_url: selection.slug ? `https://fleursdefete.fr/${selection.slug}` : null,
         }
       });
+
+      // Confirmer le parrainage si code utilisé
+      if (referral?.code) {
+        try {
+          await base44.functions.invoke('confirmReferral', {
+            referralCode: referral.code,
+            refereeEmail: customerInfo.email,
+            refereeName: fullName,
+            orderId: order.id,
+          });
+        } catch {}
+      }
 
       // Envoyer l'email de confirmation
       try {
@@ -164,6 +176,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <div className="flex justify-between text-sm text-green-600">
               <span>Réduction 10% multi-packs</span>
               <span>−{pricing.discount.toFixed(2)}€</span>
+            </div>
+          )}
+          {referral && pricing.referralDiscount > 0 && (
+            <div className="flex justify-between text-sm text-green-600">
+              <span>🎁 Code parrainage {referral.code}</span>
+              <span>−{pricing.referralDiscount.toFixed(2)}€</span>
             </div>
           )}
           {shippingMethod && (

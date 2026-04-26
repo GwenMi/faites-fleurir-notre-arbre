@@ -15,14 +15,17 @@ const EUROPEAN_COUNTRIES = [
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, Mail, Tag, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 
-export default function StepCustomerForm({ customerInfo, onChange, selection, onNext, onBack }) {
+export default function StepCustomerForm({ customerInfo, onChange, selection, referral, onReferralChange, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
   const [validationError, setValidationError] = useState("");
   const [diffBilling, setDiffBilling] = useState(false);
+  const [referralInput, setReferralInput] = useState(referral?.code || "");
+  const [referralChecking, setReferralChecking] = useState(false);
+  const [referralError, setReferralError] = useState("");
   const { isAuthenticated, user } = useAuth();
 
   // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
@@ -48,6 +51,28 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
   }, [user?.email]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
+
+  const checkReferralCode = async () => {
+    if (!referralInput.trim()) return;
+    setReferralChecking(true);
+    setReferralError("");
+    onReferralChange(null);
+    try {
+      const res = await base44.functions.invoke("applyReferralCode", {
+        referralCode: referralInput.trim(),
+        refereeEmail: customerInfo.email || user?.email || "",
+      });
+      const data = res.data;
+      if (data?.valid) {
+        onReferralChange({ code: referralInput.trim().toUpperCase(), referralId: data.referralId, discountAmount: data.discountAmount, referrerName: data.referrerName });
+      } else {
+        setReferralError(data?.error || "Code invalide");
+      }
+    } catch {
+      setReferralError("Erreur de vérification");
+    }
+    setReferralChecking(false);
+  };
 
   const daysUntilEvent = () => {
     if (!customerInfo.eventDate) return null;
@@ -303,6 +328,48 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, on
           </div>
         </div>
       )}
+
+      {/* Code parrainage */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-3">
+        <div className="flex items-center gap-2">
+          <Tag className="w-4 h-4 text-rose-400" />
+          <p className="font-semibold text-sm text-gray-800">Code parrainage <span className="font-normal text-gray-400">(optionnel)</span></p>
+        </div>
+        {referral ? (
+          <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+            <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-green-800">Code <strong>{referral.code}</strong> appliqué 🎉</p>
+              <p className="text-xs text-green-600">Parrainé par {referral.referrerName} — <strong>−{referral.discountAmount}€</strong> sur votre commande</p>
+            </div>
+            <button onClick={() => { onReferralChange(null); setReferralInput(""); }} className="text-green-400 hover:text-green-600">
+              <XCircle className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <Input
+              value={referralInput}
+              onChange={e => { setReferralInput(e.target.value.toUpperCase()); setReferralError(""); }}
+              placeholder="Ex : EMMA2599"
+              className="h-11 rounded-xl flex-1 font-mono tracking-widest"
+              onKeyDown={e => e.key === "Enter" && checkReferralCode()}
+            />
+            <button
+              onClick={checkReferralCode}
+              disabled={referralChecking || !referralInput.trim()}
+              className="h-11 px-4 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold transition disabled:opacity-40 flex items-center gap-1.5"
+            >
+              {referralChecking ? <Loader2 className="w-4 h-4 animate-spin" /> : "Appliquer"}
+            </button>
+          </div>
+        )}
+        {referralError && (
+          <p className="text-xs text-red-500 flex items-center gap-1.5">
+            <XCircle className="w-3.5 h-3.5" /> {referralError}
+          </p>
+        )}
+      </div>
 
       {validationError && (
         <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
