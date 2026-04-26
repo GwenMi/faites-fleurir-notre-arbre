@@ -8,7 +8,7 @@ import {
   Heart, Star, Euro, TrendingUp, Bell, Settings, LifeBuoy,
   Save, Phone, Home, Globe, Mail, CreditCard, ArrowRight,
   Gift, Sparkles, BarChart2, ChevronDown, ChevronUp, Copy,
-  CheckCheck
+  CheckCheck, Trash2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -355,6 +355,22 @@ export default function ClientDashboard() {
   };
 
   const handleLogout = () => base44.auth.logout(createPageUrl("Home"));
+
+  // Delete account
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (deleteInput !== "SUPPRIMER") return;
+    setDeleting(true);
+    await base44.integrations.Core.SendEmail({
+      to: "contact@fleursdefete.fr",
+      subject: `🗑️ Demande de suppression de compte — ${user.email}`,
+      body: `L'utilisateur ${user.full_name} (${user.email}) a demandé la suppression de son compte le ${new Date().toLocaleDateString('fr-FR')}.\n\nVeuillez procéder à la suppression de ses données.`,
+    });
+    await base44.auth.logout(createPageUrl("Home"));
+  };
 
   if (loading) {
     return (
@@ -739,13 +755,58 @@ export default function ClientDashboard() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <p className="font-sans-clean text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Compte</p>
               <button onClick={handleLogout}
-                className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50 transition">
+                className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50 transition mb-3">
                 <span className="font-sans-clean text-sm font-semibold text-red-500 flex items-center gap-2">
                   <LogOut className="w-4 h-4" /> Se déconnecter
                 </span>
                 <ChevronRight className="w-4 h-4 text-red-300" />
               </button>
+              <button onClick={() => setShowDeleteModal(true)}
+                className="w-full flex items-center justify-between p-4 rounded-xl border border-red-100 bg-red-50 hover:bg-red-100 transition">
+                <span className="font-sans-clean text-sm font-semibold text-red-600 flex items-center gap-2">
+                  <Trash2 className="w-4 h-4" /> Supprimer mon compte
+                </span>
+                <ChevronRight className="w-4 h-4 text-red-300" />
+              </button>
             </div>
+
+            {/* Delete account modal */}
+            {showDeleteModal && (
+              <div className="fixed inset-0 bg-black/50 flex items-end md:items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl w-full max-w-sm p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Trash2 className="w-5 h-5 text-red-600" />
+                    </div>
+                    <h3 className="font-sans-clean text-lg font-bold text-gray-800">Supprimer mon compte</h3>
+                  </div>
+                  <p className="font-sans-clean text-sm text-gray-500">
+                    Cette action est <strong>irréversible</strong>. Toutes vos données seront supprimées. Pour confirmer, tapez <strong>SUPPRIMER</strong> ci-dessous.
+                  </p>
+                  <Input
+                    value={deleteInput}
+                    onChange={e => setDeleteInput(e.target.value)}
+                    placeholder="SUPPRIMER"
+                    className="rounded-xl border-red-200 focus:border-red-400"
+                  />
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => { setShowDeleteModal(false); setDeleteInput(""); }}
+                      className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-semibold font-sans-clean hover:bg-gray-50 transition"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={deleteInput !== "SUPPRIMER" || deleting}
+                      className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold font-sans-clean hover:bg-red-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {deleting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Confirmer"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

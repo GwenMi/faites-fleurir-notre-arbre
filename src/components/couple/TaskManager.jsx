@@ -130,20 +130,20 @@ function TaskForm({ eventId, task, onSave, onCancel }) {
 }
 
 function TaskCard({ task, onUpdate, onDelete }) {
-  const [loading, setLoading] = useState(false);
+  const [optimisticStatus, setOptimisticStatus] = useState(null);
   const [editing, setEditing] = useState(false);
   const roleConfig = getRoleConfig(task.assigned_to_role);
+  const currentStatus = optimisticStatus ?? task.status;
   const dueDateStatus = getDueDateStatus(task.due_date);
-  const isDone = task.status === "termine";
+  const isDone = currentStatus === "termine";
 
   const cycleStatus = async () => {
-    if (loading) return;
-    setLoading(true);
-    const next = task.status === "a_faire" ? "en_cours" : task.status === "en_cours" ? "termine" : "a_faire";
-    await base44.entities.WeddingTask.update(task.id, { status: next });
-    setLoading(false);
-    onUpdate();
+    const next = currentStatus === "a_faire" ? "en_cours" : currentStatus === "en_cours" ? "termine" : "a_faire";
+    setOptimisticStatus(next); // optimistic update immédiat
     if (next === "termine") toast.success("Tâche terminée ! 🎉");
+    await base44.entities.WeddingTask.update(task.id, { status: next });
+    setOptimisticStatus(null);
+    onUpdate();
   };
 
   if (editing) {
@@ -158,7 +158,7 @@ function TaskCard({ task, onUpdate, onDelete }) {
 
   const statusIcon = isDone
     ? <CheckCircle2 className="w-5 h-5 text-green-500" />
-    : task.status === "en_cours"
+    : currentStatus === "en_cours"
       ? <Clock className="w-5 h-5 text-blue-400" />
       : <Circle className="w-5 h-5 text-gray-300" />;
 
@@ -168,14 +168,12 @@ function TaskCard({ task, onUpdate, onDelete }) {
       : dueDateStatus?.urgent ? "bg-red-50/30 border-red-100"
       : "bg-white border-gray-100 hover:border-gray-200"
     }`}>
-      <button onClick={cycleStatus} disabled={loading} className="flex-shrink-0 mt-0.5 hover:opacity-70 transition">
-        {loading
-          ? <div className="w-5 h-5 rounded-full border-2 border-gray-300 border-t-transparent animate-spin" />
-          : statusIcon}
+      <button onClick={cycleStatus} className="flex-shrink-0 mt-0.5 hover:opacity-70 transition">
+        {statusIcon}
       </button>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <p className={`text-sm font-semibold ${isDone ? "line-through text-gray-400" : "text-gray-800"}`}>{task.title}</p>
+          <p className={`text-sm font-semibold ${isDone ? "line-through text-gray-400" : "text-gray-800"} transition-all`}>{task.title}</p>
           {task.priority === "haute" && !isDone && <Flag className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />}
         </div>
         <div className="flex items-center gap-1.5 mt-1 flex-wrap">
