@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
   const fields = [
     ENSEIGNE,       // Enseigne
     'CCC',          // ModeCol
-    '24R',          // ModeLiv
+    '24L',          // ModeLiv
     '',             // NDossier
     '',             // NClient
     'FR',           // Expe_Langage
@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
     <WSI2_CreationEtiquette xmlns="http://www.mondialrelay.fr/webservice/">
       <Enseigne>${ENSEIGNE}</Enseigne>
       <ModeCol>CCC</ModeCol>
-      <ModeLiv>24R</ModeLiv>
+      <ModeLiv>24L</ModeLiv>
       <NDossier></NDossier>
       <NClient></NClient>
       <Expe_Langage>FR</Expe_Langage>
