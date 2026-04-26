@@ -14,6 +14,8 @@ import KitNaturel from './pages/KitNaturel';
 import FlowerTreePreview from './pages/FlowerTreePreview';
 import AdminShipping from './pages/AdminShipping';
 import ContactForm from './pages/ContactForm';
+import AdminAccessPanel from './pages/AdminAccessPanel';
+import AdminAccessLogin from './pages/AdminAccessLogin';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -69,6 +71,8 @@ const AuthenticatedApp = () => {
       <Route path="/FlowerTreePreview" element={<LayoutWrapper currentPageName="FlowerTreePreview"><FlowerTreePreview /></LayoutWrapper>} />
       <Route path="/AdminShipping" element={<LayoutWrapper currentPageName="AdminShipping"><AdminShipping /></LayoutWrapper>} />
       <Route path="/contact" element={<ContactForm />} />
+      <Route path="/AdminAccessPanel" element={<LayoutWrapper currentPageName="AdminAccessPanel"><AdminAccessPanel /></LayoutWrapper>} />
+      <Route path="/AdminAccessLogin" element={<AdminAccessLogin />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

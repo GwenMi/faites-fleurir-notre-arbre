@@ -1,0 +1,66 @@
+{
+  "name": "AdminAccess",
+  "type": "object",
+  "properties": {
+    "owner_email": {
+      "type": "string",
+      "description": "Email du propri\u00e9taire de la page d'acc\u00e8s"
+    },
+    "access_slug": {
+      "type": "string",
+      "description": "Slug unique et secret pour acc\u00e9der \u00e0 la page"
+    },
+    "pseudo": {
+      "type": "string",
+      "description": "Pseudo/identifiant de l'utilisateur invit\u00e9"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email de l'utilisateur"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor",
+        "viewer"
+      ],
+      "default": "viewer",
+      "description": "R\u00f4le d'acc\u00e8s : admin=acc\u00e8s complet, editor=modification, viewer=lecture seule"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "active"
+      ],
+      "default": "pending",
+      "description": "pending=invitation envoy\u00e9e, accepted=mot de passe d\u00e9fini, active=connect\u00e9"
+    },
+    "password_hash": {
+      "type": "string",
+      "description": "Hash du mot de passe"
+    },
+    "invitation_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "joined_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date de premi\u00e8re connexion"
+    },
+    "last_login": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "owner_email",
+    "access_slug",
+    "pseudo",
+    "email",
+    "role"
+  ]
+}
