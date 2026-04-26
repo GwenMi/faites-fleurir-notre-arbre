@@ -1,0 +1,62 @@
+{
+  "name": "TeamMember",
+  "type": "object",
+  "properties": {
+    "team_id": {
+      "type": "string",
+      "description": "ID de l'\u00e9quipe"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email du membre"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nom complet"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "manager",
+        "editor",
+        "viewer"
+      ],
+      "default": "viewer",
+      "description": "owner=propri\u00e9taire, admin=acc\u00e8s complet, manager=commandes, editor=produits/promos, viewer=lecture seule"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "pending=invitation en attente, accepted=accept\u00e9e, rejected=refus\u00e9e"
+    },
+    "invitation_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "joined_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date d'acceptation de l'invitation"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Permissions personnalis\u00e9es (ex: 'manage_orders', 'manage_products', 'manage_promos')"
+    }
+  },
+  "required": [
+    "team_id",
+    "email",
+    "role"
+  ]
+}

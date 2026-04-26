@@ -1,0 +1,30 @@
+{
+  "name": "Team",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom de l'\u00e9quipe (ex: Fleurs de F\u00eate)"
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Email du propri\u00e9taire/fondateur de l'\u00e9quipe"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description de l'\u00e9quipe"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Logo/image de l'\u00e9quipe"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "owner_email"
+  ]
+}

@@ -10,12 +10,14 @@ import { toast } from "sonner";
 import AdminGuard from "@/components/admin/AdminGuard";
 import UserManagementPanel from "@/components/admin/UserManagementPanel";
 import ProductManager from "@/components/admin/ProductManager";
+import TeamManager from "@/components/admin/TeamManager";
 
 const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
 const TABS = [
   { key: "stats", label: "Stats & Promos", icon: BarChart2 },
   { key: "products", label: "Produits", icon: ShoppingBag },
+  { key: "team", label: "Équipe", icon: Users },
 ];
 
 export default function AdminDashboard() {
@@ -218,7 +220,11 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Onglet Produits */}
         {activeTab === "products" && <ProductManager />}
-        {activeTab !== "products" && (<>
+
+        {/* Onglet Équipe */}
+        {activeTab === "team" && <TeamManager />}
+
+        {activeTab !== "products" && activeTab !== "team" && <>
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -505,9 +511,9 @@ export default function AdminDashboard() {
               })
             )}
           </div>
-          </div>
-          </>)}
-          </div>
+        </div>
+        </>}
+      </div>
     </div>
     </AdminGuard>
   );
