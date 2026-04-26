@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { LogOut, User, Package, BarChart2, Save } from "lucide-react";
+import { LogOut, User, Package, BarChart2, Save, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,9 @@ export default function AccountSettings() {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -36,6 +39,17 @@ export default function AccountSettings() {
   }, []);
 
   const handleLogout = async () => {
+    await base44.auth.logout(createPageUrl("Home"));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteInput !== "SUPPRIMER") return;
+    setDeleting(true);
+    await base44.integrations.Core.SendEmail({
+      to: "contact@fleursdefete.fr",
+      subject: `🗑️ Demande de suppression de compte — ${user.email}`,
+      body: `L'utilisateur ${user.full_name} (${user.email}) a demandé la suppression de son compte le ${new Date().toLocaleDateString('fr-FR')}.\n\nVeuillez procéder à la suppression de ses données.`,
+    });
     await base44.auth.logout(createPageUrl("Home"));
   };
 
@@ -186,6 +200,56 @@ export default function AccountSettings() {
               <LogOut className="w-4 h-4" />
               Se déconnecter
             </button>
+
+            {/* Zone danger */}
+            <div className="mt-8 pt-6 border-t border-red-100">
+              <h3 className="font-sans-shop text-sm font-semibold text-red-700 mb-2">Zone dangereuse</h3>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="w-full bg-white border border-red-300 hover:bg-red-50 text-red-600 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+              >
+                <Trash2 className="w-4 h-4" />
+                Supprimer mon compte
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Modal confirmation suppression */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black/50 flex items-end md:items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl w-full max-w-sm p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-red-600" />
+                </div>
+                <h3 className="font-sans-shop text-lg font-bold text-gray-800">Supprimer mon compte</h3>
+              </div>
+              <p className="font-sans-shop text-sm text-gray-600">
+                Cette action est <strong>irréversible</strong>. Vos données et commandes seront supprimées. Pour confirmer, tapez <strong>SUPPRIMER</strong> ci-dessous.
+              </p>
+              <Input
+                value={deleteInput}
+                onChange={e => setDeleteInput(e.target.value)}
+                placeholder="SUPPRIMER"
+                className="rounded-xl border-red-200 focus:border-red-400"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => { setShowDeleteConfirm(false); setDeleteInput(""); }}
+                  className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-semibold font-sans-shop hover:bg-gray-50 transition"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteInput !== "SUPPRIMER" || deleting}
+                  className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold font-sans-shop hover:bg-red-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {deleting ? "Envoi..." : "Confirmer"}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
