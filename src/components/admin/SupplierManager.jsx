@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Plus, Trash2, Edit2, ExternalLink, Package, AlertCircle } from 'lucide-react';
+import { Loader2, Plus, Trash2, Edit2, ExternalLink, Package, AlertCircle, FileText, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function SupplierManager({ eventId }) {
   const [suppliers, setSuppliers] = useState([]);
@@ -11,6 +12,7 @@ export default function SupplierManager({ eventId }) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSupplier, setEditingSupplier] = useState(null);
+  const [selectedSupplierForChart, setSelectedSupplierForChart] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     contact_name: '',
@@ -135,6 +137,37 @@ export default function SupplierManager({ eventId }) {
       cancelled: 'bg-red-100 text-red-700',
     };
     return colors[status] || 'bg-gray-100 text-gray-700';
+  };
+
+  const handleInvoiceUpload = async (orderId, file) => {
+    if (!file) return;
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const orderData = orders.find(o => o.id === orderId);
+      await base44.entities.SupplierOrder.update(orderId, {
+        invoice_url: file_url,
+        invoice_number: file.name.split('.')[0],
+        invoice_date: new Date().toISOString().split('T')[0],
+      });
+      toast.success('Facture uploadée');
+      loadData();
+    } catch (err) {
+      console.error(err);
+      toast.error('Erreur upload facture');
+    }
+  };
+
+  const getPriceChartData = (supplierName) => {
+    const supplierOrders = orders
+      .filter(o => o.supplier_name === supplierName && o.unit_price && o.order_date)
+      .sort((a, b) => new Date(a.order_date) - new Date(b.order_date))
+      .map(o => ({
+        date: new Date(o.order_date).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }),
+        price: o.unit_price,
+        product: o.product_description.substring(0, 20),
+        fullDate: o.order_date,
+      }));
+    return supplierOrders;
   };
 
   if (loading) {
@@ -406,10 +439,20 @@ export default function SupplierManager({ eventId }) {
 
                 {/* Associated Orders */}
                 {supplierOrders.length > 0 && (
-                  <div className="border-t border-gray-200 pt-4 mt-4">
-                    <h5 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-                      <Package className="w-4 h-4" /> Commandes liées ({supplierOrders.length})
-                    </h5>
+                  <div className="border-t border-gray-200 pt-4 mt-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h5 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                        <Package className="w-4 h-4" /> Commandes liées ({supplierOrders.length})
+                      </h5>
+                      {supplierOrders.some(o => o.unit_price) && (
+                        <button
+                          onClick={() => setSelectedSupplierForChart(selectedSupplierForChart === supplier.name ? null : supplier.name)}
+                          className="text-xs px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition flex items-center gap-1"
+                        >
+                          <TrendingDown className="w-3 h-3" /> Courbe prix
+                        </button>
+                      )}
+                    </div>
                     <div className="space-y-2">
                       {supplierOrders.map(order => (
                         <div
@@ -429,10 +472,61 @@ export default function SupplierManager({ eventId }) {
                             <span className="text-sm font-bold text-gray-800 min-w-16 text-right">
                               {order.total_price?.toFixed(2) || (order.quantity * order.unit_price).toFixed(2)}€
                             </span>
+                            {!order.invoice_url && (
+                              <label className="p-2 hover:bg-white rounded-lg transition text-gray-400 hover:text-green-600 cursor-pointer">
+                                <FileText className="w-4 h-4" />
+                                <input
+                                  type="file"
+                                  accept="application/pdf,.pdf"
+                                  onChange={(e) => handleInvoiceUpload(order.id, e.target.files?.[0])}
+                                  className="hidden"
+                                />
+                              </label>
+                            )}
+                            {order.invoice_url && (
+                              <a
+                                href={order.invoice_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                                title="Voir la facture"
+                              >
+                                <FileText className="w-4 h-4" />
+                              </a>
+                            )}
                           </div>
                         </div>
                       ))}
                     </div>
+
+                    {/* Price Chart */}
+                    {selectedSupplierForChart === supplier.name && (
+                      <div className="mt-4 pt-4 border-t border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-4">
+                        <h6 className="text-sm font-bold text-gray-800 mb-3">Suivi des prix unitaires</h6>
+                        <ResponsiveContainer width="100%" height={250}>
+                          <LineChart data={getPriceChartData(supplier.name)}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis dataKey="date" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                            <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                            <Tooltip
+                              contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                              formatter={(value) => `${value.toFixed(2)}€`}
+                              labelFormatter={(label) => `Date: ${label}`}
+                            />
+                            <Legend />
+                            <Line
+                              type="monotone"
+                              dataKey="price"
+                              stroke="#6366f1"
+                              strokeWidth={2}
+                              dot={{ fill: '#6366f1', r: 4 }}
+                              activeDot={{ r: 6 }}
+                              name="Prix unitaire (€)"
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

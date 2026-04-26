@@ -46,6 +46,19 @@
     },
     "notes": {
       "type": "string"
+    },
+    "invoice_url": {
+      "type": "string",
+      "description": "URL de la facture t\u00e9l\u00e9charg\u00e9e"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Num\u00e9ro de facture"
+    },
+    "invoice_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la facture"
     }
   },
   "required": [
