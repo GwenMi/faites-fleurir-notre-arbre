@@ -1,0 +1,32 @@
+{
+  "name": "AdminAccessLog",
+  "type": "object",
+  "properties": {
+    "access_slug": {
+      "type": "string",
+      "description": "Slug d'acc\u00e8s"
+    },
+    "pseudo": {
+      "type": "string",
+      "description": "Pseudo de l'utilisateur qui s'est connect\u00e9"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "login_attempt",
+        "login_success",
+        "password_set",
+        "view"
+      ],
+      "description": "Type d'action"
+    },
+    "ip_info": {
+      "type": "string",
+      "description": "Info navigateur/IP (optionnel)"
+    }
+  },
+  "required": [
+    "access_slug",
+    "action"
+  ]
+}

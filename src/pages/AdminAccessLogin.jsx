@@ -34,6 +34,12 @@ export default function AdminAccessLogin() {
     setLoading(true);
 
     try {
+      // Enregistrer la tentative
+      await base44.entities.AdminAccessLog.create({
+        access_slug: slug,
+        action: 'login_attempt',
+      }).catch(() => {});
+
       // Vérifier les identifiants
       const members = await base44.entities.AdminAccess.filter({
         access_slug: slug,
@@ -52,6 +58,13 @@ export default function AdminAccessLogin() {
         setLoading(false);
         return;
       }
+
+      // Enregistrer la connexion réussie
+      await base44.entities.AdminAccessLog.create({
+        access_slug: slug,
+        pseudo: pseudo,
+        action: 'login_success',
+      }).catch(() => {});
 
       setMember(foundMember);
       setStep('setPassword');
@@ -89,6 +102,13 @@ export default function AdminAccessLogin() {
         status: 'active',
         joined_date: new Date().toISOString(),
       });
+
+      // Enregistrer l'action
+      await base44.entities.AdminAccessLog.create({
+        access_slug: slug,
+        pseudo: pseudo,
+        action: 'password_set',
+      }).catch(() => {});
 
       toast.success('Mot de passe défini avec succès');
       setStep('success');

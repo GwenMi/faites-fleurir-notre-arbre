@@ -15,6 +15,7 @@ export default function AdminAccessPanel() {
   const [inviteForm, setInviteForm] = useState({ pseudo: '', email: '', role: 'viewer' });
   const [savingInvite, setSavingInvite] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState(false);
+  const [stats, setStats] = useState({ totalAttempts: 0, successLogins: 0, pendingInvites: 0, activeUsers: 0 });
 
   useEffect(() => {
     loadData();
@@ -36,6 +37,19 @@ export default function AdminAccessPanel() {
         // Charger les membres
         const allMembers = await base44.entities.AdminAccess.filter({ access_slug: existing[0].access_slug });
         setMembers(allMembers || []);
+
+        // Charger les statistiques
+        const logs = await base44.entities.AdminAccessLog.filter({ access_slug: existing[0].access_slug });
+        const successLogins = logs?.filter(l => l.action === 'login_success').length || 0;
+        const pendingInvites = (allMembers || []).filter(m => m.status === 'pending').length;
+        const activeUsers = (allMembers || []).filter(m => m.status === 'active' && m.email !== me.email).length;
+        
+        setStats({
+          totalAttempts: logs?.length || 0,
+          successLogins,
+          pendingInvites,
+          activeUsers,
+        });
       } else {
         // Créer un slug unique
         const slug = generateSlug();
@@ -153,6 +167,26 @@ export default function AdminAccessPanel() {
           </div>
           <h1 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-2">Accès administrateur</h1>
           <p className="text-gray-500 text-sm">Gérez les accès à votre page privée d'administration</p>
+        </div>
+
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-4">
+            <p className="text-xs text-gray-500 font-semibold mb-1">Tentatives d'accès</p>
+            <p className="text-3xl font-bold text-gray-800">{stats.totalAttempts}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4">
+            <p className="text-xs text-gray-500 font-semibold mb-1">Connexions réussies</p>
+            <p className="text-3xl font-bold text-green-600">{stats.successLogins}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4">
+            <p className="text-xs text-gray-500 font-semibold mb-1">Invitations en attente</p>
+            <p className="text-3xl font-bold text-amber-600">{stats.pendingInvites}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4">
+            <p className="text-xs text-gray-500 font-semibold mb-1">Utilisateurs actifs</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.activeUsers}</p>
+          </div>
         </div>
 
         {/* Slug Secret */}
