@@ -5,18 +5,20 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users, ShoppingBag, BarChart2 } from "lucide-react";
+import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users, ShoppingBag, BarChart2, Truck } from "lucide-react";
 import { toast } from "sonner";
 import AdminGuard from "@/components/admin/AdminGuard";
 import UserManagementPanel from "@/components/admin/UserManagementPanel";
 import ProductManager from "@/components/admin/ProductManager";
 import TeamManager from "@/components/admin/TeamManager";
+import SupplierManager from "@/components/admin/SupplierManager";
 
 const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
 const TABS = [
   { key: "stats", label: "Stats & Promos", icon: BarChart2 },
   { key: "products", label: "Produits", icon: ShoppingBag },
+  { key: "suppliers", label: "Fournisseurs", icon: Truck },
   { key: "team", label: "Équipe", icon: Users },
 ];
 
@@ -221,10 +223,21 @@ export default function AdminDashboard() {
         {/* Onglet Produits */}
         {activeTab === "products" && <ProductManager />}
 
+        {/* Onglet Fournisseurs */}
+        {activeTab === "suppliers" && (
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Gestion des Fournisseurs</h2>
+              <p className="text-gray-500 text-sm mt-1">Gérez vos fournisseurs et suivez les commandes associées</p>
+            </div>
+            <SupplierManager eventId="admin-global" />
+          </div>
+        )}
+
         {/* Onglet Équipe */}
         {activeTab === "team" && <TeamManager />}
 
-        {activeTab !== "products" && activeTab !== "team" && <>
+        {activeTab !== "products" && activeTab !== "suppliers" && activeTab !== "team" && <>
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg p-6 border border-gray-200">
