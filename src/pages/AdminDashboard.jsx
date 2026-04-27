@@ -11,7 +11,7 @@ import AdminGuard from "@/components/admin/AdminGuard";
 import UserManagementPanel from "@/components/admin/UserManagementPanel";
 import ProductManager from "@/components/admin/ProductManager";
 import TeamManager from "@/components/admin/TeamManager";
-import SupplierManager from "@/components/admin/SupplierManager";
+import SupplierTab from "@/components/admin/SupplierTab";
 
 const COLORS = ["#f472b6", "#ec4899", "#db2777", "#be185d"];
 
@@ -225,13 +225,7 @@ export default function AdminDashboard() {
 
         {/* Onglet Fournisseurs */}
         {activeTab === "suppliers" && (
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">Gestion des Fournisseurs</h2>
-              <p className="text-gray-500 text-sm mt-1">Gérez vos fournisseurs et suivez les commandes associées</p>
-            </div>
-            <SupplierManager eventId="admin-global" />
-          </div>
+          <SupplierTab />
         )}
 
         {/* Onglet Équipe */}
