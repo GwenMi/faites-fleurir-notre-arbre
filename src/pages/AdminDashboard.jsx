@@ -5,7 +5,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users, ShoppingBag, BarChart2, Truck } from "lucide-react";
+import { Loader2, TrendingUp, Package, Zap, Tag, Plus, Edit2, Trash2, Copy, Check, AlertCircle, Shield, Users, ShoppingBag, BarChart2, Truck, ClipboardList, BarChart, MessageSquare, FileText, Calendar, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import AdminGuard from "@/components/admin/AdminGuard";
 import UserManagementPanel from "@/components/admin/UserManagementPanel";
@@ -191,16 +191,34 @@ export default function AdminDashboard() {
               <h1 className="text-2xl font-bold text-gray-800">🌸 Admin Fleurs de Fête</h1>
               <p className="text-gray-500 mt-0.5 text-sm">Tableau de bord de gestion</p>
             </div>
-            <div className="flex items-center gap-2">
-              <a href={createPageUrl("AdminOrders")} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold transition">
+            <div className="flex flex-wrap items-center gap-2">
+              <a href={createPageUrl("AdminOrders")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold transition">
                 <Package className="w-4 h-4" /> Commandes
               </a>
-              <a href={createPageUrl("AdminSuperPanel")} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold transition">
+              <a href="/AdminShipping" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold transition">
+                <Truck className="w-4 h-4" /> Expédition
+              </a>
+              <a href={createPageUrl("Picking")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition">
+                <ClipboardList className="w-4 h-4" /> Picking
+              </a>
+              <a href={createPageUrl("CRM")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white text-sm font-semibold transition">
+                <MessageSquare className="w-4 h-4" /> CRM
+              </a>
+              <a href={createPageUrl("Quotes")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-sm font-semibold transition">
+                <FileText className="w-4 h-4" /> Devis
+              </a>
+              <a href={createPageUrl("CalendarView")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white text-sm font-semibold transition">
+                <Calendar className="w-4 h-4" /> Calendrier
+              </a>
+              <a href={createPageUrl("AdminSuperPanel")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold transition">
                 <Shield className="w-4 h-4" /> Super Panel
               </a>
-              <a href={createPageUrl("Forecast")} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold transition">
+              <a href={createPageUrl("Forecast")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold transition">
                 <TrendingUp className="w-4 h-4" /> Prévisions
               </a>
+              <button onClick={() => base44.auth.logout("/")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-gray-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-sm font-semibold transition">
+                <LogOut className="w-4 h-4" /> Déconnexion
+              </button>
             </div>
           </div>
           {/* Tabs */}
