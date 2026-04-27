@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const API_LOGIN = Deno.env.get("MONDIAL_RELAY_API_LOGIN");
 const API_PASSWORD = Deno.env.get("MONDIAL_RELAY_API_PASSWORD");
-const BRAND_ID = "CC23WIPX";
+const BRAND_ID = Deno.env.get("MONDIAL_RELAY_ENSEIGNE") || "CC23WIPX";
 const API_URL = "https://connect-api.mondialrelay.com/api/Shipment";
 
 Deno.serve(async (req) => {
@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
   const body = await req.json();
   const { order_id, recipient, parcel } = body;
 
-  const weightGrams = Math.round((parseFloat(parcel.weight_kg) || 1) * 1000);
+  const weightGrams = Math.round((parseFloat(parcel.weight_kg || parcel.weight) || 1) * 1000);
 
   // Relay location format: "FR-021834" (country code + 6-digit padded ID)
   const relayIdPadded = (recipient.relay_id || '').toString().replace(/^FR-?/, '').padStart(6, '0');

@@ -30,11 +30,11 @@ Deno.serve(async (req) => {
       outputPrintingType: "PDF_10x15_300dpi",
     },
     letter: {
-      service: {
-        productCode: "DOM",  // Colissimo domicile
-        depositDate: new Date().toISOString().slice(0, 10),
-        orderNumber: order_id,
-      },
+    service: {
+      productCode: parcel.product_code || "DOM",
+      depositDate: new Date().toISOString().slice(0, 10),
+      orderNumber: order_id,
+    },
       parcel: {
         weight: parcel.weight,
       },
