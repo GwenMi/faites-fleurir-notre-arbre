@@ -1,0 +1,86 @@
+{
+  "name": "Kit",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom du kit (ex: Kit Mariage Rose)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description du kit"
+    },
+    "image": {
+      "type": "string",
+      "description": "URL de l'image du kit"
+    },
+    "price": {
+      "type": "number",
+      "description": "Prix unitaire du kit"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "pot_type": {
+      "type": "string",
+      "description": "Type de pot (ex: Pot en verre, Pot en terre cuite)"
+    },
+    "pot_quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre de pots inclus"
+    },
+    "pot_stock": {
+      "type": "number",
+      "default": 0,
+      "description": "Stock disponible en pots"
+    },
+    "ribbon_color": {
+      "type": "string",
+      "description": "Couleur du ruban (ex: Rose, Blanc, Dor\u00e9)"
+    },
+    "ribbon_quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre de rubans inclus"
+    },
+    "ribbon_stock": {
+      "type": "number",
+      "default": 0,
+      "description": "Stock disponible en rubans"
+    },
+    "seed_type": {
+      "type": "string",
+      "description": "Type de graines (ex: Tournesol, Lavande, M\u00e9lange prairie)"
+    },
+    "seed_quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre de sachets de graines inclus"
+    },
+    "seed_stock": {
+      "type": "number",
+      "default": 0,
+      "description": "Stock disponible en sachets de graines"
+    },
+    "custom_text_included": {
+      "type": "boolean",
+      "default": false,
+      "description": "Le kit inclut un texte personnalis\u00e9"
+    },
+    "total_stock": {
+      "type": "number",
+      "default": 0,
+      "description": "Nombre de kits complets disponibles (calcul\u00e9 automatiquement)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes internes"
+    }
+  },
+  "required": [
+    "name",
+    "price"
+  ]
+}

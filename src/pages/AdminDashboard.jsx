@@ -17,6 +17,7 @@ import UserManagementPanel from "@/components/admin/UserManagementPanel";
 import ProductManager from "@/components/admin/ProductManager";
 import TeamManager from "@/components/admin/TeamManager";
 import SupplierTab from "@/components/admin/SupplierTab";
+import KitManager from "@/components/admin/KitManager";
 
 // Sections internes au dashboard
 const INTERNAL_SECTIONS = [
@@ -24,6 +25,7 @@ const INTERNAL_SECTIONS = [
   { key: "products", label: "Produits", icon: ShoppingBag, color: "text-pink-500" },
   { key: "suppliers", label: "Fournisseurs", icon: Truck, color: "text-orange-500" },
   { key: "team", label: "Équipe", icon: Users, color: "text-violet-500" },
+  { key: "kits", label: "Kits", icon: Package, color: "text-emerald-500" },
 ];
 
 // Liens vers d'autres pages
@@ -233,6 +235,9 @@ export default function AdminDashboard() {
 
             {/* Équipe */}
             {activeSection === "team" && <TeamManager />}
+
+            {/* Kits */}
+            {activeSection === "kits" && <KitManager />}
 
             {/* Stats */}
             {activeSection === "stats" && (
