@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
           <Title></Title>
           <Firstname>${firstName}</Firstname>
           <Lastname>${lastName}</Lastname>
-          <Streetname>${recipient.address1 || ''}</Streetname>
+          <Streetname>${recipient.line1 || recipient.address1 || recipient.address || ''}</Streetname>
           <HouseNo></HouseNo>
           <CountryCode>${recipient.country || 'FR'}</CountryCode>
           <PostCode>${recipient.zip || ''}</PostCode>
