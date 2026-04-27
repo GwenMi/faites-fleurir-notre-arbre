@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
+const SHOP_ID = '63211095';
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -16,45 +18,53 @@ Deno.serve(async (req) => {
     }
 
     const apiKey = Deno.env.get('ETSY_API_KEY');
-    const apiSecret = Deno.env.get('ETSY_API_SECRET');
-    const shopId = Deno.env.get('ETSY_SHOP_ID');
 
-    if (!apiKey || !apiSecret || !shopId) {
-      return Response.json({ error: 'Etsy credentials not configured' }, { status: 500 });
+    if (!apiKey) {
+      return Response.json({ error: 'ETSY_API_KEY non configuré' }, { status: 500 });
     }
 
-    // Fetch order from Etsy API
+    // Etsy v3 API — récupérer la commande de la boutique
     const response = await fetch(
-      `https://openapi.etsy.com/v3/application/shops/${shopId}/orders/${order_id}`,
+      `https://openapi.etsy.com/v3/application/shops/${SHOP_ID}/receipts/${order_id}`,
       {
         headers: {
           'x-api-key': apiKey,
-          'Authorization': `Bearer ${apiSecret}`,
         },
       }
     );
 
+    const responseText = await response.text();
+    console.log('Etsy API status:', response.status);
+    console.log('Etsy API response:', responseText.slice(0, 500));
+
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Etsy API error:', error);
-      return Response.json({ error: 'Failed to fetch Etsy order' }, { status: response.status });
+      return Response.json({ error: `Etsy API error ${response.status}: ${responseText}` }, { status: response.status });
     }
 
-    const orderData = await response.json();
+    const order = JSON.parse(responseText);
 
-    // Extract relevant data
-    const order = orderData.data || orderData;
-    
     return Response.json({
-      order_id: order.order_id,
-      order_number: order.order_number,
+      order_id: order.receipt_id,
+      order_number: order.receipt_id,
       buyer_email: order.buyer_email,
-      buyer_user_id: order.buyer_user_id,
+      buyer_name: order.name,
       status: order.status,
-      shipping_address: order.shipping_address || {},
-      items: order.items || [],
-      total_price: order.total_price,
-      created_timestamp: order.created_timestamp,
+      shipping_address: {
+        name: order.name,
+        first_line: order.first_line,
+        second_line: order.second_line,
+        city: order.city,
+        state: order.state,
+        zip: order.zip,
+        country: order.country_iso,
+      },
+      items: (order.transactions || []).map(t => ({
+        title: t.title,
+        quantity: t.quantity,
+        price: t.price?.amount / t.price?.divisor,
+      })),
+      total_price: order.grand_total?.amount / order.grand_total?.divisor,
+      created_timestamp: order.create_timestamp,
     });
   } catch (error) {
     console.error('Function error:', error);
