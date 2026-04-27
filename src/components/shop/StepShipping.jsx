@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Loader2, Truck, MapPin, Gift } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronLeft, ChevronRight, Truck, MapPin, Gift } from "lucide-react";
 
 const MAX_FREE_SHIPPING = 20;
 const WEIGHT_PER_POT_G = 200;
@@ -41,6 +42,14 @@ function getHomeMethods(weightKg) {
     w <= 10   ? 29.99 :
                39.99;
 
+  // Mondial Relay — Point Relais (24R)
+  const mondialRelayPrice =
+    w <= 0.5  ? 4.49 :
+    w <= 1    ? 5.49 :
+    w <= 2    ? 6.49 :
+    w <= 5    ? 8.99 :
+               11.99;
+
   return [
     {
       id: "colissimo_home",
@@ -69,17 +78,25 @@ function getHomeMethods(weightKg) {
       servicePointRequired: false,
       price: chronoPrice,
     },
+    {
+      id: "mondial_relay",
+      name: "Mondial Relay — Point Relais",
+      carrier: "mondial_relay",
+      description: "Retrait en point relais sous 3-5 jours",
+      deliveryDays: 4,
+      servicePointRequired: true,
+      price: mondialRelayPrice,
+    },
   ];
 }
 
 export default function StepShipping({ totalPots, shippingMethod, onSelect, onNext, onBack }) {
-  const [relayMethods, setRelayMethods] = useState([]);
-  const [loadingRelay, setLoadingRelay] = useState(true);
   const [isFreeShipping, setIsFreeShipping] = useState(false);
+  const [relayId, setRelayId] = useState(shippingMethod?.relayId || "");
 
   const weightGrams = Math.max(totalPots * WEIGHT_PER_POT_G, 100);
   const weightKg = weightGrams / 1000;
-  const homeMethods = getHomeMethods(weightKg);
+  const allMethods = getHomeMethods(weightKg);
 
   useEffect(() => {
     base44.entities.Order.list().then(orders => {
@@ -87,33 +104,21 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
     });
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoadingRelay(true);
-
-    base44.functions
-      .invoke("getSendcloudShippingMethods", { weightGrams, toCountry: "FR" })
-      .then((data) => {
-        if (cancelled) return;
-        // Garder uniquement les relais colis (point relay)
-        const relays = (data?.methods || []).filter(m => m.servicePointRequired && m.price > 0);
-        setRelayMethods(relays);
-      })
-      .catch(() => {
-        if (!cancelled) setRelayMethods([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingRelay(false);
-      });
-
-    return () => { cancelled = true; };
-  }, [weightGrams]);
-
   const handleSelect = (method) => {
-    onSelect(isFreeShipping ? { ...method, price: 0, originalPrice: method.price } : method);
+    const m = isFreeShipping ? { ...method, price: 0, originalPrice: method.price } : method;
+    if (method.id === "mondial_relay") {
+      onSelect({ ...m, relayId });
+    } else {
+      onSelect(m);
+    }
   };
 
-  const allMethods = [...homeMethods, ...relayMethods];
+  const handleRelayIdChange = (val) => {
+    setRelayId(val);
+    if (shippingMethod?.id === "mondial_relay") {
+      onSelect({ ...shippingMethod, relayId: val });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -131,39 +136,27 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
         </div>
       )}
 
-      {/* Livraisons à domicile */}
+      {/* Livraison à domicile */}
       <div>
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
           <Truck className="w-3.5 h-3.5" /> Livraison à domicile
         </p>
         <div className="space-y-3">
-          {homeMethods.map((method) => {
+          {allMethods.filter(m => !m.servicePointRequired).map((method) => {
             const selected = shippingMethod?.id === method.id;
             return (
-              <button
-                key={method.id}
-                onClick={() => handleSelect(method)}
-                className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
-                  selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"
-                }`}
+              <button key={method.id} onClick={() => handleSelect(method)}
+                className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"}`}
               >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  selected ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"
-                }`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${selected ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"}`}>
                   <Truck className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-800 text-sm">{method.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {method.description} · {method.deliveryDays} jour{method.deliveryDays > 1 ? "s" : ""}
-                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">{method.description} · {method.deliveryDays} jour{method.deliveryDays > 1 ? "s" : ""}</p>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  {isFreeShipping ? (
-                    <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p>
-                  ) : (
-                    <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>
-                  )}
+                  {isFreeShipping ? <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p> : <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>}
                 </div>
               </button>
             );
@@ -171,55 +164,47 @@ export default function StepShipping({ totalPots, shippingMethod, onSelect, onNe
         </div>
       </div>
 
-      {/* Relais colis (Sendcloud) */}
-      {(loadingRelay || relayMethods.length > 0) && (
-        <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5" /> Retrait en point relais
-          </p>
-          {loadingRelay ? (
-            <div className="flex items-center gap-2 text-gray-400 text-sm py-3 px-4">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Chargement des relais…</span>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {relayMethods.map((method) => {
-                const selected = shippingMethod?.id === method.id;
-                return (
-                  <button
-                    key={method.id}
-                    onClick={() => handleSelect(method)}
-                    className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${
-                      selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"
-                    }`}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      selected ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"
-                    }`}>
-                      <MapPin className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-800 text-sm">{method.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {method.carrier}
-                        {method.deliveryDays ? ` · ${method.deliveryDays} jour${method.deliveryDays > 1 ? "s" : ""}` : ""}
-                      </p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      {isFreeShipping ? (
-                        <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p>
-                      ) : (
-                        <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+      {/* Retrait en point relais */}
+      <div>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5" /> Retrait en point relais
+        </p>
+        <div className="space-y-3">
+          {allMethods.filter(m => m.servicePointRequired).map((method) => {
+            const selected = shippingMethod?.id === method.id;
+            return (
+              <div key={method.id} className="space-y-2">
+                <button onClick={() => handleSelect(method)}
+                  className={`w-full text-left flex items-center gap-4 p-4 rounded-2xl border-2 transition ${selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"}`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${selected ? "bg-rose-400 text-white" : "bg-gray-100 text-gray-500"}`}>
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm">{method.name}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{method.description} · {method.deliveryDays} jour{method.deliveryDays > 1 ? "s" : ""}</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    {isFreeShipping ? <p className="font-bold text-green-600 text-sm">OFFERT 🎁</p> : <p className="font-bold text-gray-900 text-sm">{method.price.toFixed(2)} €</p>}
+                  </div>
+                </button>
+                {/* Champ ID point relais pour Mondial Relay */}
+                {selected && method.id === "mondial_relay" && (
+                  <div className="ml-4 pl-4 border-l-2 border-rose-200">
+                    <p className="text-xs text-gray-500 mb-1.5">Numéro du point relais <span className="text-gray-400">(trouvez-le sur <a href="https://www.mondialrelay.fr/trouver-un-point-relais/" target="_blank" rel="noreferrer" className="text-rose-500 underline">mondialrelay.fr</a>)</span></p>
+                    <Input
+                      value={relayId}
+                      onChange={e => handleRelayIdChange(e.target.value)}
+                      placeholder="Ex: 021834"
+                      className="h-10 rounded-xl max-w-xs"
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
-      )}
+      </div>
 
       <div className="flex gap-3 pt-2">
         <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
