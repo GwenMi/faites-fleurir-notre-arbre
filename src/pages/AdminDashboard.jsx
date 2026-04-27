@@ -18,6 +18,7 @@ import ProductManager from "@/components/admin/ProductManager";
 import TeamManager from "@/components/admin/TeamManager";
 import SupplierTab from "@/components/admin/SupplierTab";
 import KitManager from "@/components/admin/KitManager";
+import ManualOrderForm from "@/components/admin/ManualOrderForm";
 
 // Sections internes au dashboard
 const INTERNAL_SECTIONS = [
@@ -26,6 +27,7 @@ const INTERNAL_SECTIONS = [
   { key: "suppliers", label: "Fournisseurs", icon: Truck, color: "text-orange-500" },
   { key: "team", label: "Équipe", icon: Users, color: "text-violet-500" },
   { key: "kits", label: "Kits", icon: Package, color: "text-emerald-500" },
+  { key: "new_order", label: "Commande manuelle", icon: ShoppingBag, color: "text-rose-500" },
 ];
 
 // Liens vers d'autres pages
@@ -238,6 +240,14 @@ export default function AdminDashboard() {
 
             {/* Kits */}
             {activeSection === "kits" && <KitManager />}
+
+            {/* Commande manuelle */}
+            {activeSection === "new_order" && (
+              <ManualOrderForm
+                onClose={() => setActiveSection("stats")}
+                onSuccess={() => setActiveSection("stats")}
+              />
+            )}
 
             {/* Stats */}
             {activeSection === "stats" && (

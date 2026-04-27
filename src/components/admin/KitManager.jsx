@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
-  Plus, Edit2, Trash2, Package, Loader2, Save, X,
-  FlowerIcon, Ribbon, Layers, AlertTriangle, Check
+  Plus, Edit2, Trash2, Package, Loader2, Save, X, ShoppingCart
 } from "lucide-react";
+import ManualOrderForm from "./ManualOrderForm";
 
 const EMPTY_FORM = {
   name: "",
@@ -48,6 +48,7 @@ export default function KitManager() {
   const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState(null); // null = list, "new" = new form, id = edit
   const [form, setForm] = useState(EMPTY_FORM);
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   useEffect(() => { loadKits(); }, []);
 
@@ -236,17 +237,32 @@ export default function KitManager() {
     );
   }
 
+  // ── FORMULAIRE COMMANDE ──
+  if (showOrderForm) {
+    return (
+      <ManualOrderForm
+        onClose={() => setShowOrderForm(false)}
+        onSuccess={() => { setShowOrderForm(false); loadKits(); }}
+      />
+    );
+  }
+
   // ── LIST ──
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h2 className="text-xl font-bold text-gray-800">Kits</h2>
           <p className="text-sm text-gray-500 mt-0.5">{kits.length} kit{kits.length > 1 ? "s" : ""} configuré{kits.length > 1 ? "s" : ""}</p>
         </div>
-        <Button onClick={openNew} className="bg-rose-500 hover:bg-rose-600">
-          <Plus className="w-4 h-4 mr-1" /> Nouveau kit
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowOrderForm(true)} variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50">
+            <ShoppingCart className="w-4 h-4 mr-1" /> Nouvelle commande
+          </Button>
+          <Button onClick={openNew} className="bg-rose-500 hover:bg-rose-600">
+            <Plus className="w-4 h-4 mr-1" /> Nouveau kit
+          </Button>
+        </div>
       </div>
 
       {kits.length === 0 ? (
