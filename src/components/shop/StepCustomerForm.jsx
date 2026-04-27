@@ -136,13 +136,24 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
           </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-1">
             <Button
-              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              onClick={() => {
+                // S'assurer que le step 6 et la sélection sont bien sauvegardés avant redirect
+                try { localStorage.setItem("shop_step", "6"); } catch {}
+                const url = new URL(window.location.href);
+                url.searchParams.set("resume", "true");
+                base44.auth.redirectToLogin(url.toString());
+              }}
               className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold"
             >
               <LogIn className="w-4 h-4 mr-2" /> Se connecter
             </Button>
             <Button
-              onClick={() => base44.auth.redirectToLogin(window.location.href)}
+              onClick={() => {
+                try { localStorage.setItem("shop_step", "6"); } catch {}
+                const url = new URL(window.location.href);
+                url.searchParams.set("resume", "true");
+                base44.auth.redirectToLogin(url.toString());
+              }}
               variant="outline"
               className="flex-1 h-11 rounded-xl border-rose-300 text-rose-600 font-semibold"
             >
