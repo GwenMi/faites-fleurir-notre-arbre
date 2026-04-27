@@ -14,7 +14,8 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Credentials Colissimo non configurés. Ajoutez COLISSIMO_LOGIN et COLISSIMO_PASSWORD dans les secrets.' }, { status: 500 });
   }
 
-  const body = await req.json();
+  let body;
+  try { body = await req.json(); } catch { body = {}; }
   const { order_id, recipient, parcel, sender } = body;
   // recipient: { name, line1, line2, city, zip, country, email, phone }
   // parcel: { weight } in kg
