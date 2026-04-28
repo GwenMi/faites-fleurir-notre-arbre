@@ -19,11 +19,15 @@ const CARRIERS = [
 ];
 
 const STATUS_CONFIG = {
-  pending:   { label: "En attente",  className: "bg-amber-100 text-amber-700" },
-  confirmed: { label: "Confirmée",   className: "bg-blue-100 text-blue-700" },
-  shipped:   { label: "Expédiée",    className: "bg-purple-100 text-purple-700" },
-  delivered: { label: "Livrée",      className: "bg-green-100 text-green-700" },
-  cancelled: { label: "Annulée",     className: "bg-red-100 text-red-700" },
+  pending:           { label: "En attente",              className: "bg-amber-100 text-amber-700" },
+  waiting_supplier:  { label: "En attente fournisseur",  className: "bg-orange-100 text-orange-700" },
+  preparing:         { label: "En cours de préparation", className: "bg-yellow-100 text-yellow-700" },
+  waiting_shipping:  { label: "En attente d'expédition", className: "bg-sky-100 text-sky-700" },
+  confirmed:         { label: "Confirmée",               className: "bg-blue-100 text-blue-700" },
+  shipping:          { label: "En cours d'expédition",   className: "bg-indigo-100 text-indigo-700" },
+  shipped:           { label: "Expédiée",                className: "bg-purple-100 text-purple-700" },
+  delivered:         { label: "Livrée",                  className: "bg-green-100 text-green-700" },
+  cancelled:         { label: "Annulée",                 className: "bg-red-100 text-red-700" },
 };
 
 export default function AdminOrders() {
@@ -515,24 +519,19 @@ contact@fleursenfete.com`,
                   </div>
 
                   {/* Status update */}
-                  <div className="mt-3 pt-3 border-t border-gray-50">
-                    <p className="text-xs text-gray-400 mb-2">Changer le statut :</p>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="mt-3 pt-3 border-t border-gray-50 flex items-center gap-3">
+                    <p className="text-xs text-gray-400 flex-shrink-0">Statut :</p>
+                    <select
+                      value={order.status}
+                      disabled={updatingId === order.id}
+                      onChange={e => updateStatus(order, e.target.value)}
+                      className="flex-1 text-xs border border-gray-200 rounded-xl px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200 text-gray-600 disabled:opacity-50"
+                    >
                       {STATUSES.map(s => (
-                        <button
-                          key={s}
-                          disabled={order.status === s || updatingId === order.id}
-                          onClick={() => updateStatus(order, s)}
-                          className={`text-xs px-3 py-1.5 rounded-full border transition font-medium ${
-                            order.status === s
-                              ? "border-rose-300 bg-rose-50 text-rose-600 cursor-default"
-                              : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
-                          }`}
-                        >
-                          {STATUS_CONFIG[s].label}
-                        </button>
+                        <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>
                       ))}
-                    </div>
+                    </select>
+                    {updatingId === order.id && <Loader2 className="w-4 h-4 animate-spin text-gray-400 flex-shrink-0" />}
                   </div>
 
                   {/* Invoice & Reminder actions */}
