@@ -75,7 +75,34 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Order.update(order.id, { event_id: event.id });
     }
 
-    // 3. Envoyer l'email de confirmation si demandé
+    // 3. Notifier Gwenaëlle de la nouvelle commande manuelle
+    const adminNotifBody = `🌸 Nouvelle commande manuelle enregistrée !
+
+👤 Client : ${customer_name} (${customer_email})
+📦 Kit : ${kit_name} × ${quantity || 1}
+💰 Montant : ${Number(total_price || 0).toFixed(2)} €
+💳 Paiement : ${payment_status || 'unpaid'}
+🔖 Source : ${source || 'manual'}
+${external_ref ? `📋 Réf. externe : ${external_ref}` : ''}
+${event_date ? `📅 Événement le : ${new Date(event_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
+${notes ? `📝 Notes : ${notes}` : ''}
+
+ID commande : ${order.id}`;
+
+    await Promise.all([
+      base44.asServiceRole.integrations.Core.SendEmail({
+        to: 'gwen@fleursdefete.fr',
+        subject: `🌸 Nouvelle commande manuelle — ${kit_name} (${customer_name})`,
+        body: adminNotifBody,
+      }),
+      base44.asServiceRole.integrations.Core.SendEmail({
+        to: 'milletgwenaelle@gmail.com',
+        subject: `🌸 Nouvelle commande manuelle — ${kit_name} (${customer_name})`,
+        body: adminNotifBody,
+      }),
+    ]);
+
+    // 4. Envoyer l'email de confirmation si demandé
     if (send_email) {
       const eventUrl = event
         ? `${req.headers.get('origin') || 'https://fleursenfete.com'}/event/${event.slug}`
