@@ -144,6 +144,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <span>{kitLabel}</span>
             <span>{basePrice.toFixed(2)}€/invité</span>
           </div>
+          {selection.kitVariant && (
+            <div className="flex justify-between text-sm text-gray-700">
+              <span>Variante</span>
+              <span>{selection.kitVariant === "crackers" ? "🫙 Kit Apéro Crackers Italiens" : "🌻 Graines de tournesol"}</span>
+            </div>
+          )}
           {containerLabel && (
             <div className="flex justify-between text-sm text-gray-700">
               <span>Contenant</span>
