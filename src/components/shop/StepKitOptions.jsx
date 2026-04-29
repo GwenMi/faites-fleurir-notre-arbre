@@ -25,7 +25,7 @@ const KITS = {
     name: "Kit à composer",
     desc: "Un souvenir original pour vos invités : chacun reçoit une petite graine à faire pousser en souvenir de votre mariage. Les éléments sont envoyés séparément afin que vous puissiez préparer facilement vos cadeaux invités.",
     features: [
-      "Graines de fleur",
+      "Graines de fleur / crackers italiens",
       "Pastille de semis",
       "Notice de plantation",
       "Étiquette personnalisée (prénoms & date)",
@@ -39,7 +39,7 @@ const KITS = {
     name: "Kit prêt à offrir",
     desc: "Le souvenir est entièrement préparé et prêt à être posé sur la table des invités le jour du mariage. Chaque invité repart avec une graine à planter et pourra partager la photo de sa fleur.",
     features: [
-      "Graines de fleur",
+      "Graines de fleur / crackers italiens",
       "Pastille de semis",
       "Notice",
       "Étiquette personnalisée (prénoms & date)",
