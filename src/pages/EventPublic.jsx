@@ -7,6 +7,7 @@ import MinimalTemplate from "@/components/public/templates/MinimalTemplate";
 import ElegantTemplate from "@/components/public/templates/ElegantTemplate";
 import FestiveTemplate from "@/components/public/templates/FestiveTemplate";
 import FlowerChallengeSection from "@/components/challenge/FlowerChallengeSection";
+import CookingGallerySection from "@/components/challenge/CookingGallerySection";
 import CountdownWidget from "@/components/challenge/CountdownWidget";
 import RSVPSection from "@/components/public/sections/RSVPSection";
 import GuestbookSection from "@/components/public/sections/GuestbookSection";
@@ -26,6 +27,7 @@ export default function EventPublic() {
   const [event, setEvent] = useState(null);
   const [faqs, setFaqs] = useState([]);
   const [hasPotOrder, setHasPotOrder] = useState(false);
+  const [kitVariant, setKitVariant] = useState(null); // "tournesol" | "crackers"
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -59,13 +61,21 @@ export default function EventPublic() {
   const checkPotOrders = async (eventId) => {
     try {
       const orders = await base44.entities.Order.filter({ event_id: eventId });
-      const hasPot = orders?.some(order => {
-        const category = order.product_id ? (order.product_name?.toLowerCase().includes('pot') || order.product_name?.toLowerCase().includes('kit')) : false;
-        return category && order.status !== 'cancelled';
+      const flowerOrder = orders?.find(order => {
+        if (order.status === 'cancelled') return false;
+        const kitType = order.options_selected?.kitType || order.product_id || '';
+        return kitType === 'compose' || kitType === 'pret' || kitType.includes('kit_');
       });
-      setHasPotOrder(hasPot || false);
+      if (flowerOrder) {
+        setHasPotOrder(true);
+        setKitVariant(flowerOrder.options_selected?.kitVariant || "tournesol");
+      } else {
+        setHasPotOrder(false);
+        setKitVariant(null);
+      }
     } catch {
       setHasPotOrder(false);
+      setKitVariant(null);
     }
   };
 
@@ -167,8 +177,13 @@ export default function EventPublic() {
       {/* Sections dans l'ordre personnalisé */}
       {sectionsOrder.map(key => SECTION_RENDERS[key] || null)}
 
-      {/* Flower Challenge Section - only if flower pot was ordered */}
-      {hasPotOrder && (
+      {/* Section galerie — adaptée selon la variante du kit */}
+      {hasPotOrder && kitVariant === "crackers" && (
+        <div className="max-w-2xl mx-auto px-4 pb-16">
+          <CookingGallerySection event={event} />
+        </div>
+      )}
+      {hasPotOrder && kitVariant !== "crackers" && (
         <div className="max-w-2xl mx-auto px-4 pb-16">
           <FlowerChallengeSection event={event} />
         </div>
