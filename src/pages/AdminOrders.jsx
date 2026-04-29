@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import AdminGuard from "@/components/admin/AdminGuard";
-import { ChevronLeft, Loader2, Package, RefreshCw, Truck, Send, CheckCircle2, X, FileText, Mail, Bell, Star, Download, Filter, Euro, CreditCard, AlertCircle } from "lucide-react";
+import { ChevronLeft, Loader2, Package, RefreshCw, Truck, Send, CheckCircle2, X, FileText, Mail, Bell, Star, Download, Filter, Euro, CreditCard, AlertCircle, SquareCheck, Square } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,8 @@ export default function AdminOrders() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [bulkQontoLoading, setBulkQontoLoading] = useState(false);
 
   useEffect(() => { loadOrders(); }, []);
 
@@ -211,6 +213,42 @@ contact@fleursenfete.com`,
     await loadOrders();
   };
 
+  const toggleSelect = (id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredOrders.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredOrders.map(o => o.id)));
+    }
+  };
+
+  const bulkSyncQonto = async () => {
+    if (selectedIds.size === 0) return;
+    setBulkQontoLoading(true);
+    let success = 0, errors = 0;
+    for (const orderId of selectedIds) {
+      try {
+        const result = await base44.functions.invoke("createQontoInvoice", { orderId });
+        if (result?.data?.success) success++;
+        else errors++;
+      } catch {
+        errors++;
+      }
+    }
+    await loadOrders();
+    setSelectedIds(new Set());
+    setBulkQontoLoading(false);
+    if (errors === 0) toast.success(`${success} facture${success > 1 ? "s" : ""} synchronisée${success > 1 ? "s" : ""} sur Qonto ✓`);
+    else toast.warning(`${success} succès · ${errors} erreur${errors > 1 ? "s" : ""}`);
+  };
+
   const STATUSES = Object.keys(STATUS_CONFIG);
 
   const filteredOrders = orders.filter(order => {
@@ -359,6 +397,28 @@ contact@fleursenfete.com`,
         </div>
       </div>
 
+      {/* Bulk actions bar */}
+      {selectedIds.size > 0 && (
+        <div className="bg-violet-600 text-white px-4 py-2.5 sticky top-[105px] z-10">
+          <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
+            <span className="text-sm font-semibold">{selectedIds.size} commande{selectedIds.size > 1 ? "s" : ""} sélectionnée{selectedIds.size > 1 ? "s" : ""}</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={bulkSyncQonto}
+                disabled={bulkQontoLoading}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-white text-violet-700 hover:bg-violet-50 font-semibold transition disabled:opacity-60"
+              >
+                {bulkQontoLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                {bulkQontoLoading ? "Synchronisation..." : "Sync Qonto"}
+              </button>
+              <button onClick={() => setSelectedIds(new Set())} className="text-white/70 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-3xl mx-auto p-4">
         {loading ? (
           <div className="text-center py-16">
@@ -375,16 +435,27 @@ contact@fleursenfete.com`,
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-sm text-gray-500 font-medium">
-              {filteredOrders.length} commande{filteredOrders.length > 1 ? "s" : ""}
-              {filteredOrders.length !== orders.length && <span className="text-gray-400"> (sur {orders.length})</span>}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-500 font-medium">
+                {filteredOrders.length} commande{filteredOrders.length > 1 ? "s" : ""}
+                {filteredOrders.length !== orders.length && <span className="text-gray-400"> (sur {orders.length})</span>}
+              </p>
+              <button onClick={toggleSelectAll} className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-violet-800 font-medium">
+                {selectedIds.size === filteredOrders.length && filteredOrders.length > 0
+                  ? <><SquareCheck className="w-4 h-4" /> Tout désélectionner</>
+                  : <><Square className="w-4 h-4" /> Tout sélectionner</>}
+              </button>
+            </div>
             {filteredOrders.map(order => {
               const statusCfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
               const opts = order.options_selected || {};
               return (
-                <div key={order.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                  <div className="flex items-start justify-between gap-3">
+                <div key={order.id} className={`bg-white rounded-2xl border shadow-sm p-4 transition ${selectedIds.has(order.id) ? "border-violet-300 ring-1 ring-violet-200" : "border-gray-100"}`}>
+                  <div className="flex items-start gap-3">
+                    <button onClick={() => toggleSelect(order.id)} className="mt-1 flex-shrink-0 text-violet-400 hover:text-violet-600">
+                      {selectedIds.has(order.id) ? <SquareCheck className="w-4 h-4 text-violet-600" /> : <Square className="w-4 h-4" />}
+                    </button>
+                  <div className="flex items-start justify-between gap-3 flex-1">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                          <a href={`${createPageUrl("AdminOrdersDetail")}?id=${order.id}`} className="font-bold text-gray-800 hover:text-indigo-600 transition cursor-pointer">
@@ -425,10 +496,11 @@ contact@fleursenfete.com`,
                       <p className="text-xs text-gray-300 mt-2">
                         {new Date(order.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                       </p>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
+                      </div>{/* close flex items-start gap-3 (checkbox + content) */}
 
-                  {/* Payment tracking */}
+                      {/* Payment tracking */}
                   <div className="mt-3 pt-3 border-t border-gray-50">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -652,7 +724,7 @@ contact@fleursenfete.com`,
                       </div>
                     )}
                   </div>
-                </div>
+                  </div>
               );
             })}
           </div>
