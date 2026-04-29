@@ -337,7 +337,9 @@ export default function AdminOrdersDetail() {
                         <div className="flex justify-between">
                           <span className="text-gray-500">Variante</span>
                           <span className="font-medium">
-                            {order.options_selected.kitVariant === "crackers" ? "🫙 Kit Apéro Crackers Italiens" : "🌻 Graines de tournesol"}
+                            {order.options_selected.kitVariant === "crackers"
+                              ? <span>🫙 Kit Apéro Crackers Italiens<br /><span className="text-xs text-gray-400 font-normal">Épices : paprika, basilic, tomates, niora, origan, ail, poivre noir</span></span>
+                              : "🌻 Graines de tournesol"}
                           </span>
                         </div>
                       )}
