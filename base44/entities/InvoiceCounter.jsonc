@@ -1,0 +1,19 @@
+{
+  "name": "InvoiceCounter",
+  "type": "object",
+  "properties": {
+    "year": {
+      "type": "number",
+      "description": "Ann\u00e9e fiscale"
+    },
+    "last_number": {
+      "type": "number",
+      "default": 0,
+      "description": "Dernier num\u00e9ro de facture utilis\u00e9 pour cette ann\u00e9e"
+    }
+  },
+  "required": [
+    "year",
+    "last_number"
+  ]
+}

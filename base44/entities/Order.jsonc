@@ -65,6 +65,10 @@
       "type": "boolean",
       "default": false
     },
+    "invoice_number": {
+      "type": "string",
+      "description": "Num\u00e9ro de facture s\u00e9quentiel (ex: FEF-2026-0001)"
+    },
     "invoice_email_sent": {
       "type": "boolean",
       "default": false,
