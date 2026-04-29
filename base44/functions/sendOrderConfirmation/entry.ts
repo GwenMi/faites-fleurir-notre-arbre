@@ -82,7 +82,7 @@ TOTAL PAYÉ : ${pricing.total.toFixed(2)}€
 Nom : ${customerInfo.name}
 Email : ${customerInfo.email}
 Téléphone : ${customerInfo.phone || "Non renseigné"}
-Adresse : ${customerInfo.address || "Non renseignée"}
+Adresse : ${[customerInfo.street, customerInfo.zipCode, customerInfo.city, customerInfo.country].filter(Boolean).join(", ") || "Non renseignée"}
 Date de votre événement : ${eventDateStr}
 
 Nous vous recommandons de prévoir la réception au moins 7 jours avant votre événement.
