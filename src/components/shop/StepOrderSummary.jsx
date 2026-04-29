@@ -119,6 +119,17 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         console.log('PDF generation warning:', pdfError.message);
       }
 
+      // Sauvegarder l'adresse sur le profil pour les prochaines commandes
+      try {
+        await base44.auth.updateMe({
+          phone: customerInfo.phone || undefined,
+          street: customerInfo.street || undefined,
+          zip_code: customerInfo.zipCode || undefined,
+          city: customerInfo.city || undefined,
+          country: customerInfo.country || undefined,
+        });
+      } catch {}
+
       setCreatedOrderId(order.id);
       setPaymentDone(true);
       if (onOrderComplete) onOrderComplete();

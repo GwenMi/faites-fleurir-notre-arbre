@@ -28,13 +28,15 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
   const [referralError, setReferralError] = useState("");
   const { isAuthenticated, user } = useAuth();
 
-  // Pré-remplir depuis le compte connecté + date d'événement depuis la sélection
+  // Pré-remplir depuis le compte connecté + dernière commande + date d'événement
   useEffect(() => {
     if (!user) return;
     const parts = (user?.full_name || "").split(" ");
     const firstName = parts[0] || "";
     const lastName = parts.slice(1).join(" ") || "";
     const eventDateFromSelection = selection?.customization?.date || "";
+
+    // D'abord pré-remplir les infos de base
     onChange(info => ({
       ...info,
       email: info.email || user?.email || "",
@@ -42,12 +44,32 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
       lastName: info.lastName || lastName,
       name: info.name || user?.full_name || "",
       eventDate: info.eventDate || eventDateFromSelection,
+      // Champs custom sauvegardés sur le profil (via updateMe)
       phone: info.phone || user?.phone || "",
       street: info.street || user?.street || "",
       zipCode: info.zipCode || user?.zip_code || "",
       city: info.city || user?.city || "",
       country: info.country || user?.country || "France",
     }));
+
+    // Puis essayer de compléter avec la dernière commande passée
+    base44.entities.Order.filter({ customer_email: user.email }, "-created_date", 1)
+      .then(orders => {
+        const last = orders?.[0];
+        if (!last) return;
+        const opts = last.options_selected || {};
+        // Parser l'adresse stockée dans options_selected
+        const deliveryParts = (opts.delivery_address || "").split(",").map(s => s.trim());
+        onChange(info => ({
+          ...info,
+          phone: info.phone || opts.phone || "",
+          street: info.street || deliveryParts[0] || "",
+          zipCode: info.zipCode || (deliveryParts[1] || "").split(" ")[0] || "",
+          city: info.city || (deliveryParts[1] || "").split(" ").slice(1).join(" ") || "",
+          country: info.country || deliveryParts[2] || "France",
+        }));
+      })
+      .catch(() => {});
   }, [user?.email]);
 
   const set = (k, v) => onChange(info => ({ ...info, [k]: v }));
