@@ -45,7 +45,9 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
   };
 
   const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
-  const isCompanyEvent = ["fete_entreprise", "entreprise_standard", "entreprise_premium"].includes(selection.eventType);
+  // isCompanyEvent : via eventType (si renseigné) OU via kitType directement pour kits entreprise
+  const isCompanyEvent = ["fete_entreprise", "entreprise_standard", "entreprise_premium"].includes(selection.eventType)
+    || (selection.kitType || "").startsWith("entreprise");
   const isAccommodationEvent = selection.eventType === "maison_hote";
 
   const LogoUpload = ({ field, label }) => (
@@ -91,6 +93,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
           {isPersonalEvent && "Saisissez les prénoms et la date qui seront imprimés sur les étiquettes"}
           {isCompanyEvent && "Ajoutez votre logo et nom d'entreprise"}
           {isAccommodationEvent && "Ajoutez votre logo et nom d'établissement"}
+          {!isPersonalEvent && !isCompanyEvent && !isAccommodationEvent && "Personnalisez votre commande"}
         </p>
       </div>
 
