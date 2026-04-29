@@ -79,13 +79,21 @@
       "format": "date-time",
       "description": "Date d'envoi de la facture"
     },
+    "qonto_invoice_id": {
+      "type": "string",
+      "description": "ID de la facture dans Qonto"
+    },
+    "qonto_invoice_url": {
+      "type": "string",
+      "description": "URL de la facture Qonto"
+    },
     "payment_notes": {
       "type": "string"
     },
     "event_date": {
       "type": "string",
       "format": "date",
-      "description": "Date de l'\u00e9v\u00e9nement (mariage, bapt\u00eame\u2026) pour d\u00e9clencher le rappel floraison J+1"
+      "description": "Date de l'\u00e9v\u00e9nement (mariage, bapt\u00eame\u2026)"
     },
     "guest_emails": {
       "type": "array",
@@ -97,23 +105,19 @@
     },
     "flower_reminder_sent": {
       "type": "boolean",
-      "default": false,
-      "description": "Rappel floraison J+1 envoy\u00e9 aux mari\u00e9s et invit\u00e9s"
+      "default": false
     },
     "flower_reminder_sent_at": {
       "type": "string",
-      "format": "date-time",
-      "description": "Date d'envoi du rappel floraison J+1"
+      "format": "date-time"
     },
     "flower_tree_pdf_sent": {
       "type": "boolean",
-      "default": false,
-      "description": "Email de cl\u00f4ture J+45 (arbre fleuri) envoy\u00e9 aux mari\u00e9s"
+      "default": false
     },
     "flower_tree_pdf_sent_at": {
       "type": "string",
-      "format": "date-time",
-      "description": "Date d'envoi de l'email de cl\u00f4ture arbre fleuri"
+      "format": "date-time"
     }
   },
   "required": [

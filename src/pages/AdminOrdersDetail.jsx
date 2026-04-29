@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { ChevronLeft, Loader2, Mail, FileText, Edit2, Save, X } from "lucide-react";
+import { ChevronLeft, Loader2, Mail, FileText, Edit2, Save, X, ExternalLink, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +33,7 @@ export default function AdminOrdersDetail() {
   const [editStatus, setEditStatus] = useState(null);
   const [editPayment, setEditPayment] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [qontoLoading, setQontoLoading] = useState(false);
 
   useEffect(() => {
     if (orderId) fetchOrder();
@@ -91,6 +92,22 @@ export default function AdminOrdersDetail() {
     toast.success("Encaissement mis à jour ✓");
     setSaving(false);
     setEditPayment(null);
+  };
+
+  const pushToQonto = async () => {
+    setQontoLoading(true);
+    try {
+      const result = await base44.functions.invoke("createQontoInvoice", { orderId: order.id });
+      if (result?.data?.success) {
+        toast.success(result.data.already_exists ? "Facture déjà dans Qonto ✓" : `Facture ${result.data.invoice_number} créée dans Qonto ✓`);
+        await fetchOrder();
+      } else {
+        toast.error("Erreur Qonto : " + (result?.data?.error || "inconnu"));
+      }
+    } catch (e) {
+      toast.error("Erreur : " + e.message);
+    }
+    setQontoLoading(false);
   };
 
   const downloadInvoice = async () => {
@@ -266,7 +283,10 @@ export default function AdminOrdersDetail() {
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-bold text-gray-800">Documents</h3>
-                    {order.invoice_email_sent && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Envoyée</span>}
+                    <div className="flex items-center gap-2">
+                      {order.invoice_number && <span className="text-xs bg-violet-100 text-violet-700 px-2 py-1 rounded font-mono">{order.invoice_number}</span>}
+                      {order.invoice_email_sent && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Envoyée</span>}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Button onClick={downloadInvoice} variant="outline" className="w-full justify-start">
@@ -275,6 +295,19 @@ export default function AdminOrdersDetail() {
                     {(order.payment_status === "paid" || order.payment_status === "partial") && (
                       <Button onClick={() => sendInvoiceEmail(order, order.payment_status, order.deposit_amount)} variant="outline" className="w-full justify-start">
                         <Mail className="w-4 h-4 mr-2" /> Renvoyer facture
+                      </Button>
+                    )}
+                    {/* Qonto */}
+                    {order.qonto_invoice_url ? (
+                      <a href={order.qonto_invoice_url} target="_blank" rel="noreferrer" className="w-full">
+                        <Button variant="outline" className="w-full justify-start text-violet-700 border-violet-200 hover:bg-violet-50">
+                          <ExternalLink className="w-4 h-4 mr-2" /> Voir sur Qonto
+                        </Button>
+                      </a>
+                    ) : (
+                      <Button onClick={pushToQonto} disabled={qontoLoading} variant="outline" className="w-full justify-start text-violet-700 border-violet-200 hover:bg-violet-50">
+                        {qontoLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+                        {qontoLoading ? "Envoi Qonto..." : "Pousser vers Qonto"}
                       </Button>
                     )}
                   </div>
