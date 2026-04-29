@@ -15,7 +15,7 @@ const KIT_VARIANTS = [
     emoji: "🫙",
     label: "Kit Apéro Crackers Italiens",
     badge: "🆕 Nouveauté",
-    desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison.",
+    desc: "Un mix prêt à cuisiner : farine, sel et un mélange d'épices italiennes (paprika, basilic, tomates, niora, origan, ail, poivre noir). Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison.",
   },
 ];
 

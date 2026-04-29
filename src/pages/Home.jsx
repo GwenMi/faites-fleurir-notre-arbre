@@ -248,7 +248,7 @@ export default function Home() {
                 Kit Apéro Crackers Italiens
               </h3>
               <p className="font-sans-clean text-sm text-gray-500 leading-relaxed">
-                Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités réalisent leurs crackers maison et partagent leurs photos dans un album "Vos invités en cuisine".
+                Un mix prêt à cuisiner : farine, sel et épices italiennes (paprika, basilic, tomates, niora, origan, ail, poivre noir). Vos invités réalisent leurs crackers maison et partagent leurs photos dans un album "Vos invités en cuisine".
               </p>
             </div>
             <div className="flex-shrink-0 font-sans-clean text-sm font-semibold text-rose-500 group-hover:text-rose-600 transition whitespace-nowrap">
