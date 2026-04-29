@@ -1,6 +1,23 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+
+const KIT_VARIANTS = [
+  {
+    id: "tournesol",
+    emoji: "🌻",
+    label: "Graines de tournesol",
+    desc: "La version originale : chaque invité plante sa graine et partage sa fleur sur votre galerie photo.",
+  },
+  {
+    id: "crackers",
+    emoji: "🫙",
+    label: "Kit Apéro Crackers Italiens",
+    badge: "🆕 Nouveauté",
+    desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison.",
+  },
+];
 
 const KITS = {
   compose: {
@@ -35,8 +52,22 @@ const KITS = {
 };
 
 export default function StepKitOptions({ selection, onUpdate, onNext, onBack, PRICING }) {
+  const [variantModal, setVariantModal] = useState(null); // kitType en attente de variante
+
+  const handleSelectKit = (key) => {
+    onUpdate({ kitType: key });
+    setVariantModal(key);
+  };
+
+  const handleSelectVariant = (variantId) => {
+    onUpdate({ kitVariant: variantId });
+    setVariantModal(null);
+    onNext();
+  };
+
   const handleNext = () => {
     if (!selection.kitType) { toast.error("Veuillez choisir un kit"); return; }
+    if (!selection.kitVariant) { setVariantModal(selection.kitType); return; }
     onNext();
   };
 
@@ -55,7 +86,7 @@ export default function StepKitOptions({ selection, onUpdate, onNext, onBack, PR
           return (
             <button
               key={key}
-              onClick={() => onUpdate({ kitType: key })}
+              onClick={() => handleSelectKit(key)}
               className={`text-left rounded-2xl border-2 p-6 transition-all relative ${
                 selected ? "border-rose-400 bg-rose-50 shadow-md" : "border-gray-200 bg-white hover:border-rose-200"
               }`}
@@ -79,10 +110,55 @@ export default function StepKitOptions({ selection, onUpdate, onNext, onBack, PR
                   </li>
                 ))}
               </ul>
+              {selected && selection.kitVariant && (
+                <div className="mt-3 flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-rose-200">
+                  <span className="text-base">{KIT_VARIANTS.find(v => v.id === selection.kitVariant)?.emoji}</span>
+                  <span className="text-xs font-semibold text-rose-600">{KIT_VARIANTS.find(v => v.id === selection.kitVariant)?.label}</span>
+                  <button onClick={e => { e.stopPropagation(); setVariantModal(key); }} className="ml-auto text-xs text-gray-400 hover:text-rose-500 underline">Changer</button>
+                </div>
+              )}
             </button>
           );
         })}
       </div>
+
+      {/* Modale variante */}
+      {variantModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl">
+            <h3 className="text-xl font-bold text-gray-800 mb-1">Quelle variante ?</h3>
+            <p className="text-sm text-gray-400 mb-6">Choisissez la version de votre kit cadeau invités</p>
+            <div className="space-y-3">
+              {KIT_VARIANTS.map(v => (
+                <button
+                  key={v.id}
+                  onClick={() => handleSelectVariant(v.id)}
+                  className="w-full text-left p-4 rounded-2xl border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all flex items-start gap-4"
+                >
+                  <span className="text-3xl flex-shrink-0">{v.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="font-bold text-gray-800 text-sm">{v.label}</span>
+                      {v.badge && (
+                        <span className="inline-block bg-rose-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                          {v.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 leading-relaxed">{v.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setVariantModal(null)}
+              className="mt-5 w-full text-center text-sm text-gray-400 hover:text-rose-400 transition"
+            >
+              ← Annuler
+            </button>
+          </div>
+        </div>
+      )}
 
 
 
