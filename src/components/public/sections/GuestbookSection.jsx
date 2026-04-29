@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,9 +7,16 @@ import { toast } from "sonner";
 
 export default function GuestbookSection({ event }) {
   const [entries, setEntries] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [formData, setFormData] = useState({ pseudo: "", email: "", message: "" });
+
+  useEffect(() => {
+    base44.entities.GuestbookEntry.filter({ event_id: event.id, approved: true }, "-created_date")
+      .then(data => setEntries(data || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [event.id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +35,7 @@ export default function GuestbookSection({ event }) {
         approved: true,
       });
       toast.success("Message ajouté ! 📖");
+      setEntries(prev => [{ ...formData, event_id: event.id, approved: true, created_date: new Date().toISOString() }, ...prev]);
       setFormData({ pseudo: "", email: "", message: "" });
       setFormOpen(false);
     } catch {
@@ -93,7 +101,9 @@ export default function GuestbookSection({ event }) {
       )}
 
       <div className="space-y-4">
-        {entries.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-400 py-8">Chargement...</p>
+        ) : entries.length === 0 ? (
           <p className="text-center text-gray-400 py-8">Pas de messages pour le moment...</p>
         ) : (
           entries.map((entry) => (

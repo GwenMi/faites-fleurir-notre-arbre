@@ -130,7 +130,7 @@ export default function EventPublic() {
     couple_story: isPremium && event.show_couple_story && event.couple_story && (
       <div key="couple_story" className="max-w-2xl mx-auto px-4"><CoupleStorySection event={event} /></div>
     ),
-    day_schedule: isPremium && event.event_date && (
+    day_schedule: isPremium && (
       <div key="day_schedule" className="max-w-2xl mx-auto px-4"><DayScheduleSection event={event} /></div>
     ),
     rsvp: isPremium && (
