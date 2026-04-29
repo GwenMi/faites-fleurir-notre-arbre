@@ -21,7 +21,16 @@ const CONTAINERS = [
 ];
 
 export default function StepPackSelector({ selection, onUpdate, pricing, onNext, onBack }) {
-  // Quantité = nombre total de pots commandés (stocké dans packs comme [{size:1, qty: N}])
+  const kitType = selection.kitType || "";
+  const isEntreprise = kitType.startsWith("entreprise");
+  const isNaturel = kitType.startsWith("naturel");
+  const needsContainer = !isEntreprise && !isNaturel;
+
+  // Label contextuel
+  const unitLabel = isEntreprise ? "kits bureaux" : isNaturel ? "kits" : "pots";
+  const unitLabelSingular = isEntreprise ? "kit bureau" : isNaturel ? "kit" : "pot";
+
+  // Quantité = nombre total commandé (stocké dans packs comme [{size:1, qty: N}])
   const qty = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
 
   const setQty = (newQty) => {
@@ -31,15 +40,15 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
 
   const handleNext = () => {
     if (qty < 1) { toast.error("Veuillez indiquer une quantité"); return; }
-    if (!selection.containerType) { toast.error("Veuillez choisir un contenant"); return; }
+    if (needsContainer && !selection.containerType) { toast.error("Veuillez choisir un contenant"); return; }
     onNext();
   };
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Combien de pots ?</h2>
-        <p className="text-sm text-gray-500">Prix unitaire : <strong>{pricing.pricePerPot.toFixed(2)} €</strong> / pot</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">Combien de {unitLabel} ?</h2>
+        <p className="text-sm text-gray-500">Prix unitaire : <strong>{pricing.pricePerPot.toFixed(2)} €</strong> / {unitLabelSingular}</p>
       </div>
 
       {/* Sélecteur de quantité */}
@@ -64,7 +73,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
               }}
               className="w-24 text-center text-4xl font-bold text-gray-900 border-b-2 border-rose-300 focus:outline-none focus:border-rose-500 bg-transparent pb-1"
             />
-            <p className="text-sm text-gray-400 mt-1">pots</p>
+            <p className="text-sm text-gray-400 mt-1">{unitLabel}</p>
           </div>
 
           <button
@@ -91,37 +100,39 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
         </div>
       </div>
 
-      {/* Sélection du contenant */}
-      <div>
-        <p className="text-sm font-semibold text-gray-700 mb-3">Choisissez votre contenant</p>
-        <div className="grid grid-cols-2 gap-4">
-          {CONTAINERS.map(c => {
-            const selected = selection.containerType === c.id;
-            return (
-              <button
-                key={c.id}
-                onClick={() => onUpdate({ containerType: c.id })}
-                className={`rounded-2xl border-2 overflow-hidden text-left transition-all ${
-                  selected ? "border-rose-400 shadow-md" : "border-gray-200 hover:border-rose-200"
-                }`}
-              >
-                <div className="aspect-square bg-gray-50 relative">
-                  <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
-                  {selected && (
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-rose-400 rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="w-4 h-4 text-white" />
-                    </div>
-                  )}
-                </div>
-                <div className={`p-3 ${selected ? "bg-rose-50" : "bg-white"}`}>
-                  <p className="font-semibold text-sm text-gray-900">{c.name}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{c.desc}</p>
-                </div>
-              </button>
-            );
-          })}
+      {/* Sélection du contenant — uniquement pour kits mariage/événement */}
+      {needsContainer && (
+        <div>
+          <p className="text-sm font-semibold text-gray-700 mb-3">Choisissez votre contenant</p>
+          <div className="grid grid-cols-2 gap-4">
+            {CONTAINERS.map(c => {
+              const selected = selection.containerType === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => onUpdate({ containerType: c.id })}
+                  className={`rounded-2xl border-2 overflow-hidden text-left transition-all ${
+                    selected ? "border-rose-400 shadow-md" : "border-gray-200 hover:border-rose-200"
+                  }`}
+                >
+                  <div className="aspect-square bg-gray-50 relative">
+                    <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
+                    {selected && (
+                      <div className="absolute top-2 right-2 w-6 h-6 bg-rose-400 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className={`p-3 ${selected ? "bg-rose-50" : "bg-white"}`}>
+                    <p className="font-semibold text-sm text-gray-900">{c.name}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{c.desc}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Sac cadeau */}
       {qty > 0 && (
@@ -157,7 +168,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
       {qty > 0 && (
         <div className="bg-rose-50 rounded-2xl p-6 space-y-2">
           <div className="flex justify-between text-sm text-gray-700">
-            <span>{qty} pots × {pricing.pricePerPot.toFixed(2)} €</span>
+            <span>{qty} {unitLabel} × {pricing.pricePerPot.toFixed(2)} €</span>
             <span>{(qty * pricing.pricePerPot).toFixed(2)} €</span>
           </div>
           {selection.sacCadeau && (
