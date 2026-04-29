@@ -206,8 +206,14 @@ export default function Shop() {
     }
   };
 
+  const bgGradient = (() => {
+    if (selection.kitType?.startsWith("entreprise")) return "bg-gradient-to-b from-emerald-50 to-white";
+    if (selection.kitType?.startsWith("naturel")) return "bg-gradient-to-b from-amber-50 to-white";
+    return "bg-gradient-to-b from-rose-50 to-white";
+  })();
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+    <div className={`min-h-screen ${bgGradient}`}>
       <nav className="flex items-center justify-between px-6 md:px-12 py-4 bg-white border-b border-gray-100">
         <a href={createPageUrl("Home")}>
           <img
