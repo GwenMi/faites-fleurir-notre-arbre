@@ -496,9 +496,9 @@ contact@fleursenfete.com`,
                       <p className="text-xs text-gray-300 mt-2">
                         {new Date(order.created_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                       </p>
-                      </div>
-                      </div>
-                      </div>{/* close flex items-start gap-3 (checkbox + content) */}
+                      </div>{/* flex-1 min-w-0 */}
+                      </div>{/* flex items-start justify-between */}
+                      </div>{/* flex items-start gap-3 (checkbox + content) */}
 
                       {/* Payment tracking */}
                   <div className="mt-3 pt-3 border-t border-gray-50">
