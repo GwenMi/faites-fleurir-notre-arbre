@@ -22,22 +22,29 @@ export default function ContactForm() {
     setSending(true);
     setError("");
 
-    await base44.integrations.Core.SendEmail({
-      to: "contact@fleursdefete.fr",
-      subject: `📬 Nouveau message de ${form.name} — ${form.subject || "Contact site"}`,
-      body: `Nouveau message reçu depuis le formulaire de contact :\n\n👤 Nom : ${form.name}\n📧 Email : ${form.email}${form.phone ? `\n📞 Téléphone : ${form.phone}` : ""}\n📌 Sujet : ${form.subject || "Non précisé"}\n\n💬 Message :\n${form.message}\n\n---\nEnvoyé depuis fleursdefete.fr`,
-    });
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: "contact@fleursdefete.fr",
+        subject: `📬 Nouveau message de ${form.name} — ${form.subject || "Contact site"}`,
+        body: `Nouveau message reçu depuis le formulaire de contact :\n\n👤 Nom : ${form.name}\n📧 Email : ${form.email}${form.phone ? `\n📞 Téléphone : ${form.phone}` : ""}\n📌 Sujet : ${form.subject || "Non précisé"}\n\n💬 Message :\n${form.message}\n\n---\nEnvoyé depuis fleursdefete.fr`,
+      });
 
-    // Confirmation email to the customer
-    await base44.integrations.Core.SendEmail({
-      to: form.email,
-      from_name: "Gwenaëlle — Fleurs de Fête",
-      subject: "✅ Votre message a bien été reçu — Fleurs de Fête",
-      body: `Bonjour ${form.name},\n\nMerci pour votre message ! Je vous répondrai dans les plus brefs délais, généralement sous 24 à 48h.\n\nVotre message :\n"${form.message}"\n\nÀ très bientôt,\nGwenaëlle 🌸\nFleurs de Fête\ncontact@fleursdefete.fr`,
-    });
+      // Confirmation email to the customer
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: form.email,
+          from_name: "Gwenaëlle — Fleurs de Fête",
+          subject: "✅ Votre message a bien été reçu — Fleurs de Fête",
+          body: `Bonjour ${form.name},\n\nMerci pour votre message ! Je vous répondrai dans les plus brefs délais, généralement sous 24 à 48h.\n\nVotre message :\n"${form.message}"\n\nÀ très bientôt,\nGwenaëlle 🌸\nFleurs de Fête\ncontact@fleursdefete.fr`,
+        });
+      } catch {}
 
-    setSending(false);
-    setSent(true);
+      setSent(true);
+    } catch (err) {
+      setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement par email.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
