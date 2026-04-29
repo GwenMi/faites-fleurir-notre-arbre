@@ -147,7 +147,7 @@ export default function ContactForm() {
                         value={form.name}
                         onChange={handleChange}
                         placeholder="Marie Dupont"
-                        className="rounded-xl"
+                        className="rounded-xl text-gray-900"
                         required
                       />
                     </div>
@@ -159,7 +159,7 @@ export default function ContactForm() {
                         value={form.email}
                         onChange={handleChange}
                         placeholder="marie@exemple.fr"
-                        className="rounded-xl"
+                        className="rounded-xl text-gray-900"
                         required
                       />
                     </div>
@@ -174,7 +174,7 @@ export default function ContactForm() {
                         value={form.phone}
                         onChange={handleChange}
                         placeholder="06 12 34 56 78"
-                        className="rounded-xl"
+                        className="rounded-xl text-gray-900"
                       />
                     </div>
                     <div>
@@ -184,7 +184,7 @@ export default function ContactForm() {
                         value={form.subject}
                         onChange={handleChange}
                         placeholder="Question commande, devis…"
-                        className="rounded-xl"
+                        className="rounded-xl text-gray-900"
                       />
                     </div>
                   </div>
@@ -196,7 +196,7 @@ export default function ContactForm() {
                       value={form.message}
                       onChange={handleChange}
                       placeholder="Décrivez votre projet ou votre question..."
-                      className="rounded-xl h-36 resize-none"
+                      className="rounded-xl h-36 resize-none text-gray-900"
                       required
                     />
                   </div>
