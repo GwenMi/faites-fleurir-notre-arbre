@@ -53,6 +53,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
         event_date: customerInfo.eventDate || undefined,
         options_selected: {
           kitType: selection.kitType,
+          kitVariant: selection.kitVariant || null,
           eventType: selection.eventType,
           containerType: selection.containerType,
           sacCadeau: selection.sacCadeau,
