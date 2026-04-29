@@ -84,7 +84,9 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Personnalisez vos pots</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">
+          {selection.kitVariant === "crackers" ? "Personnalisez vos étiquettes" : "Personnalisez vos pots"}
+        </h2>
         <p className="text-sm text-gray-500">
           {isPersonalEvent && "Saisissez les prénoms et la date qui seront imprimés sur les étiquettes"}
           {isCompanyEvent && "Ajoutez votre logo et nom d'entreprise"}
@@ -92,36 +94,45 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
         </p>
       </div>
 
-      {/* Choix de la graine */}
-      {seeds && seeds.length > 1 && (
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-3">Type de graine</label>
-          <div className="grid grid-cols-2 gap-3">
-            {seeds.map(seed => (
-              <button
-                key={seed.id}
-                onClick={() => updateCustomization({ seedType: seed.id })}
-                className={`p-4 rounded-lg border-2 transition text-center ${
-                  selection.customization?.seedType === seed.id || (selection.seedType === seed.id)
-                    ? 'border-rose-400 bg-rose-50'
-                    : 'border-gray-200 bg-white hover:border-rose-200'
-                }`}
-              >
-                <p className="text-sm font-semibold text-gray-800">{seed.label}</p>
-                <p className="text-xs text-gray-500 mt-1">{seed.description}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      {seeds && seeds.length === 1 && (
+      {/* Affichage de la variante choisie */}
+      {selection.kitVariant === "crackers" ? (
         <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3">
-          <span className="text-xl">{seeds[0].label.split(' ')[0]}</span>
+          <span className="text-xl">🫙</span>
           <div>
-            <p className="text-sm font-semibold text-gray-800">{seeds[0].label}</p>
-            <p className="text-xs text-gray-500">{seeds[0].description}</p>
+            <p className="text-sm font-semibold text-gray-800">Kit Apéro Crackers Italiens</p>
+            <p className="text-xs text-gray-500">Nouveauté — mix prêt à cuisiner</p>
           </div>
         </div>
+      ) : (
+        seeds && seeds.length > 1 ? (
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-3">Type de graine</label>
+            <div className="grid grid-cols-2 gap-3">
+              {seeds.map(seed => (
+                <button
+                  key={seed.id}
+                  onClick={() => updateCustomization({ seedType: seed.id })}
+                  className={`p-4 rounded-lg border-2 transition text-center ${
+                    selection.customization?.seedType === seed.id || (selection.seedType === seed.id)
+                      ? 'border-rose-400 bg-rose-50'
+                      : 'border-gray-200 bg-white hover:border-rose-200'
+                  }`}
+                >
+                  <p className="text-sm font-semibold text-gray-800">{seed.label}</p>
+                  <p className="text-xs text-gray-500 mt-1">{seed.description}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : seeds && seeds.length === 1 ? (
+          <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3">
+            <span className="text-xl">{seeds[0].label.split(' ')[0]}</span>
+            <div>
+              <p className="text-sm font-semibold text-gray-800">{seeds[0].label}</p>
+              <p className="text-xs text-gray-500">{seeds[0].description}</p>
+            </div>
+          </div>
+        ) : null
       )}
 
       {/* Événements personnels */}
