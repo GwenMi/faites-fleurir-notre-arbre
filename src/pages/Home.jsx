@@ -227,6 +227,37 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Bannière Nouveauté Kit Apéro Crackers */}
+      <div className="px-6 md:px-12 py-8">
+        <a
+          href={createPageUrl("Shop")}
+          className="block max-w-3xl mx-auto rounded-3xl border-2 border-rose-200 bg-gradient-to-r from-rose-50 via-pink-50 to-amber-50 p-6 hover:shadow-md transition-all group"
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-shrink-0 w-14 h-14 bg-white rounded-2xl border border-rose-100 flex items-center justify-center text-3xl shadow-sm">
+              🫙
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <span className="inline-block bg-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full font-sans-clean">
+                  🆕 Nouveauté
+                </span>
+                <span className="font-sans-clean text-xs text-gray-400">Cadeau invités</span>
+              </div>
+              <h3 className="font-serif-elegant text-xl font-bold text-gray-800 mb-1">
+                Kit Apéro Crackers Italiens
+              </h3>
+              <p className="font-sans-clean text-sm text-gray-500 leading-relaxed">
+                Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités réalisent leurs crackers maison et partagent leurs photos dans un album "Vos invités en cuisine".
+              </p>
+            </div>
+            <div className="flex-shrink-0 font-sans-clean text-sm font-semibold text-rose-500 group-hover:text-rose-600 transition whitespace-nowrap">
+              Découvrir →
+            </div>
+          </div>
+        </a>
+      </div>
+
       {/* Divider */}
       <div className="flex items-center gap-4 px-8 md:px-20 py-2">
         <div className="gold-line flex-1" />

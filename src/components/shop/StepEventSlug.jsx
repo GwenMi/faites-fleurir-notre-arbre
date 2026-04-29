@@ -12,6 +12,7 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
   const [slugAvailable, setSlugAvailable] = useState(null);
 
   const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
+  const isCrackers = selection.kitVariant === "crackers";
 
   // Générer une suggestion automatique basée sur le nom
   const generateSuggestion = async () => {
@@ -96,8 +97,19 @@ export default function StepEventSlug({ selection, onUpdate, onNext, onBack }) {
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Votre site personnel</h2>
         <p className="text-sm text-gray-500">
-          Créez votre page d'événement avec un lien personnalisé
+          {isCrackers
+            ? "Créez votre page d'événement — vos invités pourront partager leurs photos de réalisation"
+            : "Créez votre page d'événement avec un lien personnalisé"}
         </p>
+        {isCrackers && (
+          <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+            <span className="text-base flex-shrink-0">🫙</span>
+            <div>
+              <p className="text-sm font-semibold text-amber-800">Kit Apéro Crackers Italiens</p>
+              <p className="text-xs text-amber-700 mt-0.5">Album photo "Vos invités en cuisine" — vos invités partagent leurs photos de crackers maison.</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {isPersonalEvent && (
