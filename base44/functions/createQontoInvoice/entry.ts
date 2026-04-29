@@ -3,9 +3,10 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 const QONTO_BASE = "https://thirdparty.qonto.com/v2";
 
 function qontoHeaders() {
+  const login = Deno.env.get("QONTO_LOGIN");
   const apiKey = Deno.env.get("QONTO_API_KEY");
   return {
-    "Authorization": `Bearer ${apiKey}`,
+    "Authorization": `${login}:${apiKey}`,
     "Content-Type": "application/json",
   };
 }
