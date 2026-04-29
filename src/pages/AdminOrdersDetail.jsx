@@ -289,12 +289,88 @@ export default function AdminOrdersDetail() {
 
                 {Object.keys(order.options_selected || {}).length > 0 && (
                   <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <h3 className="font-bold text-gray-800 mb-3">Options</h3>
-                    <div className="space-y-2 text-sm">
+                    <h3 className="font-bold text-gray-800 mb-3">Détail du kit</h3>
+                    <div className="space-y-2 text-sm text-gray-700">
+                      {/* Kit type + variante */}
+                      {order.options_selected?.kitType && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Kit</span>
+                          <span className="font-medium">
+                            {{ pret: "Prêt à offrir", compose: "À composer", entreprise_standard: 'Standard "Bureau"', entreprise_premium: 'Premium "Moniteur"', naturel_essentiel: "Naturel Essentiel", naturel_douceur: "Naturel Douceur" }[order.options_selected.kitType] || order.options_selected.kitType}
+                          </span>
+                        </div>
+                      )}
+                      {order.options_selected?.kitVariant && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Variante</span>
+                          <span className="font-medium">
+                            {order.options_selected.kitVariant === "crackers" ? "🫙 Kit Apéro Crackers Italiens" : "🌻 Graines de tournesol"}
+                          </span>
+                        </div>
+                      )}
+                      {/* Événement */}
+                      {order.options_selected?.eventType && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Événement</span>
+                          <span className="font-medium capitalize">{order.options_selected.eventType}</span>
+                        </div>
+                      )}
+                      {/* Contenant */}
+                      {order.options_selected?.containerType && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Contenant</span>
+                          <span className="font-medium">
+                            {order.options_selected.containerType === "rond_clip" ? "Pot rond fermoir" : order.options_selected.containerType === "carre_liege" ? "Pot carré liège" : order.options_selected.containerType}
+                          </span>
+                        </div>
+                      )}
+                      {/* Sac cadeau */}
+                      {order.options_selected?.sacCadeau && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Sacs cadeaux</span>
+                          <span className="font-medium text-green-600">✓ Inclus</span>
+                        </div>
+                      )}
+                      {/* Packs */}
+                      {order.options_selected?.packs?.length > 0 && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <p className="text-gray-500 mb-1">Packs :</p>
+                          {order.options_selected.packs.map((p, i) => (
+                            <div key={i} className="flex justify-between pl-2">
+                              <span>Pack {p.size} invités × {p.qty}</span>
+                              <span className="font-medium">{p.size * p.qty} pots</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {/* Personnalisation */}
+                      {order.options_selected?.customization && Object.values(order.options_selected.customization).some(Boolean) && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <p className="text-gray-500 mb-1">Personnalisation :</p>
+                          {order.options_selected.customization.names && <p className="pl-2">✍️ {order.options_selected.customization.names}</p>}
+                          {order.options_selected.customization.date && <p className="pl-2">📅 {order.options_selected.customization.date}</p>}
+                          {order.options_selected.customization.companyName && <p className="pl-2">🏢 {order.options_selected.customization.companyName}</p>}
+                          {order.options_selected.customization.logoUrl && <p className="pl-2 text-green-600">Logo fourni ✓</p>}
+                        </div>
+                      )}
+                      {/* Téléphone */}
+                      {order.options_selected?.phone && (
+                        <div className="flex justify-between pt-2 border-t border-gray-100">
+                          <span className="text-gray-500">Téléphone</span>
+                          <span className="font-medium">{order.options_selected.phone}</span>
+                        </div>
+                      )}
+                      {/* Livraison */}
+                      {order.options_selected?.shipping_method_name && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Livraison</span>
+                          <span className="font-medium">{order.options_selected.shipping_method_name}</span>
+                        </div>
+                      )}
+                      {/* Anciens champs */}
                       {order.options_selected?.pot_type && <p>Pot: {order.options_selected.pot_type}</p>}
-                      {order.options_selected?.ribbon_color && <p>Ruban: {order.options_selected.ribbon_color}</p>}
                       {order.options_selected?.seed_type && <p>Graines: {order.options_selected.seed_type}</p>}
-                      {order.options_selected?.custom_text && <p>{order.options_selected.custom_text}</p>}
+                      {order.options_selected?.custom_text && <p>✍️ {order.options_selected.custom_text}</p>}
                     </div>
                   </div>
                 )}
