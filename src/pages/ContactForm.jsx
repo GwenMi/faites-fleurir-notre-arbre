@@ -24,7 +24,7 @@ export default function ContactForm() {
 
     try {
       await base44.integrations.Core.SendEmail({
-        to: "contact@fleursdefete.fr",
+        to: "gwen@fleursdefete.fr",
         subject: `📬 Nouveau message de ${form.name} — ${form.subject || "Contact site"}`,
         body: `Nouveau message reçu depuis le formulaire de contact :\n\n👤 Nom : ${form.name}\n📧 Email : ${form.email}${form.phone ? `\n📞 Téléphone : ${form.phone}` : ""}\n📌 Sujet : ${form.subject || "Non précisé"}\n\n💬 Message :\n${form.message}\n\n---\nEnvoyé depuis fleursdefete.fr`,
       });
