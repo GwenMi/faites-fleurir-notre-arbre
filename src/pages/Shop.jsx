@@ -52,11 +52,14 @@ export default function Shop() {
         const saved = localStorage.getItem("shop_selection");
         if (saved) {
           const parsed = JSON.parse(saved);
-          return { ...parsed, eventType: initEventType || parsed.eventType || null, kitType: initKitType || parsed.kitType || null };
+          // Si kit mariage sans kitVariant (ancienne session), on repart de zéro sur ce champ
+          const kitType = initKitType || parsed.kitType || null;
+          const kitVariant = (["compose", "pret"].includes(kitType) && !parsed.kitVariant) ? null : parsed.kitVariant;
+          return { ...parsed, eventType: initEventType || parsed.eventType || null, kitType, kitVariant };
         }
       } catch {}
     }
-    return { eventType: initEventType || null, kitType: initKitType || null, seedType: "tournesol_nain", sacCadeau: false, packs: [], containerType: null };
+    return { eventType: initEventType || null, kitType: initKitType || null, kitVariant: null, seedType: "tournesol_nain", sacCadeau: false, packs: [], containerType: null };
   });
 
   const [customerInfo, setCustomerInfo] = useState(() => {
