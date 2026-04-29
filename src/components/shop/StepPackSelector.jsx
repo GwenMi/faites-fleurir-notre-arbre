@@ -134,8 +134,8 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
         </div>
       )}
 
-      {/* Sac cadeau */}
-      {qty > 0 && (
+      {/* Sac cadeau — uniquement pour kits fleurs/apéro */}
+      {qty > 0 && needsContainer && (
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
@@ -171,7 +171,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
             <span>{qty} {unitLabel} × {pricing.pricePerPot.toFixed(2)} €</span>
             <span>{(qty * pricing.pricePerPot).toFixed(2)} €</span>
           </div>
-          {selection.sacCadeau && (
+          {needsContainer && selection.sacCadeau && (
             <div className="flex justify-between text-sm text-gray-700">
               <span>Sacs cadeaux ({qty} × {SAC_CADEAU_PRICE.toFixed(2)} €)</span>
               <span>{(SAC_CADEAU_PRICE * qty).toFixed(2)} €</span>
@@ -180,7 +180,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
           <div className="flex justify-between font-bold text-lg border-t border-rose-200 pt-3 mt-1">
             <span>Sous-total</span>
             <span className="text-rose-600">
-              {(qty * pricing.pricePerPot + (selection.sacCadeau ? SAC_CADEAU_PRICE * qty : 0)).toFixed(2)} €
+              {(qty * pricing.pricePerPot + (needsContainer && selection.sacCadeau ? SAC_CADEAU_PRICE * qty : 0)).toFixed(2)} €
             </span>
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function StepPackSelector({ selection, onUpdate, pricing, onNext,
         <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
           <ChevronLeft className="w-4 h-4 mr-2" /> Retour
         </Button>
-        <Button onClick={handleNext} disabled={qty < 1 || !selection.containerType} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
+        <Button onClick={handleNext} disabled={qty < 1 || (needsContainer && !selection.containerType)} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>

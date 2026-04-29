@@ -156,6 +156,56 @@ export default function Shop() {
 
   const updateSelection = (updates) => setSelection(s => ({ ...s, ...updates }));
 
+  const kitType = selection.kitType || "";
+  const isFleurKit = kitType === "compose" || kitType === "pret";
+  const isEntrepriseKit = kitType.startsWith("entreprise");
+  const isNaturelKit = kitType.startsWith("naturel");
+
+  // Gestion des sauts d'étapes selon le type de kit
+  const goNext = (fromStep) => {
+    if (fromStep === 1) {
+      // Après choix du kit : événement uniquement pour kits fleurs, sinon directement quantité
+      if (isFleurKit) setStep(2);
+      else setStep(3);
+    } else if (fromStep === 2) {
+      setStep(3);
+    } else if (fromStep === 3) {
+      // Après quantité : personnalisation pour fleurs & entreprise, sinon coordonnées
+      if (isNaturelKit) setStep(6);
+      else setStep(4);
+    } else if (fromStep === 4) {
+      // Après personnalisation : slug pour kits fleurs events personnels, sinon coordonnées
+      const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
+      if (isFleurKit && isPersonalEvent && !selection.slug) setStep(5);
+      else setStep(6);
+    } else if (fromStep === 5) {
+      setStep(6);
+    } else if (fromStep === 6) {
+      setStep(7);
+    } else if (fromStep === 7) {
+      setStep(8);
+    }
+  };
+
+  const goBack = (fromStep) => {
+    if (fromStep === 3) {
+      if (isFleurKit) setStep(2);
+      else setStep(1);
+    } else if (fromStep === 4) {
+      setStep(3);
+    } else if (fromStep === 5) {
+      setStep(4);
+    } else if (fromStep === 6) {
+      if (isNaturelKit) setStep(3);
+      else if (selection.slug) setStep(5);
+      else setStep(4);
+    } else if (fromStep === 7) {
+      setStep(6);
+    } else if (fromStep === 8) {
+      setStep(7);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
       <nav className="flex items-center justify-between px-6 md:px-12 py-4 bg-white border-b border-gray-100">
@@ -173,29 +223,25 @@ export default function Shop() {
         <WizardProgress currentStep={step} steps={STEPS} />
         <div className="mt-12">
           {step === 1 && (
-            <StepKitChoice selection={selection} onUpdate={updateSelection} onNext={() => setStep(2)} onBack={() => { window.location.href = createPageUrl("Home"); }} />
+            <StepKitChoice selection={selection} onUpdate={updateSelection} onNext={() => goNext(1)} onBack={() => { window.location.href = createPageUrl("Home"); }} />
           )}
           {step === 2 && (
-            <StepEventType selection={selection} onUpdate={updateSelection} onNext={() => setStep(3)} onBack={() => setStep(1)} />
+            <StepEventType selection={selection} onUpdate={updateSelection} onNext={() => goNext(2)} onBack={() => setStep(1)} />
           )}
           {step === 3 && (
-            <StepPackSelector selection={selection} onUpdate={updateSelection} pricing={pricing} onNext={() => setStep(4)} onBack={() => setStep(2)} />
+            <StepPackSelector selection={selection} onUpdate={updateSelection} pricing={pricing} onNext={() => goNext(3)} onBack={() => goBack(3)} />
           )}
           {step === 4 && (
             <StepCustomization
               selection={selection}
               onUpdate={updateSelection}
-              onNext={() => {
-                const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
-                if (!isPersonalEvent || selection.slug) setStep(6);
-                else setStep(5);
-              }}
-              onBack={() => setStep(3)}
+              onNext={() => goNext(4)}
+              onBack={() => goBack(4)}
               seeds={SEEDS}
             />
           )}
           {step === 5 && (
-            <StepEventSlug selection={selection} onUpdate={updateSelection} onNext={() => setStep(6)} onBack={() => setStep(4)} />
+            <StepEventSlug selection={selection} onUpdate={updateSelection} onNext={() => goNext(5)} onBack={() => goBack(5)} />
           )}
           {step === 6 && (
             <StepCustomerForm
@@ -204,15 +250,12 @@ export default function Shop() {
               selection={selection}
               referral={referral}
               onReferralChange={setReferral}
-              onNext={() => setStep(7)}
-              onBack={() => {
-                if (selection.slug) setStep(5);
-                else setStep(4);
-              }}
+              onNext={() => goNext(6)}
+              onBack={() => goBack(6)}
             />
           )}
           {step === 7 && (
-            <StepShipping totalPots={pricing.totalPots} shippingMethod={shippingMethod} onSelect={setShippingMethod} onNext={() => setStep(8)} onBack={() => setStep(6)} />
+            <StepShipping totalPots={pricing.totalPots} shippingMethod={shippingMethod} onSelect={setShippingMethod} onNext={() => goNext(7)} onBack={() => goBack(7)} />
           )}
           {step === 8 && (
             <StepOrderSummary
