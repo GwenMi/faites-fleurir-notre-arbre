@@ -14,7 +14,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison.",
+      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
     },
   ],
   pret: [
@@ -29,7 +29,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison.",
+      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
     },
   ],
 };
