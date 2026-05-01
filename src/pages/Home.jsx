@@ -53,34 +53,30 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {cartInProgress && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-amber-800">
-            <ShoppingCart className="w-4 h-4 flex-shrink-0" />
-            <span>Vous avez un panier en cours de création.</span>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <button
-              onClick={() => {
-                try {
-                  localStorage.removeItem("shop_step");
-                  localStorage.removeItem("shop_selection");
-                  localStorage.removeItem("shop_customer_info");
-                  localStorage.removeItem("shop_reminder_sent_at");
-                } catch {}
-                setCartInProgress(false);
-              }}
-              className="text-sm text-amber-600 hover:text-amber-800 transition flex items-center gap-1"
-              title="Vider le panier"
-            >
-              <Trash2 className="w-3.5 h-3.5" /> Vider
-            </button>
-            <a
-              href={createPageUrl("Shop") + "?resume=true"}
-              className="text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 transition px-4 py-1.5 rounded-full"
-            >
-              Reprendre mon panier →
-            </a>
-          </div>
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex items-center gap-3">
+          <ShoppingCart className="w-4 h-4 flex-shrink-0 text-amber-700" />
+          <span className="flex-1 text-sm text-amber-800 min-w-0 truncate">Panier en cours de création</span>
+          <a
+            href={createPageUrl("Shop") + "?resume=true"}
+            className="text-xs font-semibold text-white bg-amber-500 hover:bg-amber-600 transition px-3 py-1.5 rounded-full flex-shrink-0"
+          >
+            Reprendre →
+          </a>
+          <button
+            onClick={() => {
+              try {
+                localStorage.removeItem("shop_step");
+                localStorage.removeItem("shop_selection");
+                localStorage.removeItem("shop_customer_info");
+                localStorage.removeItem("shop_reminder_sent_at");
+              } catch {}
+              setCartInProgress(false);
+            }}
+            className="p-1 text-amber-500 hover:text-amber-700 transition flex-shrink-0"
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
       <SEOHead
@@ -127,12 +123,8 @@ export default function Home() {
               Créer mon événement
             </a>
           </div>
-          {/* Mobile: CTA + burger */}
+          {/* Mobile: burger only */}
           <div className="flex md:hidden items-center gap-2">
-            <a href={createPageUrl("Shop")}
-              className="font-sans-clean text-xs font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-4 py-2 rounded-full shadow-sm">
-              Créer mon événement
-            </a>
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
               className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition"
@@ -145,26 +137,31 @@ export default function Home() {
 
         {/* Mobile dropdown menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-4">
+          <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-3">
             <a href={createPageUrl("Shop")}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-rose-500 py-1">
+              className="font-sans-clean text-sm font-semibold text-rose-500 py-2 border-b border-gray-50">
               Boutique 🌸
             </a>
             <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-emerald-600 py-1">
+              className="font-sans-clean text-sm font-semibold text-emerald-600 py-2 border-b border-gray-50">
               Cadeaux entreprise 🏢
             </a>
             <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-amber-600 py-1">
+              className="font-sans-clean text-sm font-semibold text-amber-600 py-2 border-b border-gray-50">
               Maisons d'hôtes 🏡
             </a>
             <a href={createPageUrl("ClientDashboard")}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm text-gray-500 py-1">
+              className="font-sans-clean text-sm text-gray-500 py-2 border-b border-gray-50">
               Mon espace
+            </a>
+            <a href={createPageUrl("Shop")}
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-1 font-sans-clean text-sm font-bold text-white bg-rose-400 hover:bg-rose-500 transition py-3 rounded-full text-center shadow-sm">
+              Créer mon événement 🌸
             </a>
           </div>
         )}
