@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import AdminGuard from "@/components/admin/AdminGuard";
-import { ChevronLeft, Loader2, TrendingUp, ShoppingBag, Euro, Package } from "lucide-react";
+import { ChevronLeft, Loader2, TrendingUp, ShoppingBag, Euro, Package, Eye } from "lucide-react";
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend
 } from "recharts";
@@ -12,11 +12,16 @@ const COLORS = ["#f43f5e", "#a78bfa", "#34d399", "#fb923c", "#60a5fa", "#f472b6"
 
 export default function Stats() {
   const [orders, setOrders] = useState([]);
+  const [pageViews, setPageViews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.Order.list("-created_date").then(data => {
-      setOrders(data || []);
+    Promise.all([
+      base44.entities.Order.list("-created_date"),
+      base44.entities.PageView.filter({ page: "home" }, "date", 365),
+    ]).then(([ordersData, viewsData]) => {
+      setOrders(ordersData || []);
+      setPageViews(viewsData || []);
       setLoading(false);
     });
   }, []);
@@ -56,6 +61,22 @@ export default function Stats() {
   const bestMonth = [...monthlyData].sort((a, b) => b.ca - a.ca)[0];
   const avgBasket = totalOrders > 0 ? (totalCA / totalOrders).toFixed(2) : "0.00";
 
+  // Visites — année en cours
+  const totalVisits = pageViews
+    .filter(v => new Date(v.date).getFullYear() === currentYear)
+    .reduce((s, v) => s + (v.count || 0), 0);
+
+  // Visites par mois
+  const monthlyVisits = MONTHS.map((month, idx) => {
+    const count = pageViews
+      .filter(v => {
+        const d = new Date(v.date);
+        return d.getFullYear() === currentYear && d.getMonth() === idx;
+      })
+      .reduce((s, v) => s + (v.count || 0), 0);
+    return { month, visites: count };
+  });
+
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50">
       <Loader2 className="w-8 h-8 animate-spin text-rose-300" />
@@ -79,12 +100,13 @@ export default function Stats() {
       <div className="max-w-4xl mx-auto p-4 space-y-6">
 
         {/* KPI cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {[
             { label: "CA annuel", value: `${totalCA.toFixed(2)} €`, icon: Euro, color: "text-rose-500", bg: "bg-rose-50" },
             { label: "Commandes", value: totalOrders, icon: ShoppingBag, color: "text-purple-500", bg: "bg-purple-50" },
             { label: "Panier moyen", value: `${avgBasket} €`, icon: Package, color: "text-amber-500", bg: "bg-amber-50" },
             { label: "Meilleur mois", value: bestMonth?.ca > 0 ? `${bestMonth.month} (${bestMonth.ca} €)` : "—", icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-50" },
+            { label: "Visites (année)", value: totalVisits.toLocaleString("fr-FR"), icon: Eye, color: "text-blue-500", bg: "bg-blue-50" },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2">
               <div className={`w-8 h-8 rounded-xl ${bg} flex items-center justify-center`}>
@@ -131,6 +153,25 @@ export default function Stats() {
               />
               <Line type="monotone" dataKey="commandes" stroke="#a78bfa" strokeWidth={2.5} dot={{ r: 4, fill: "#a78bfa" }} />
             </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Monthly visits chart */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <h2 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <Eye className="w-4 h-4 text-blue-400" /> Visites mensuelles (page d'accueil)
+          </h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={monthlyVisits} margin={{ top: 4, right: 4, left: -10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#9ca3af" }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+              <Tooltip
+                formatter={(v) => [v, "Visites"]}
+                contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", fontSize: 12 }}
+              />
+              <Bar dataKey="visites" radius={[6, 6, 0, 0]} fill="#60a5fa" />
+            </BarChart>
           </ResponsiveContainer>
         </div>
 

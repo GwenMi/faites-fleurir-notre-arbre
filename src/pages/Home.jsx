@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,8 @@ export default function Home() {
       const savedSelection = JSON.parse(localStorage.getItem("shop_selection") || "{}");
       if (savedStep >= 2 && savedSelection?.kitType) setCartInProgress(true);
     } catch {}
+    // Tracker la visite
+    base44.functions.invoke("trackPageView", { page: "home" }).catch(() => {});
   }, []);
 
   const handleGoToEvent = () => {

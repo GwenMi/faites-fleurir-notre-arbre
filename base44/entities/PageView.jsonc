@@ -1,0 +1,25 @@
+{
+  "name": "PageView",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date de la visite (YYYY-MM-DD)"
+    },
+    "page": {
+      "type": "string",
+      "description": "Nom de la page visit\u00e9e"
+    },
+    "count": {
+      "type": "number",
+      "default": 1,
+      "description": "Nombre de visites pour cette date/page"
+    }
+  },
+  "required": [
+    "date",
+    "page",
+    "count"
+  ]
+}
