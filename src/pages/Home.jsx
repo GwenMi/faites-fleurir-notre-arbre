@@ -173,15 +173,18 @@ export default function Home() {
       {/* Hero */}
       <div className="hero-bg px-6 md:px-12 py-20 md:py-28 text-center">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">
-          Cadeaux de mariage · Baptêmes · Anniversaires · Entreprises · Maisons d'hôtes
+          Mariage · Baptême · Anniversaire · Maison d'hôte · Entreprise
         </p>
         <h1 className="font-serif-elegant text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-6">
           Le cadeau qu'on<br />
-          <span className="text-rose-400">n'oublie pas</span>
+          <span className="text-rose-400">n'oublie jamais</span>
         </h1>
         <div className="gold-line max-w-xs mx-auto mb-6" />
-        <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-10 leading-relaxed font-light">
-          Des petits pots de graines personnalisés à poser sur les tables — chaque invité plante, chaque fleur raconte encore votre histoire.
+        <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-4 leading-relaxed font-light">
+          Un petit pot de graines personnalisé à poser sur chaque table — prénoms gravés, graine de votre choix, QR code pour partager les photos quand la fleur pousse.
+        </p>
+        <p className="font-sans-clean text-gray-400 text-sm max-w-sm mx-auto mb-10">
+          🌱 Mariage, baptême, anniversaire, communion, maison d'hôte — <strong className="text-gray-600">à partir de 3,90 € / invité.</strong>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-8">
@@ -224,6 +227,106 @@ export default function Home() {
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Bande chiffres preuves sociales */}
+      <div className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-6 py-6">
+        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-8 md:gap-16 text-center">
+          {[
+            { value: "+2 000", label: "événements célébrés" },
+            { value: "98%", label: "clients satisfaits" },
+            { value: "dès 3,90€", label: "par invité" },
+            { value: "5–10j", label: "délai de livraison" },
+          ].map(s => (
+            <div key={s.label}>
+              <p className="font-serif-elegant text-3xl font-bold">{s.value}</p>
+              <p className="font-sans-clean text-xs opacity-80 mt-0.5">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Section Pour chaque occasion */}
+      <div className="px-6 md:px-12 py-16 max-w-5xl mx-auto">
+        <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Adapté à votre fête</p>
+        <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-3 text-center">Pour chaque occasion</h2>
+        <p className="font-sans-clean text-gray-400 text-sm text-center max-w-md mx-auto mb-12">Chaque kit est personnalisé selon votre événement — prénoms, date, message et type de graine. Un souvenir unique pour chaque moment de vie.</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            {
+              emoji: "💍",
+              title: "Mariage",
+              desc: "Posez un pot sur chaque table. Vos invités plantent, la fleur pousse, le souvenir reste.",
+              tag: "Le plus populaire",
+              tagColor: "bg-rose-100 text-rose-600",
+              img: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=250&fit=crop&auto=format",
+              href: "?kitType=compose&eventType=mariage",
+              cta: "Voir les kits mariage",
+              ctaColor: "bg-rose-400 hover:bg-rose-500",
+            },
+            {
+              emoji: "🍼",
+              title: "Baptême",
+              desc: "Un cadeau doux et végétal pour accueillir ce nouveau prénom dans le monde.",
+              tag: "Tendance",
+              tagColor: "bg-sky-100 text-sky-600",
+              img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=250&fit=crop&auto=format",
+              href: "?kitType=compose&eventType=bapteme",
+              cta: "Voir les kits baptême",
+              ctaColor: "bg-sky-400 hover:bg-sky-500",
+            },
+            {
+              emoji: "🎂",
+              title: "Anniversaire",
+              desc: "Pour les 30, 40, 50 ans ou plus — une attention vivante que personne n'oublie.",
+              tag: "Original",
+              tagColor: "bg-amber-100 text-amber-600",
+              img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=250&fit=crop&auto=format",
+              href: "?kitType=compose&eventType=anniversaire",
+              cta: "Voir les kits anniversaire",
+              ctaColor: "bg-amber-400 hover:bg-amber-500",
+            },
+            {
+              emoji: "🏡",
+              title: "Maison d'hôte",
+              desc: "Un petit pot déposé dans chaque chambre. Vos hôtes repartent avec un souvenir de leur séjour.",
+              tag: "Coup de cœur",
+              tagColor: "bg-emerald-100 text-emerald-600",
+              img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop&auto=format",
+              href: "?kitType=naturel_essentiel",
+              cta: "Voir les kits maison d'hôte",
+              ctaColor: "bg-emerald-500 hover:bg-emerald-600",
+            },
+          ].map(item => (
+            <a
+              key={item.title}
+              href={createPageUrl("Shop") + item.href}
+              className="group rounded-3xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
+            >
+              <div className="relative overflow-hidden h-40">
+                <img
+                  src={item.img}
+                  alt={`Cadeau ${item.title} personnalisé — Fleurs de Fête`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full font-sans-clean ${item.tagColor}`}>
+                  {item.tag}
+                </span>
+              </div>
+              <div className="p-4 flex flex-col flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xl">{item.emoji}</span>
+                  <h3 className="font-serif-elegant text-xl font-bold text-gray-800">{item.title}</h3>
+                </div>
+                <p className="font-sans-clean text-xs text-gray-500 leading-relaxed flex-1 mb-4">{item.desc}</p>
+                <span className={`w-full text-center text-xs font-bold text-white py-2.5 rounded-full font-sans-clean transition ${item.ctaColor}`}>
+                  {item.cta} →
+                </span>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -271,9 +374,9 @@ export default function Home() {
         <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-12">Comment ça marche ?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { icon: "🌱", step: "01", title: "Offrez des graines", desc: "Chaque invité reçoit un petit pot avec des graines à planter." },
-            { icon: "🌸", step: "02", title: "La fleur pousse", desc: "Quelques semaines plus tard, la fleur s'épanouit chez eux." },
-            { icon: "📸", step: "03", title: "Ils partagent", desc: "Ils scannent le QR code et ajoutent leur photo sur votre arbre." },
+            { icon: "✏️", step: "01", title: "Personnalisez", desc: "Prénoms, date, message et graine de votre choix — mariage, baptême, anniversaire ou maison d'hôte." },
+            { icon: "🌸", step: "02", title: "On fabrique & livre", desc: "Vos kits arrivent prêts à poser sur les tables en 5 à 10 jours ouvrés." },
+            { icon: "📸", step: "03", title: "La fleur pousse & ils partagent", desc: "Quand la fleur éclot, vos invités scannent le QR code et partagent leur photo." },
           ].map(item => (
             <div key={item.step} className="flex flex-col items-center">
               <div className="text-5xl mb-4">{item.icon}</div>
