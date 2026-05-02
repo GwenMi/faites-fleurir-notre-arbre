@@ -230,23 +230,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Bande chiffres preuves sociales */}
-      <div className="bg-gradient-to-r from-rose-400 to-pink-500 text-white px-6 py-6">
-        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-8 md:gap-16 text-center">
-          {[
-            { value: "+2 000", label: "événements célébrés" },
-            { value: "98%", label: "clients satisfaits" },
-            { value: "dès 3,90€", label: "par invité" },
-            { value: "5–10j", label: "délai de livraison" },
-          ].map(s => (
-            <div key={s.label}>
-              <p className="font-serif-elegant text-3xl font-bold">{s.value}</p>
-              <p className="font-sans-clean text-xs opacity-80 mt-0.5">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Section Pour chaque occasion */}
       <div className="px-6 md:px-12 py-16 max-w-5xl mx-auto">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Adapté à votre fête</p>
