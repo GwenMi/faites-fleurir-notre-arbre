@@ -244,7 +244,8 @@ export default function Home() {
               desc: "Posez un pot sur chaque table. Vos invités plantent, la fleur pousse, le souvenir reste.",
               tag: "Le plus populaire",
               tagColor: "bg-rose-100 text-rose-600",
-              img: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=250&fit=crop&auto=format",
+              bg: "from-rose-50 to-pink-50",
+              iconBg: "bg-rose-100",
               href: "?kitType=compose&eventType=mariage",
               cta: "Voir les kits mariage",
               ctaColor: "bg-rose-400 hover:bg-rose-500",
@@ -255,7 +256,8 @@ export default function Home() {
               desc: "Un cadeau doux et végétal pour accueillir ce nouveau prénom dans le monde.",
               tag: "Tendance",
               tagColor: "bg-sky-100 text-sky-600",
-              img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=250&fit=crop&auto=format",
+              bg: "from-sky-50 to-blue-50",
+              iconBg: "bg-sky-100",
               href: "?kitType=compose&eventType=bapteme",
               cta: "Voir les kits baptême",
               ctaColor: "bg-sky-400 hover:bg-sky-500",
@@ -266,7 +268,8 @@ export default function Home() {
               desc: "Pour les 30, 40, 50 ans ou plus — une attention vivante que personne n'oublie.",
               tag: "Original",
               tagColor: "bg-amber-100 text-amber-600",
-              img: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=250&fit=crop&auto=format",
+              bg: "from-amber-50 to-yellow-50",
+              iconBg: "bg-amber-100",
               href: "?kitType=compose&eventType=anniversaire",
               cta: "Voir les kits anniversaire",
               ctaColor: "bg-amber-400 hover:bg-amber-500",
@@ -277,7 +280,8 @@ export default function Home() {
               desc: "Un petit pot déposé dans chaque chambre. Vos hôtes repartent avec un souvenir de leur séjour.",
               tag: "Coup de cœur",
               tagColor: "bg-emerald-100 text-emerald-600",
-              img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop&auto=format",
+              bg: "from-emerald-50 to-green-50",
+              iconBg: "bg-emerald-100",
               href: "?kitType=naturel_essentiel",
               cta: "Voir les kits maison d'hôte",
               ctaColor: "bg-emerald-500 hover:bg-emerald-600",
@@ -286,23 +290,16 @@ export default function Home() {
             <a
               key={item.title}
               href={createPageUrl("Shop") + item.href}
-              className="group rounded-3xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
+              className={`group rounded-3xl overflow-hidden border border-gray-100 bg-gradient-to-br ${item.bg} shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col`}
             >
-              <div className="relative overflow-hidden h-40">
-                <img
-                  src={item.img}
-                  alt={`Cadeau ${item.title} personnalisé — Fleurs de Fête`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full font-sans-clean ${item.tagColor}`}>
-                  {item.tag}
-                </span>
+              <div className={`flex items-center justify-center h-36 text-7xl`}>
+                {item.emoji}
               </div>
-              <div className="p-4 flex flex-col flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xl">{item.emoji}</span>
-                  <h3 className="font-serif-elegant text-xl font-bold text-gray-800">{item.title}</h3>
+              <div className="px-5 pb-5 flex flex-col flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full font-sans-clean ${item.tagColor}`}>{item.tag}</span>
                 </div>
+                <h3 className="font-serif-elegant text-xl font-bold text-gray-800 mb-1">{item.title}</h3>
                 <p className="font-sans-clean text-xs text-gray-500 leading-relaxed flex-1 mb-4">{item.desc}</p>
                 <span className={`w-full text-center text-xs font-bold text-white py-2.5 rounded-full font-sans-clean transition ${item.ctaColor}`}>
                   {item.cta} →
