@@ -178,28 +178,17 @@ export default function Home() {
               ctaColor: "bg-rose-400 hover:bg-rose-500",
             },
             {
-              emoji: "🍼",
-              title: "Baptême",
-              desc: "Un cadeau doux et végétal pour accueillir ce nouveau prénom dans le monde.",
-              tag: "Tendance",
-              tagColor: "bg-sky-100 text-sky-600",
-              bg: "from-sky-50 to-blue-50",
-              iconBg: "bg-sky-100",
-              href: "?kitType=compose&eventType=bapteme",
-              cta: "Voir les kits baptême",
-              ctaColor: "bg-sky-400 hover:bg-sky-500",
-            },
-            {
-              emoji: "🎂",
-              title: "Anniversaire",
-              desc: "Pour les 30, 40, 50 ans ou plus — une attention vivante que personne n'oublie.",
-              tag: "Original",
-              tagColor: "bg-amber-100 text-amber-600",
-              bg: "from-amber-50 to-yellow-50",
-              iconBg: "bg-amber-100",
-              href: "?kitType=compose&eventType=anniversaire",
-              cta: "Voir les kits anniversaire",
-              ctaColor: "bg-amber-400 hover:bg-amber-500",
+              emoji: "🏢",
+              title: "Entreprise",
+              desc: "Séminaires, lancements, cadeaux collaborateurs — un souvenir végétal à votre image.",
+              tag: "B2B",
+              tagColor: "bg-emerald-100 text-emerald-700",
+              bg: "from-emerald-50 to-teal-50",
+              iconBg: "bg-emerald-100",
+              href: null,
+              page: "KitFocusOrganisation",
+              cta: "Voir les kits entreprise",
+              ctaColor: "bg-emerald-600 hover:bg-emerald-700",
             },
             {
               emoji: "🏡",
@@ -216,7 +205,7 @@ export default function Home() {
           ].map(item => (
             <a
               key={item.title}
-              href={createPageUrl("Shop") + item.href}
+              href={item.page ? createPageUrl(item.page) : createPageUrl("Shop") + item.href}
               className={`group rounded-3xl overflow-hidden border border-gray-100 bg-gradient-to-br ${item.bg} shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col`}
             >
               <div className={`flex items-center justify-center h-36 text-7xl`}>
