@@ -42,8 +42,10 @@ export default function ProductCard({ product, onAdd, onOrder, compact = false }
         <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-xs text-gray-500 mb-1">À partir de</p>
-              <p className="text-2xl font-bold text-rose-600">{product.price.toFixed(2)}€</p>
+              <p className="text-2xl font-bold text-rose-600">{product.price.toFixed(2)} €</p>
+              {product.unit && (
+                <p className="text-xs text-gray-400 mt-0.5">{product.unit}</p>
+              )}
             </div>
           </div>
           <div className="flex gap-2">

@@ -11,13 +11,8 @@ const GUEST_PACKS = [
 ];
 
 const KIT_OPTIONS = [
-  { id: "compose", name: "Kit à composer", basePrice: 2.50 },
-  { id: "ready", name: "Kit prêt à offrir", basePrice: 4.50 },
-];
-
-const POT_OPTIONS = [
-  { id: "plastic", name: "Pot plastique", surcharge: 0 },
-  { id: "glass", name: "Pot verre (Option élégante)", surcharge: 0.20 },
+  { id: "compose", name: "Kit à composer", basePrice: 3.90 },
+  { id: "pret", name: "Kit prêt à offrir", basePrice: 5.90 },
 ];
 
 export default function GuestPacksSection({ onSelectPack }) {
@@ -28,51 +23,31 @@ export default function GuestPacksSection({ onSelectPack }) {
 
   const getPackSelection = (guests) => {
     const key = getPackKey(guests);
-    return selections[key] || { kit: "compose", pot: "plastic" };
+    return selections[key] || { kit: "compose" };
   };
 
-  const calculatePrice = (guests, kitId, potId) => {
+  const calculatePrice = (guests, kitId) => {
     const kit = KIT_OPTIONS.find(k => k.id === kitId);
-    const pot = POT_OPTIONS.find(p => p.id === potId);
-    if (!kit || !pot) return 0;
-    const basePrice = kit.basePrice * guests;
-    const surcharge = pot.surcharge * guests;
-    return parseFloat((basePrice + surcharge).toFixed(2));
+    if (!kit) return 0;
+    return parseFloat((kit.basePrice * guests).toFixed(2));
   };
 
   const handleSelectKit = (guests, kitId) => {
     const key = getPackKey(guests);
-    const current = getPackSelection(guests);
-    setSelections({
-      ...selections,
-      [key]: { ...current, kit: kitId }
-    });
-  };
-
-  const handleSelectPot = (guests, potId) => {
-    const key = getPackKey(guests);
-    const current = getPackSelection(guests);
-    setSelections({
-      ...selections,
-      [key]: { ...current, pot: potId }
-    });
+    setSelections({ ...selections, [key]: { kit: kitId } });
   };
 
   const handleOrderPack = (guests) => {
     const selection = getPackSelection(guests);
     const kit = KIT_OPTIONS.find(k => k.id === selection.kit);
-    const pot = POT_OPTIONS.find(p => p.id === selection.pot);
-    const price = calculatePrice(guests, selection.kit, selection.pot);
+    const price = calculatePrice(guests, selection.kit);
 
     onSelectPack({
       type: "guest_pack",
       guests,
       kitName: kit.name,
       kitId: selection.kit,
-      potName: pot.name,
-      potId: selection.pot,
       pricePerKit: kit.basePrice,
-      potSurcharge: pot.surcharge,
       totalPrice: price,
     });
   };
@@ -91,7 +66,7 @@ export default function GuestPacksSection({ onSelectPack }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {GUEST_PACKS.map(({ guests, badge }) => {
           const selection = getPackSelection(guests);
-          const price = calculatePrice(guests, selection.kit, selection.pot);
+          const price = calculatePrice(guests, selection.kit);
           const isExpanded = expandedPack === guests;
 
           return (
@@ -117,10 +92,6 @@ export default function GuestPacksSection({ onSelectPack }) {
                     <p className="font-semibold text-gray-800 text-sm">
                       {KIT_OPTIONS.find(k => k.id === selection.kit)?.name}
                     </p>
-                    <p className="text-xs text-gray-500">Pot sélectionné</p>
-                    <p className="font-semibold text-gray-800 text-sm">
-                      {POT_OPTIONS.find(p => p.id === selection.pot)?.name}
-                    </p>
                   </div>
 
                   <div className="mb-6">
@@ -134,7 +105,7 @@ export default function GuestPacksSection({ onSelectPack }) {
                     onClick={() => setExpandedPack(guests)}
                     className="w-full h-10 rounded-full bg-rose-100 text-rose-500 hover:bg-rose-200 font-semibold text-sm transition"
                   >
-                    Modifier le kit ou le pot
+                    Changer de kit
                   </Button>
                 </>
               ) : (
@@ -155,33 +126,6 @@ export default function GuestPacksSection({ onSelectPack }) {
                         >
                           <div className="font-semibold">{kit.name}</div>
                           <div className="text-xs opacity-75">{kit.basePrice.toFixed(2)} € / pot</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Pot selection */}
-                  <div>
-                    <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Choisir le pot</p>
-                    <div className="space-y-2">
-                      {POT_OPTIONS.map(pot => (
-                        <button
-                          key={pot.id}
-                          onClick={() => handleSelectPot(guests, pot.id)}
-                          className={`w-full text-left px-4 py-2.5 rounded-lg border-2 transition text-sm font-medium ${
-                            selection.pot === pot.id
-                              ? "border-rose-400 bg-rose-50 text-rose-600"
-                              : "border-gray-200 text-gray-600 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold">{pot.name}</span>
-                            {pot.surcharge > 0 && (
-                              <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                                +{pot.surcharge.toFixed(2)} € / pot
-                              </span>
-                            )}
-                          </div>
                         </button>
                       ))}
                     </div>

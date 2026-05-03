@@ -81,7 +81,7 @@ export default function CartDrawer({ cart, onUpdateQty, onRemove, onCheckout, on
             <span className="font-semibold text-gray-700 font-sans-shop">Total</span>
             <span className="text-2xl font-bold text-rose-500 font-sans-shop">{total.toFixed(2)} €</span>
           </div>
-          <p className="text-xs text-gray-500 font-sans-shop text-center">Livraison offerte · Paiement sécurisé Stripe</p>
+          <p className="text-xs text-gray-500 font-sans-shop text-center">Paiement sécurisé Stripe</p>
           <Button
             onClick={onCheckout}
             disabled={cart.length === 0}
