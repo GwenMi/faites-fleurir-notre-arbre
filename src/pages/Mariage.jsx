@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createPageUrl } from "@/utils";
 import { Check, Sparkles, ChevronRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import SiteNav from "@/components/SiteNav";
 
 const FEATURES_PREMIUM = [
   "Site événement personnalisé complet",
@@ -72,25 +73,7 @@ export default function Mariage() {
         .gold-line { background: linear-gradient(90deg, transparent, #c9a96e, transparent); height: 1px; }
       `}</style>
 
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-gray-100 bg-white sticky top-0 z-40">
-        <a href={createPageUrl("Home")}>
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-            alt="Fleurs de fête"
-            className="h-10 md:h-12"
-          />
-        </a>
-        <div className="flex items-center gap-3">
-          <a href={createPageUrl("Shop")} className="font-sans-m text-sm text-gray-500 hover:text-rose-500 transition hidden sm:block">Boutique</a>
-          <a
-            href={createPageUrl("CreateMyEvent") + "?plan=basic"}
-            className="font-sans-m text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm"
-          >
-            Créer mon site gratuit
-          </a>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* Hero */}
       <div className="bg-gradient-to-b from-rose-50 to-white px-6 md:px-12 py-20 md:py-28 text-center">

@@ -4,8 +4,9 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPageUrl } from "@/utils";
-import { ChevronRight, Sparkles, Check, ShoppingCart, Trash2, Menu, X } from "lucide-react";
+import { ChevronRight, Sparkles, Check, ShoppingCart, X } from "lucide-react";
 import ReviewsSlider from "@/components/home/ReviewsSlider";
+import SiteNav from "@/components/SiteNav";
 
 const SHOP_URL = () => createPageUrl("Shop");
 
@@ -35,7 +36,6 @@ const FEATURES_PREMIUM = [
 export default function Home() {
   const [slugInput, setSlugInput] = useState("");
   const [cartInProgress, setCartInProgress] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -95,80 +95,7 @@ export default function Home() {
         .hero-bg { background: linear-gradient(160deg, #fff9f5 0%, #fff 50%, #f8f5ff 100%); }
       `}</style>
 
-      {/* Nav */}
-      <nav className="border-b border-gray-100 bg-white relative z-50">
-        <div className="flex items-center justify-between px-6 md:px-12 py-4">
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-            alt="Fleurs de fête"
-            className="h-10 md:h-12"
-          />
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-4">
-            <a href={createPageUrl("Mariage")}
-              className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition">
-              Mariage 💍
-            </a>
-            <a href={createPageUrl("KitFocusOrganisation")}
-              className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">
-              Entreprise 🏢
-            </a>
-            <a href={createPageUrl("KitNaturel")}
-              className="font-sans-clean text-sm font-semibold text-amber-600 hover:text-amber-700 transition">
-              Maisons d'hôtes 🏡
-            </a>
-            <a href={createPageUrl("Shop")}
-              className="font-sans-clean text-sm font-semibold text-gray-600 hover:text-rose-500 transition">
-              Boutique 🌸
-            </a>
-            <a href={createPageUrl("ClientDashboard")}
-              className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
-              Mon espace
-            </a>
-          </div>
-          {/* Mobile: burger only */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => setMobileMenuOpen(o => !o)}
-              className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition"
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-3">
-          <a href={createPageUrl("Mariage")}
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-sans-clean text-sm font-semibold text-rose-500 py-2 border-b border-gray-50">
-            Mariage 💍
-          </a>
-          <a href={createPageUrl("KitFocusOrganisation")}
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-sans-clean text-sm font-semibold text-emerald-600 py-2 border-b border-gray-50">
-            Entreprise 🏢
-          </a>
-          <a href={createPageUrl("KitNaturel")}
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-sans-clean text-sm font-semibold text-amber-600 py-2 border-b border-gray-50">
-            Maisons d'hôtes 🏡
-          </a>
-          <a href={createPageUrl("Shop")}
-            onClick={() => setMobileMenuOpen(false)}
-            className="font-sans-clean text-sm font-semibold text-gray-600 py-2 border-b border-gray-50">
-            Boutique 🌸
-          </a>
-          <a href={createPageUrl("ClientDashboard")}
-            onClick={() => setMobileMenuOpen(false)}
-            className="mt-1 font-sans-clean text-sm font-bold text-white bg-rose-400 hover:bg-rose-500 transition py-3 rounded-full text-center shadow-sm">
-            Mon espace
-          </a>
-        </div>
-        )}
-      </nav>
+      <SiteNav />
 
       {/* Hero */}
       <div className="hero-bg px-6 md:px-12 py-20 md:py-28 text-center">
