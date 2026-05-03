@@ -14,13 +14,16 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
   const [createdOrderId, setCreatedOrderId] = useState(null);
 
   const KIT_LABELS = {
-    pret: "Kit prêt à offrir",
-    compose: "Kit à composer",
+    pret: "Kit Fleurs prêt à offrir",
+    compose: "Kit Fleurs à composer",
+    crackers: "Kit Apéro Crackers Italiens",
     entreprise_standard: 'Pack Standard "Bureau"',
     entreprise_premium: 'Pack Premium "Moniteur"',
     naturel_essentiel: "Kit Naturel Essentiel",
     naturel_douceur: "Kit Naturel Douceur",
   };
+  const isEventKit = ["pret", "compose", "crackers"].includes(selection.kitType);
+  const [wantPremium, setWantPremium] = useState(false);
   const kitLabel = KIT_LABELS[selection.kitType] || "Kit";
   const basePrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
   const containerLabel = selection.containerType === "rond_clip" ? "Pot rond fermoir" : selection.containerType === "carre_liege" ? "Pot carré liège" : null;
@@ -214,9 +217,15 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
               </span>
             </div>
           )}
+          {wantPremium === true && (
+            <div className="flex justify-between text-sm text-rose-500">
+              <span>✨ Site Premium</span>
+              <span>+39,99€</span>
+            </div>
+          )}
           <div className="flex justify-between text-lg font-bold text-rose-600 border-t border-gray-100 pt-3">
             <span>Total</span>
-            <span>{pricing.total.toFixed(2)}€</span>
+            <span>{(pricing.total + (wantPremium === true ? 39.99 : 0)).toFixed(2)}€</span>
           </div>
         </div>
       </div>
@@ -241,6 +250,43 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
       {/* Budget savings block */}
       <BudgetSavings selection={selection} pricing={pricing} PRICING={PRICING} />
 
+      {/* Upsell Premium — uniquement pour kits événement perso */}
+      {isEventKit && !wantPremium && (
+        <div className="bg-gradient-to-br from-rose-50 to-pink-50 border-2 border-rose-200 rounded-2xl p-5">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">✨</span>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-gray-900 text-sm mb-0.5">Complétez avec le site Premium — 39,99 €</p>
+              <p className="text-xs text-gray-500 mb-3 leading-relaxed">RSVP, programme, plan de table, albums, livre d'or, liste de cadeaux... tout pour un mariage inoubliable.</p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={() => setWantPremium(true)}
+                  className="flex-1 py-2.5 rounded-xl bg-rose-400 hover:bg-rose-500 text-white font-semibold text-sm transition"
+                >
+                  Ajouter le Premium +39,99 €
+                </button>
+                <button
+                  onClick={() => setWantPremium(null)}
+                  className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm hover:bg-gray-50 transition"
+                >
+                  Non merci, site gratuit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {wantPremium === true && (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center gap-3">
+          <span className="text-xl">✅</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-green-800">Site Premium ajouté — +39,99 €</p>
+            <p className="text-xs text-green-600">Vous créerez votre site après le paiement</p>
+          </div>
+          <button onClick={() => setWantPremium(false)} className="text-xs text-gray-400 hover:text-red-400 transition">Retirer</button>
+        </div>
+      )}
+
 
 
       {paymentDone ? (
@@ -255,22 +301,28 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           {["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType) && (
             <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 space-y-4">
               <div className="text-center">
-                <p className="text-lg font-bold text-indigo-900 mb-1">✨ Créez votre site personnalisé</p>
-                <p className="text-sm text-indigo-700">Partagez votre histoire, les photos de fleurs et les détails de votre événement — gratuit avec votre commande.</p>
+                <p className="text-lg font-bold text-indigo-900 mb-1">
+                  {wantPremium === true ? "✨ Créez votre site Premium" : "🌐 Créez votre site gratuit"}
+                </p>
+                <p className="text-sm text-indigo-700">
+                  {wantPremium === true
+                    ? "Votre site Premium est inclus dans votre commande. Personnalisez-le maintenant."
+                    : "Partagez les photos et les détails de votre événement — gratuit avec votre commande."}
+                </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
-                  onClick={() => window.location.href = createPageUrl("CreateMyEvent") + `?order_id=${createdOrderId}`}
+                  onClick={() => window.location.href = createPageUrl("CreateMyEvent") + `?order_id=${createdOrderId}&plan=${wantPremium === true ? "premium" : "basic"}`}
                   className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold"
                 >
-                  🌐 Créer mon site événement
+                  {wantPremium === true ? "✨ Créer mon site Premium" : "🌐 Créer mon site gratuit"}
                 </Button>
                 <Button
                   onClick={() => window.location.href = createPageUrl("OrderConfirmation") + `?order_id=${createdOrderId}`}
                   variant="outline"
                   className="flex-1 h-12 rounded-xl text-gray-500"
                 >
-                  Passer pour l'instant
+                  Plus tard
                 </Button>
               </div>
             </div>
@@ -297,7 +349,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
       ) : (
         <StripePaymentForm
           customerInfo={customerInfo}
-          total={pricing.total}
+          total={pricing.total + (wantPremium === true ? 39.99 : 0)}
           onSuccess={handlePaymentSuccess}
           onBack={() => setPaymentStarted(false)}
         />

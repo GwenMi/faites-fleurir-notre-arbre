@@ -17,6 +17,7 @@ import ContactForm from './pages/ContactForm';
 import AdminAccessPanel from './pages/AdminAccessPanel';
 import AdminAccessLogin from './pages/AdminAccessLogin';
 import EtsyOrderCompletion from './pages/EtsyOrderCompletion';
+import Mariage from './pages/Mariage';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -75,6 +76,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminAccessPanel" element={<LayoutWrapper currentPageName="AdminAccessPanel"><AdminAccessPanel /></LayoutWrapper>} />
       <Route path="/AdminAccessLogin" element={<AdminAccessLogin />} />
       <Route path="/EtsyOrderCompletion" element={<LayoutWrapper currentPageName="EtsyOrderCompletion"><EtsyOrderCompletion /></LayoutWrapper>} />
+      <Route path="/Mariage" element={<Mariage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

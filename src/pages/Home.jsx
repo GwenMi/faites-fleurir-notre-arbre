@@ -105,25 +105,25 @@ export default function Home() {
           />
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-4">
-            <a href={createPageUrl("Shop")}
+            <a href={createPageUrl("Mariage")}
               className="font-sans-clean text-sm font-semibold text-rose-500 hover:text-rose-600 transition">
-              Boutique 🌸
+              Mariage 💍
             </a>
-            <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
+            <a href={createPageUrl("KitFocusOrganisation")}
               className="font-sans-clean text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">
-              Cadeaux entreprise 🏢
+              Entreprise 🏢
             </a>
-            <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
+            <a href={createPageUrl("KitNaturel")}
               className="font-sans-clean text-sm font-semibold text-amber-600 hover:text-amber-700 transition">
               Maisons d'hôtes 🏡
             </a>
-            <a href={createPageUrl("ClientDashboard")}
-              className="font-sans-clean text-sm text-gray-500 hover:text-rose-500 transition">
-              Mon espace
-            </a>
             <a href={createPageUrl("Shop")}
+              className="font-sans-clean text-sm font-semibold text-gray-600 hover:text-rose-500 transition">
+              Boutique 🌸
+            </a>
+            <a href={createPageUrl("ClientDashboard")}
               className="font-sans-clean text-sm font-semibold text-white bg-rose-400 hover:bg-rose-500 transition px-5 py-2.5 rounded-full shadow-sm">
-              Créer mon événement
+              Mon espace
             </a>
           </div>
           {/* Mobile: burger only */}
@@ -140,33 +140,33 @@ export default function Home() {
 
         {/* Mobile dropdown menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-3">
-            <a href={createPageUrl("Shop")}
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-rose-500 py-2 border-b border-gray-50">
-              Boutique 🌸
-            </a>
-            <a href={createPageUrl("Shop") + "?kitType=entreprise_standard"}
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-emerald-600 py-2 border-b border-gray-50">
-              Cadeaux entreprise 🏢
-            </a>
-            <a href={createPageUrl("Shop") + "?kitType=naturel_essentiel"}
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm font-semibold text-amber-600 py-2 border-b border-gray-50">
-              Maisons d'hôtes 🏡
-            </a>
-            <a href={createPageUrl("ClientDashboard")}
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-sans-clean text-sm text-gray-500 py-2 border-b border-gray-50">
-              Mon espace
-            </a>
-            <a href={createPageUrl("Shop")}
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-1 font-sans-clean text-sm font-bold text-white bg-rose-400 hover:bg-rose-500 transition py-3 rounded-full text-center shadow-sm">
-              Créer mon événement 🌸
-            </a>
-          </div>
+        <div className="md:hidden border-t border-gray-100 bg-white px-6 py-4 flex flex-col gap-3">
+          <a href={createPageUrl("Mariage")}
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-sans-clean text-sm font-semibold text-rose-500 py-2 border-b border-gray-50">
+            Mariage 💍
+          </a>
+          <a href={createPageUrl("KitFocusOrganisation")}
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-sans-clean text-sm font-semibold text-emerald-600 py-2 border-b border-gray-50">
+            Entreprise 🏢
+          </a>
+          <a href={createPageUrl("KitNaturel")}
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-sans-clean text-sm font-semibold text-amber-600 py-2 border-b border-gray-50">
+            Maisons d'hôtes 🏡
+          </a>
+          <a href={createPageUrl("Shop")}
+            onClick={() => setMobileMenuOpen(false)}
+            className="font-sans-clean text-sm font-semibold text-gray-600 py-2 border-b border-gray-50">
+            Boutique 🌸
+          </a>
+          <a href={createPageUrl("ClientDashboard")}
+            onClick={() => setMobileMenuOpen(false)}
+            className="mt-1 font-sans-clean text-sm font-bold text-white bg-rose-400 hover:bg-rose-500 transition py-3 rounded-full text-center shadow-sm">
+            Mon espace
+          </a>
+        </div>
         )}
       </nav>
 

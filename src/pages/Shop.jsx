@@ -18,6 +18,7 @@ const STEPS = ["Votre kit", "Votre événement", "Quantité", "Personnalisation"
 export const PRICING = {
   KIT_COMPOSE: 3.90,
   KIT_PRET: 5.90,
+  crackers: 5.90,
   SAC_CADEAU: 0.40,
   entreprise_standard: 15,
   entreprise_premium: 20,
@@ -145,7 +146,7 @@ export default function Shop() {
     } catch {}
   };
 
-  const baseKitPrice = PRICING[selection.kitType] ?? (selection.kitType === "pret" ? PRICING.KIT_PRET : PRICING.KIT_COMPOSE);
+  const baseKitPrice = PRICING[selection.kitType] ?? PRICING.KIT_COMPOSE;
   const totalPots = (selection.packs || []).reduce((sum, p) => sum + p.size * p.qty, 0);
   const subtotal = baseKitPrice * totalPots;
   const sacCadeauTotal = selection.sacCadeau ? PRICING.SAC_CADEAU * totalPots : 0;
@@ -158,25 +159,27 @@ export default function Shop() {
 
   const kitType = selection.kitType || "";
   const isFleurKit = kitType === "compose" || kitType === "pret";
+  const isCrackersKit = kitType === "crackers";
+  const isEventKit = isFleurKit || isCrackersKit;
   const isEntrepriseKit = kitType.startsWith("entreprise");
   const isNaturelKit = kitType.startsWith("naturel");
 
   // Gestion des sauts d'étapes selon le type de kit
   const goNext = (fromStep) => {
     if (fromStep === 1) {
-      // Après choix du kit : événement uniquement pour kits fleurs, sinon directement quantité
-      if (isFleurKit) setStep(2);
+      // Après choix du kit : événement pour kits event (fleurs + crackers), sinon directement quantité
+      if (isEventKit) setStep(2);
       else setStep(3);
     } else if (fromStep === 2) {
       setStep(3);
     } else if (fromStep === 3) {
-      // Après quantité : personnalisation pour fleurs & entreprise, sinon coordonnées
+      // Après quantité : personnalisation pour event & entreprise, sinon coordonnées
       if (isNaturelKit) setStep(6);
       else setStep(4);
     } else if (fromStep === 4) {
-      // Après personnalisation : slug pour kits fleurs events personnels, sinon coordonnées
+      // Après personnalisation : slug pour kits event perso, sinon coordonnées
       const isPersonalEvent = ["mariage", "bapteme", "communion", "anniversaire"].includes(selection.eventType);
-      if (isFleurKit && isPersonalEvent && !selection.slug) setStep(5);
+      if (isEventKit && isPersonalEvent && !selection.slug) setStep(5);
       else setStep(6);
     } else if (fromStep === 5) {
       setStep(6);
@@ -189,7 +192,7 @@ export default function Shop() {
 
   const goBack = (fromStep) => {
     if (fromStep === 3) {
-      if (isFleurKit) setStep(2);
+      if (isEventKit) setStep(2);
       else setStep(1);
     } else if (fromStep === 4) {
       setStep(3);

@@ -116,10 +116,11 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
 
   const handleSelectKit = (kit) => {
     if (MARIAGE_KITS.includes(kit.id)) {
-      // Ouvrir le sélecteur de variante
+      // Ouvrir le sélecteur de variante fleurs uniquement
       setVariantModal(kit.id);
     } else {
-      onUpdate({ kitType: kit.id, kitVariant: null });
+      // crackers et autres kits : sélection directe
+      onUpdate({ kitType: kit.id, kitVariant: kit.id === "crackers" ? "crackers" : null });
       onNext();
     }
   };
