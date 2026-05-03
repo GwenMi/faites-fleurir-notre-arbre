@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import SupplierManager from './SupplierManager';
 import SupplierPriceChart from './SupplierPriceChart';
+import DecoSupplierSection from './DecoSupplierSection';
 import { Loader2 } from 'lucide-react';
 
 const SUB_TABS = [
   { key: 'manage', label: '📋 Gestion' },
   { key: 'charts', label: '📈 Courbes de prix' },
   { key: 'couts', label: '🧾 Coûts produits' },
+  { key: 'deco', label: '🪢 Déco Mariage' },
 ];
 
 const PRODUCT_COSTS = [
@@ -134,6 +136,10 @@ export default function SupplierTab() {
             </div>
           ))}
         </div>
+      )}
+
+      {subTab === 'deco' && (
+        <DecoSupplierSection />
       )}
 
       {subTab === 'charts' && (

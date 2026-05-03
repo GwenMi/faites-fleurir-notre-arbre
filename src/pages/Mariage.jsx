@@ -3,6 +3,7 @@ import { createPageUrl } from "@/utils";
 import { Check, Sparkles, ChevronRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import SiteNav from "@/components/SiteNav";
+import DecoTableSection from "@/components/mariage/DecoTableSection";
 
 const FEATURES_PREMIUM = [
   "Site événement personnalisé complet",
@@ -155,6 +156,14 @@ export default function Mariage() {
           ))}
         </div>
       </div>
+
+      {/* Deco Table */}
+      <div className="flex items-center gap-4 px-8 md:px-20 mt-4">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
+        <span className="text-xl">🪢</span>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
+      </div>
+      <DecoTableSection />
 
       {/* Divider */}
       <div className="flex items-center gap-4 px-8 md:px-20">
