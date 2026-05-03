@@ -333,26 +333,26 @@ export default function KitNaturel() {
           </div>
 
           {/* Pack Complet */}
-          <div className="border-2 border-green-300 bg-green-50 rounded-3xl p-8 flex flex-col relative">
-            <span className="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full font-sans-nat">Coup de cœur 🌿</span>
+          <div className="border-2 border-amber-400 bg-amber-50 rounded-3xl p-8 flex flex-col relative">
+            <span className="absolute top-4 right-4 bg-amber-600 text-white text-xs font-bold px-2.5 py-1 rounded-full font-sans-nat">Coup de cœur 🌿</span>
             <p className="font-sans-nat text-xs tracking-widest uppercase text-stone-400 mb-1">Kit Naturel Complet</p>
             <p className="font-serif-nat text-4xl font-bold text-stone-800 mb-0.5">6 €<span className="text-base font-normal text-stone-400"> / unité</span></p>
             <ul className="space-y-2.5 mt-5 mb-5 flex-1">
               {["Galet de cire d'abeille", "1 sous-verre bambou", "Carte", "Boîte fenêtre blanche", "Sac à cordelette coton recyclé avec nom de la maison d'hôte"].map(f => (
                 <li key={f} className="flex items-start gap-2 font-sans-nat text-sm text-stone-700">
-                  <span className="text-green-600 mt-0.5 flex-shrink-0">✓</span>{f}
+                  <span className="text-amber-600 mt-0.5 flex-shrink-0">✓</span>{f}
                 </li>
               ))}
             </ul>
             {/* Options à la pièce */}
-            <div className="bg-white rounded-xl border border-green-200 px-4 py-3 mb-5">
+            <div className="bg-white rounded-xl border border-amber-200 px-4 py-3 mb-5">
               <p className="font-sans-nat text-xs font-semibold text-stone-600 mb-2">Options à la pièce</p>
               <p className="font-sans-nat text-xs text-stone-500">🪵 Sous-verre supplémentaire : <strong>+1,50 €</strong> <span className="text-stone-400">(dégressif à partir de 6)</span></p>
               <p className="font-sans-nat text-xs text-stone-500 mt-1">🐝 Galet supplémentaire : <strong>+0,50 €</strong></p>
             </div>
             <button
               onClick={() => setOrderPack("complet")}
-              className="w-full py-3 rounded-full font-sans-nat font-semibold text-sm bg-green-600 hover:bg-green-700 text-white transition shadow-sm"
+              className="w-full py-3 rounded-full font-sans-nat font-semibold text-sm bg-amber-600 hover:bg-amber-700 text-white transition shadow-sm"
             >
               Commander ce pack
             </button>
