@@ -9,6 +9,7 @@ import {
   CheckCircle2, Loader2, AlertCircle, ChevronLeft, X,
   Building2, MapPin, Leaf, Clock, Banknote, ChevronRight, Upload, Package, Infinity
 } from "lucide-react";
+import SiteNav from "@/components/SiteNav";
 import { toast } from "sonner";
 
 const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY
@@ -482,23 +483,7 @@ export default function KitFocusOrganisation() {
         .font-display { font-family: 'Playfair Display', Georgia, serif; }
       `}</style>
 
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 bg-white border-b border-gray-100">
-        <a href={createPageUrl("Home")}>
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-            alt="Fleurs en fête" className="h-10" />
-        </a>
-        <div className="flex items-center gap-3">
-          <a href={createPageUrl("Boutique")} className="text-sm text-gray-500 hover:text-gray-800 transition hidden sm:block">Boutique</a>
-          <button
-            onClick={() => setShowDevis(true)}
-            className="text-sm font-semibold text-white px-4 py-2 rounded-full transition"
-            style={{ background: "#1D9E75" }}
-          >
-            Demander un devis
-          </button>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* Hero */}
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-10 text-center">

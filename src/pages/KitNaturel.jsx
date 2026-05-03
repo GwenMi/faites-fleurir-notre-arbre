@@ -3,6 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Plus, Minus, Upload, X } from "lucide-react";
+import SiteNav from "@/components/SiteNav";
 
 const USAGES = [
   { icon: "🪵", title: "Entretien du bois", desc: "Nourrit et protège les surfaces en bois brut, planches et meubles." },
@@ -278,22 +279,7 @@ export default function KitNaturel() {
         .honey-line { background: linear-gradient(90deg, transparent, #c9a96e, transparent); height: 1px; }
       `}</style>
 
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-amber-100 bg-amber-50/50">
-        <a href={createPageUrl("Home")}>
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
-            alt="Fleurs de fête" className="h-10" />
-        </a>
-        <div className="flex items-center gap-3">
-          <a href={createPageUrl("Shop")} className="font-sans-nat text-sm text-amber-700 hover:text-amber-900 transition hidden sm:block">Boutique</a>
-          <button
-            onClick={() => setOrderPack("essentiel")}
-            className="font-sans-nat text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 transition px-5 py-2.5 rounded-full shadow-sm"
-          >
-            Commander
-          </button>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* Hero */}
       <div className="bg-gradient-to-b from-amber-50 to-white px-6 md:px-12 py-16 md:py-24 text-center">
