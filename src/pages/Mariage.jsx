@@ -89,33 +89,45 @@ export default function Mariage() {
 
       <SiteNav />
 
-      {/* Hero */}
-      <div className="bg-gradient-to-b from-rose-50 to-white px-6 md:px-12 py-20 md:py-28 text-center">
-        <p className="font-sans-m text-xs tracking-[0.3em] uppercase text-rose-400 mb-4">Mariage · Fiançailles · Anniversaire · Communion · Baptême</p>
-        <h1 className="font-serif-m text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-5">
-          Le souvenir que<br />
-          <span className="text-rose-400">vos invités garderont</span>
-        </h1>
-        <div className="gold-line max-w-xs mx-auto mb-6" />
-        <p className="font-sans-m text-gray-500 text-lg max-w-lg mx-auto mb-3 leading-relaxed font-light">
-          Un kit à poser sur chaque table — personnalisé avec vos prénoms, la date et un QR code pour partager les photos quand la fleur pousse ou les crackers cuisent.
-        </p>
-        <p className="font-sans-m text-gray-400 text-sm mb-10">
-          À partir de <strong className="text-gray-600">3,90 € / invité</strong> · Site événement <strong className="text-gray-600">gratuit</strong> inclus
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto">
-          <a
-            href="#kits"
-            className="flex-1 py-4 rounded-full font-sans-m font-bold text-white bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm shadow-lg flex items-center justify-center gap-2"
-          >
-            <Sparkles className="w-4 h-4" /> Voir les kits
-          </a>
-          <a
-            href={createPageUrl("CreateMyEvent") + "?plan=basic"}
-            className="flex-1 py-4 rounded-full font-sans-m font-semibold text-rose-500 border-2 border-rose-200 hover:bg-rose-50 transition text-sm flex items-center justify-center gap-2"
-          >
-            🌐 Créer mon site gratuit
-          </a>
+      {/* Hero — Mariage */}
+      <div className="relative overflow-hidden">
+        {/* Image de fond */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=80"
+            alt="Décoration de mariage"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-white/75" />
+        </div>
+
+        <div className="relative z-10 px-6 md:px-12 py-24 md:py-36 text-center max-w-3xl mx-auto">
+          <p className="font-sans-m text-xs tracking-[0.35em] uppercase text-rose-400 mb-4">Cadeaux & Décoration de mariage</p>
+          <h1 className="font-serif-m text-5xl md:text-7xl font-bold text-gray-800 leading-tight mb-5">
+            Tout pour sublimer<br />
+            <span className="text-rose-400">votre jour J</span>
+          </h1>
+          <div className="gold-line max-w-xs mx-auto mb-6" />
+          <p className="font-sans-m text-gray-600 text-lg max-w-xl mx-auto mb-4 leading-relaxed font-light">
+            Kits fleurs & crackers personnalisés pour vos invités · Chemins de table & nœuds de chaise en tissu naturel · Site de mariage offert.
+          </p>
+          <p className="font-sans-m text-gray-400 text-sm mb-10">
+            Cadeaux invités à partir de <strong className="text-gray-700">3,90 €</strong> · Déco table à partir de <strong className="text-gray-700">8 €</strong>
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+            <a
+              href="#kits"
+              className="flex-1 py-4 rounded-full font-sans-m font-bold text-white bg-gradient-to-r from-rose-400 to-pink-500 hover:opacity-90 transition text-sm shadow-lg flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" /> Cadeaux invités
+            </a>
+            <a
+              href="#deco"
+              className="flex-1 py-4 rounded-full font-sans-m font-semibold text-rose-500 border-2 border-rose-300 bg-white/80 hover:bg-rose-50 transition text-sm flex items-center justify-center gap-2"
+            >
+              🪢 Déco de table
+            </a>
+          </div>
         </div>
       </div>
 
