@@ -54,6 +54,19 @@ const KITS = [
     cta: "Commander ce kit",
     href: "/Shop?kitType=crackers&eventType=mariage",
   },
+  {
+    id: "terrarium",
+    emoji: "🫙",
+    badge: "🌿 Nouveau",
+    badgeColor: "bg-teal-500",
+    name: "Terrarium Souvenir",
+    price: 10,
+    desc: "Pot en verre, cristaux hydrogel, fleurs séchées, galets & coquillages. Les invités créent leur terrarium pendant le repas et repartent avec leur création unique.",
+    features: ["Pot en verre 80ml + bouchon liège", "Cristaux hydrogel colorés", "Fleurs séchées (3-4 variétés)", "Galets & mini coquillages", "Étiquette personnalisée prénoms + date", "Expédié prêt à poser sur les tables"],
+    color: "border-teal-300 bg-gradient-to-br from-teal-50 to-emerald-50",
+    cta: "Commander ce kit",
+    href: "/Shop?kitType=terrarium&eventType=mariage",
+  },
 ];
 
 export default function Mariage() {

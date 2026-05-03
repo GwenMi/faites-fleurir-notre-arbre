@@ -109,6 +109,18 @@ const KITS = [
     desc: "Galet de cire d'abeille, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
     features: ["Galet cire d'abeille", "Dessous de verre", "Carte kraft 6 usages", "Sac en coton recyclé"],
   },
+  {
+    id: "terrarium",
+    emoji: "🫙",
+    name: "Terrarium Souvenir",
+    popular: "💍 Activité créative & souvenir unique",
+    price: 10,
+    unit: "/ invité",
+    badge: "🌿 Nouveau",
+    color: "border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50",
+    desc: "Pot en verre avec bouchon liège, cristaux hydrogel, fleurs séchées et petits éléments naturels. Les invités remplissent leur terrarium pendant le repas.",
+    features: ["Pot en verre 80ml + bouchon liège", "Cristaux hydrogel colorés", "Fleurs séchées (3-4 variétés)", "Galets & mini coquillages", "Étiquette personnalisée prénoms + date", "Expédié prêt à poser sur les tables"],
+  },
 ];
 
 export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
