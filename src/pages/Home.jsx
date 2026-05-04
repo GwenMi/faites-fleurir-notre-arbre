@@ -163,7 +163,7 @@ export default function Home() {
         <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-3 text-center">Pour chaque occasion</h2>
         <p className="font-sans-clean text-gray-400 text-sm text-center max-w-md mx-auto mb-12">Chaque kit est personnalisé selon votre événement — prénoms, date, message et type de graine. Un souvenir unique pour chaque moment de vie.</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
           {[
             {
               emoji: "💍",
@@ -195,12 +195,12 @@ export default function Home() {
               title: "Maison d'hôte",
               desc: "Un petit pot déposé dans chaque chambre. Vos hôtes repartent avec un souvenir de leur séjour.",
               tag: "Coup de cœur",
-              tagColor: "bg-emerald-100 text-emerald-600",
-              bg: "from-emerald-50 to-green-50",
-              iconBg: "bg-emerald-100",
+              tagColor: "bg-amber-100 text-amber-700",
+              bg: "from-amber-50 to-yellow-50",
+              iconBg: "bg-amber-100",
               href: "?kitType=naturel_essentiel",
               cta: "Voir les kits maison d'hôte",
-              ctaColor: "bg-emerald-500 hover:bg-emerald-600",
+              ctaColor: "bg-amber-500 hover:bg-amber-600",
             },
           ].map(item => (
             <a
