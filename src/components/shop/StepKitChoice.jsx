@@ -94,7 +94,7 @@ const KITS = [
     unit: "/ unité",
     badge: "100% naturel",
     color: "border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100",
-    desc: "Galet de cire d'abeille, dessous de verre en bois, carte 6 usages.",
+    desc: "Une attention qui se remarque. Le galet de cire d'abeille, le dessous de verre en bois, la carte aux six usages — trois objets qui transforment un accueil ordinaire en souvenir de séjour.",
     features: ["Galet cire d'abeille", "Dessous de verre", "Carte kraft 6 usages"],
   },
   {
@@ -106,7 +106,7 @@ const KITS = [
     unit: "/ unité",
     badge: "Coup de cœur",
     color: "border-amber-300 bg-gradient-to-br from-amber-100 to-amber-200",
-    desc: "Galet de cire d'abeille, dessous de verre, carte usages et sac en coton recyclé. L'accueil parfait.",
+    desc: "L'accueil qui reste. Dans un sac en coton recyclé : un galet de cire d'abeille, un dessous de verre en bois, une carte kraft aux six usages. Vos hôtes repartent avec — et se souviennent de votre établissement.",
     features: ["Galet cire d'abeille", "Dessous de verre", "Carte kraft 6 usages", "Sac en coton recyclé"],
   },
   {
