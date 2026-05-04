@@ -14,7 +14,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "L'étiquette à leur prénom fait office de marque-place à table. Chez eux, ils ajoutent huile d'olive et eau pour réaliser leurs crackers italiens maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
+      desc: "Marque-place le jour J, kit apéro à faire soi-même le lendemain. Farine, épices italiennes, sel — il ne manque que l'huile d'olive et l'eau. En 20 minutes, des crackers maison dignes d'une trattoria. 🌾 Intolérance au gluten ? Remplacez par de la farine de sarrasin.",
     },
   ],
   pret: [
@@ -29,7 +29,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "L'étiquette à leur prénom fait office de marque-place à table. Chez eux, ils ajoutent huile d'olive et eau pour réaliser leurs crackers italiens maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
+      desc: "Marque-place le jour J, kit apéro à faire soi-même le lendemain. Farine, épices italiennes, sel — il ne manque que l'huile d'olive et l'eau. En 20 minutes, des crackers maison dignes d'une trattoria. 🌾 Intolérance au gluten ? Remplacez par de la farine de sarrasin.",
     },
   ],
 };
@@ -46,7 +46,7 @@ const KITS = [
     unit: "/ invité",
     badge: null,
     color: "border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100",
-    desc: "Vous assemblez chaque pot vous-même avant le grand jour. L'étiquette au prénom de chaque invité fait office de marque-place à table — puis ils plantent leur graine et partagent leur floraison sur votre galerie photo.",
+    desc: "Un marque-place qui fleurit. Chaque invité trouve son prénom sur la table, repart avec son pot, arrose — et des semaines plus tard, un tournesol éclot dans son salon. Vous assemblez les pots avant le jour J : même magie, prix allégé.",
     features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation", "Assemblage simple & accessible"],
   },
   {
@@ -58,7 +58,7 @@ const KITS = [
     badge: "Le plus choisi ✨",
     popular: "💍 N°1 des mariages & anniversaires",
     color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
-    desc: "L'étiquette au prénom de chaque invité fait office de marque-place à table. Quelques semaines après, la fleur éclot — ils scannent le QR code et ajoutent leur photo à votre album partagé.",
+    desc: "Leur prénom marque leur place à table. Ils repartent avec leur pot, arrosent, et des semaines après votre fête, un tournesol éclot dans leur salon. Ils scannent le QR code, ajoutent leur photo — et votre album continue de grandir.",
     features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation simple", "Assemblé & prêt à offrir ✓"],
   },
   {
@@ -118,7 +118,7 @@ const KITS = [
     unit: "/ invité",
     badge: "🌿 Nouveau",
     color: "border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50",
-    desc: "Leur prénom indique leur place à table. Pendant le repas, chaque invité compose son terrarium à sa façon et repart avec une pièce unique, faite de ses mains.",
+    desc: "Un marque-place qui s'anime pendant le repas. Chaque invité crée son propre terrarium à table — cristaux hydrogel, fleurs séchées, petits galets — et repart avec une pièce faite de ses mains, unique et inoubliable.",
     features: ["Pot en verre 80ml + bouchon liège", "Cristaux hydrogel (gel transparent qui retient l'eau)", "Fleurs séchées (3-4 variétés)", "Étiquette personnalisée (marque-place + souvenir)", "Notice d'animation simple", "Prêt à poser sur les tables"],
   },
 ];
