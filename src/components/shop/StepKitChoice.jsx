@@ -14,7 +14,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
+      desc: "L'étiquette à leur prénom fait office de marque-place à table. Chez eux, ils ajoutent huile d'olive et eau pour réaliser leurs crackers italiens maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
     },
   ],
   pret: [
@@ -29,7 +29,7 @@ const KIT_VARIANTS = {
       emoji: "🫙",
       label: "Kit Apéro Crackers Italiens",
       badge: "🆕 Nouveauté",
-      desc: "Un mix prêt à cuisiner : farine, épices italiennes et sel. Vos invités n'ont qu'à ajouter huile d'olive et eau pour réaliser leurs crackers maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
+      desc: "L'étiquette à leur prénom fait office de marque-place à table. Chez eux, ils ajoutent huile d'olive et eau pour réaliser leurs crackers italiens maison. 🌾 Intolérance au gluten ? La farine peut être remplacée par de la farine de sarrasin.",
     },
   ],
 };
@@ -46,8 +46,8 @@ const KITS = [
     unit: "/ invité",
     badge: null,
     color: "border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100",
-    desc: "Les éléments sont envoyés séparément pour que vous puissiez assembler vos cadeaux à votre rythme.",
-    features: ["Graines de fleur", "Pastille de semis", "Étiquette personnalisée", "QR code galerie photos", "Notice de plantation"],
+    desc: "Vous assemblez chaque pot vous-même avant le grand jour. L'étiquette au prénom de chaque invité fait office de marque-place à table — puis ils plantent leur graine et partagent leur floraison sur votre galerie photo.",
+    features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation", "Assemblage simple & accessible"],
   },
   {
     id: "pret",
@@ -58,8 +58,8 @@ const KITS = [
     badge: "Le plus choisi ✨",
     popular: "💍 N°1 des mariages & anniversaires",
     color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
-    desc: "Tout arrive assemblé et emballé. Posez simplement les pots sur les tables le jour J.",
-    features: ["Graines de fleur", "Pastille de semis", "Étiquette personnalisée", "QR code galerie photos", "Notice de plantation", "Assemblé & prêt à offrir ✓"],
+    desc: "L'étiquette au prénom de chaque invité fait office de marque-place à table. Quelques semaines après, la fleur éclot — ils scannent le QR code et ajoutent leur photo à votre album partagé.",
+    features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation simple", "Assemblé & prêt à offrir ✓"],
   },
   {
     id: "entreprise_standard",
@@ -118,8 +118,8 @@ const KITS = [
     unit: "/ invité",
     badge: "🌿 Nouveau",
     color: "border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50",
-    desc: "Pot en verre avec bouchon liège, cristaux hydrogel, fleurs séchées et petits éléments naturels. Les invités remplissent leur terrarium pendant le repas.",
-    features: ["Pot en verre 80ml + bouchon liège", "Cristaux hydrogel colorés", "Fleurs séchées (3-4 variétés)", "Galets & mini coquillages", "Étiquette personnalisée prénoms + date", "Expédié prêt à poser sur les tables"],
+    desc: "Leur prénom indique leur place à table. Pendant le repas, chaque invité compose son terrarium à sa façon et repart avec une pièce unique, faite de ses mains.",
+    features: ["Pot en verre 80ml + bouchon liège", "Cristaux hydrogel (gel transparent qui retient l'eau)", "Fleurs séchées (3-4 variétés)", "Étiquette personnalisée (marque-place + souvenir)", "Notice d'animation simple", "Prêt à poser sur les tables"],
   },
 ];
 

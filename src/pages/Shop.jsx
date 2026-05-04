@@ -24,6 +24,7 @@ export const PRICING = {
   entreprise_premium: 20,
   naturel_essentiel: 5,
   naturel_douceur: 13,
+  terrarium: 10,
 };
 
 const SEEDS = [
