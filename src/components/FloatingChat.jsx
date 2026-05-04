@@ -84,9 +84,9 @@ export default function FloatingChat() {
       
       if (!response) {
         if (hours) {
-          response = "Merci pour votre question ! 😊 Notre équipe vous répondra au plus vite. Vous pouvez aussi nous contacter directement à contact@fleursenfete.com";
+          response = "Merci pour votre question ! 😊 Notre équipe vous répondra au plus vite. Vous pouvez aussi nous contacter directement à contact@fleursdefete.fr";
         } else {
-          response = `Notre équipe est actuellement fermée. Nous sommes ouverts ${todayHours} aujourd'hui (${day}). Envoyez-nous un email à contact@fleursenfete.com et nous vous répondrons dès notre réouverture ! 📧`;
+          response = `Notre équipe est actuellement fermée. Nous sommes ouverts ${todayHours} aujourd'hui (${day}). Envoyez-nous un email à contact@fleursdefete.fr et nous vous répondrons dès notre réouverture ! 📧`;
         }
       }
 

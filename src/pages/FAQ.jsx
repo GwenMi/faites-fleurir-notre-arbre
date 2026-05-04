@@ -38,7 +38,7 @@ const FAQ_SECTIONS = [
     items: [
       {
         q: "Quels sont les délais de livraison ?",
-        a: "Nous recommandons de commander au minimum 21 jours avant votre événement pour être serein. Les commandes passées moins de 14 jours avant la date peuvent être acceptées mais la livraison dans les délais ne peut pas être garantie."
+        a: "Vos commandes sont préparées avec soin et expédiées dès qu'elles sont prêtes. Nous recommandons de commander au minimum 15 jours avant votre événement pour être serein. Pour les commandes passées moins de 15 jours avant la date, nous ferons notre maximum mais ne pouvons garantir une livraison dans les temps."
       },
       {
         q: "Livrez-vous partout en France ?",

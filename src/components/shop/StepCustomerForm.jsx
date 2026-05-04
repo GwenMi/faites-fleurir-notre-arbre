@@ -131,7 +131,7 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
     // Sync name synchronously before advancing
     const fullName = `${customerInfo.firstName} ${customerInfo.lastName}`.trim();
     const days = daysUntilEvent();
-    if (days !== null && days < 14) {
+    if (days !== null && days < 15) {
       setShowLateWarning(true);
       return;
     }
@@ -269,7 +269,7 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
               Date de votre événement * <span className="font-normal text-gray-400">(pour la planification)</span>
             </Label>
             <Input type="date" value={customerInfo.eventDate} onChange={e => set("eventDate", e.target.value)} className="h-11 rounded-xl w-full sm:w-64" />
-            {days !== null && days >= 0 && days < 14 && (
+            {days !== null && days >= 0 && days < 15 && (
               <p className="text-amber-600 text-sm mt-2 flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4" /> Commande tardive — livraison à confirmer
               </p>
@@ -347,7 +347,7 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
               <div>
                 <h3 className="font-bold text-gray-900">Commande tardive</h3>
                 <p className="text-sm text-gray-600 mt-2">
-                  Votre événement est dans <strong>{days} jour{days > 1 ? "s" : ""}</strong> — moins de 14 jours. La livraison dans les délais ne peut pas être garantie.
+                  Votre événement est dans <strong>{days} jour{days > 1 ? "s" : ""}</strong>. Nous préparons et expédions dès que possible, mais nous ne pouvons garantir une livraison dans les temps.
                 </p>
                 <p className="text-sm text-gray-600 mt-1">Souhaitez-vous tout de même continuer ?</p>
               </div>

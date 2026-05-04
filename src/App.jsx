@@ -72,6 +72,7 @@ const AuthenticatedApp = () => {
       <Route path="/KitNaturel" element={<LayoutWrapper currentPageName="KitNaturel"><KitNaturel /></LayoutWrapper>} />
       <Route path="/FlowerTreePreview" element={<LayoutWrapper currentPageName="FlowerTreePreview"><FlowerTreePreview /></LayoutWrapper>} />
       <Route path="/AdminShipping" element={<LayoutWrapper currentPageName="AdminShipping"><AdminShipping /></LayoutWrapper>} />
+      <Route path="/Contact" element={<ContactForm />} />
       <Route path="/contact" element={<ContactForm />} />
       <Route path="/AdminAccessPanel" element={<LayoutWrapper currentPageName="AdminAccessPanel"><AdminAccessPanel /></LayoutWrapper>} />
       <Route path="/AdminAccessLogin" element={<AdminAccessLogin />} />
