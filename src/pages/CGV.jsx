@@ -3,7 +3,7 @@ import { createPageUrl } from "@/utils";
 const LEGAL = `
 **Responsable :** Papin Gwenaëlle  
 **Enseigne :** Fleurs en fête  
-**E-mail :** contact@fleursenfete.com  
+**E-mail :** contact@fleursdefete.fr  
 **Téléphone :** 06 30 77 80 36
 `;
 
@@ -63,20 +63,20 @@ export default function CGV() {
           <p>Le paiement est exigible immédiatement à la commande. Les paiements sont traités de manière sécurisée par <strong>Stripe</strong> (Stripe Payments Europe Ltd — 1 Grand Canal Street Lower, Dublin 2, Irlande), prestataire certifié PCI-DSS. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
 
           <h2>6. Livraison</h2>
-          <p>Les commandes sont expédiées en France métropolitaine et dans les pays de l'Union européenne. Les délais indicatifs sont précisés lors de la commande. En cas de dépassement de délai de 7 jours ouvrés, le client peut demander l'annulation par email.</p>
+          <p>Les commandes sont expédiées en France métropolitaine et dans les pays de l'Union européenne. Chaque commande est préparée avec soin et expédiée dès qu'elle est prête. <strong>Nous recommandons de passer commande au minimum 15 jours avant votre événement</strong> afin de garantir la réception des produits dans les délais. Pour les commandes passées moins de 15 jours avant l'événement, nous ferons notre maximum pour préparer et expédier rapidement, mais <strong>Fleurs en fête ne peut garantir une livraison dans les temps</strong> au-delà de ce délai. En cas de dépassement de délai de livraison de 7 jours ouvrés au-delà de la date estimée, le client peut demander l'annulation par email à <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a>.</p>
 
           <h2>7. Droit de rétractation (14 jours — Art. L221-18 Code de la consommation)</h2>
           <p>Conformément à la directive européenne 2011/83/UE et aux articles L221-18 à L221-28 du Code de la consommation, <strong>le consommateur dispose d'un délai de 14 jours calendaires</strong> à compter de la réception du produit pour exercer son droit de rétractation, sans avoir à justifier de motifs ni à payer de pénalités.</p>
           <h3>Exercice du droit de rétractation</h3>
           <p>Pour exercer ce droit, le client doit notifier sa décision par :</p>
           <ul>
-            <li>Email : <a href="mailto:contact@fleursenfete.com">contact@fleursenfete.com</a></li>
+            <li>Email : <a href="mailto:contact@fleursdefete.fr">contact@fleursdefete.fr</a></li>
             <li>Téléphone : 06 30 77 80 36</li>
           </ul>
           <p>Le client peut utiliser le formulaire de rétractation type ci-dessous ou toute autre déclaration dénuée d'ambiguïté.</p>
           <div className="bg-gray-50 rounded-2xl border border-gray-200 p-4 my-4 text-xs text-gray-600">
             <strong className="block mb-2">Formulaire de rétractation type :</strong>
-            À l'attention de Fleurs en fête — contact@fleursenfete.com<br /><br />
+            À l'attention de Fleurs en fête — contact@fleursdefete.fr<br /><br />
             Je/Nous (*) vous notifie/notifions (*) par la présente ma/notre (*) rétractation du contrat portant sur la vente du bien (*) ci-dessous :<br />
             Commandé le (*) / reçu le (*) :<br />
             Nom du/des consommateur(s) :<br />

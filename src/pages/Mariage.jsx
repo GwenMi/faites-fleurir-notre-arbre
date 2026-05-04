@@ -252,7 +252,7 @@ export default function Mariage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: "✏️", step: "01", title: "Personnalisez", desc: "Prénoms, date, kit de votre choix. On s'occupe du reste." },
-              { icon: "🌸", step: "02", title: "On livre", desc: "Vos kits arrivent prêts en 5 à 10 jours ouvrés avant votre événement." },
+              { icon: "🌸", step: "02", title: "On livre", desc: "Vos commandes sont préparées avec soin et expédiées dès qu'elles sont prêtes. Commandez au minimum 15 jours avant votre événement." },
               { icon: "📸", step: "03", title: "Ils partagent", desc: "La fleur pousse ou les crackers cuisent — vos invités scannent et partagent." },
             ].map(item => (
               <div key={item.step} className="flex flex-col items-center">

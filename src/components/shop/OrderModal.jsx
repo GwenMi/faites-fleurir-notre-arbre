@@ -43,7 +43,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
   const daysUntilEvent = eventDate
     ? Math.floor((new Date(eventDate) - new Date()) / (1000 * 60 * 60 * 24))
     : null;
-  const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
+  const isLate = daysUntilEvent !== null && daysUntilEvent < 15;
 
   const [siteUrl, setSiteUrl] = useState("");
   const [orderCreated, setOrderCreated] = useState(null);
@@ -121,8 +121,8 @@ export default function OrderModal({ product, guestPack, onClose }) {
     setLoading(true);
 
     const lateNote = isLate
-      ? "\n\n⚠️ Rappel délais : Votre événement est dans moins de 14 jours. Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie."
-      : "\n\nRappel délais : Nous vous recommandons de passer commande jusqu'à 21 jours avant votre événement afin de garantir la livraison dans les délais. Les commandes passées moins de 14 jours avant l'événement peuvent être acceptées mais la livraison à temps ne peut pas être garantie.";
+      ? "\n\n⚠️ Votre événement est dans moins de 15 jours. Nous préparons et expédions votre commande dès que possible, mais nous ne pouvons garantir une livraison dans les temps."
+      : "\n\nNos commandes sont préparées avec soin et expédiées dès qu'elles sont prêtes. Pour garantir la réception de vos produits à temps, nous recommandons de commander au minimum 15 jours avant votre événement.";
 
     const productName = isGuestPack ? `Pack ${guestPack.guests} invités - ${guestPack.kitName}` : workingProduct.name;
     
@@ -382,9 +382,9 @@ export default function OrderModal({ product, guestPack, onClose }) {
                   min={new Date().toISOString().split("T")[0]}
                   className="rounded-xl h-11"
                 />
-                {daysUntilEvent !== null && daysUntilEvent >= 14 && daysUntilEvent <= 21 && (
+                {daysUntilEvent !== null && daysUntilEvent >= 15 && daysUntilEvent <= 21 && (
                   <p className="mt-2 text-xs text-amber-600 bg-amber-50 rounded-xl px-3 py-2">
-                    ⏱️ Votre événement est dans {daysUntilEvent} jours. Nous ferons de notre mieux pour garantir la livraison.
+                    ⏱️ Votre événement est dans {daysUntilEvent} jours. Nous expédions dès que votre commande est prête.
                   </p>
                 )}
               </div>
@@ -396,7 +396,7 @@ export default function OrderModal({ product, guestPack, onClose }) {
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-amber-800 font-medium">
-                    Attention : votre événement est proche ({daysUntilEvent} jour{daysUntilEvent > 1 ? "s" : ""}). Nous ferons notre maximum pour préparer et expédier votre commande rapidement, mais la livraison dans les délais ne peut pas être garantie.
+                    Votre événement est dans {daysUntilEvent} jour{daysUntilEvent > 1 ? "s" : ""}. Nous préparons et expédions votre commande dès que possible, mais nous ne pouvons garantir une livraison dans les temps.
                   </p>
                 </div>
                 <div className="flex gap-2">

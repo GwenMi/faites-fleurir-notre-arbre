@@ -205,14 +205,14 @@ export default function Boutique() {
                 <h2 className="font-serif-elegant text-2xl font-bold text-gray-800">Livraison</h2>
               </div>
               <div className="font-sans-clean text-sm text-gray-600 leading-relaxed space-y-3">
-                <p>Chaque commande est préparée avec soin avant expédition.</p>
+                <p>Vos commandes sont préparées avec soin et expédiées dès qu'elles sont prêtes.</p>
                 <p>
-                  Afin de garantir la préparation et la livraison dans les délais, nous vous recommandons de passer commande
-                  <span className="font-semibold text-gray-800"> jusqu'à 21 jours avant votre événement</span>.
+                  Pour être certain de recevoir vos produits à temps, nous vous recommandons de passer commande
+                  <span className="font-semibold text-gray-800"> au minimum 15 jours avant votre événement</span>.
                 </p>
                 <p className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-amber-800">
                   <span className="mt-0.5">⚠️</span>
-                  <span>Les commandes passées <span className="font-semibold">moins de 14 jours</span> avant la date de l'événement peuvent être acceptées, mais la livraison dans les délais ne peut pas être garantie.</span>
+                  <span>Pour les commandes passées <span className="font-semibold">moins de 15 jours</span> avant l'événement, nous ferons notre maximum, mais nous ne pouvons garantir une livraison dans les temps.</span>
                 </p>
               </div>
             </div>

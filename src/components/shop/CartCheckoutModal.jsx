@@ -155,7 +155,7 @@ export default function CartCheckoutModal({ cart, onClose, onOrderComplete }) {
 
   const [info, setInfo] = useState({ name: "", email: "", phone: "", address: "", eventDate: "" });
 
-  const isLate = daysUntilEvent !== null && daysUntilEvent < 14;
+  const isLate = daysUntilEvent !== null && daysUntilEvent < 15;
 
   const handleDateChange = (v) => {
     setInfo(p => ({ ...p, eventDate: v }));
@@ -295,9 +295,9 @@ export default function CartCheckoutModal({ cart, onClose, onOrderComplete }) {
                   min={new Date().toISOString().split("T")[0]}
                   className="rounded-xl h-11"
                 />
-                {daysUntilEvent !== null && daysUntilEvent >= 14 && daysUntilEvent <= 21 && (
+                {daysUntilEvent !== null && daysUntilEvent >= 15 && daysUntilEvent <= 21 && (
                   <p className="mt-2 text-xs text-amber-600 bg-amber-50 rounded-xl px-3 py-2">
-                    ⏱️ Votre événement est dans {daysUntilEvent} jours.
+                    ⏱️ Votre événement est dans {daysUntilEvent} jours. Nous expédions dès que votre commande est prête.
                   </p>
                 )}
               </div>
@@ -307,7 +307,7 @@ export default function CartCheckoutModal({ cart, onClose, onOrderComplete }) {
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-amber-800">
-                      Votre événement est dans {daysUntilEvent} jour{daysUntilEvent !== 1 ? "s" : ""}. La livraison dans les délais n'est pas garantie.
+                      Votre événement est dans {daysUntilEvent} jour{daysUntilEvent !== 1 ? "s" : ""}. Nous préparons et expédions votre commande dès que possible, mais nous ne pouvons garantir une livraison dans les temps.
                     </p>
                   </div>
                   <div className="flex gap-2">
