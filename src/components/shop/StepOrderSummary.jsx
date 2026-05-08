@@ -12,6 +12,8 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
   const [loading, setLoading] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState(null);
+  const [deliveryAcknowledged, setDeliveryAcknowledged] = useState(false);
+  const [showDeliveryError, setShowDeliveryError] = useState(false);
 
   const KIT_LABELS = {
     pret: "Kit Fleurs prêt à offrir",
@@ -338,13 +340,43 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           )}
         </div>
       ) : !paymentStarted ? (
-        <div className="flex gap-3">
-          <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
-            <ChevronLeft className="w-4 h-4 mr-2" /> Retour
-          </Button>
-          <Button onClick={() => setPaymentStarted(true)} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
-            Procéder au paiement →
-          </Button>
+        <div className="space-y-4">
+          {/* Case à cocher délai livraison — obligatoire */}
+          <div
+            className={`rounded-2xl border-2 p-4 cursor-pointer transition ${deliveryAcknowledged ? "border-green-300 bg-green-50" : showDeliveryError ? "border-red-400 bg-red-50" : "border-amber-300 bg-amber-50"}`}
+            onClick={() => { setDeliveryAcknowledged(v => !v); setShowDeliveryError(false); }}
+          >
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition ${deliveryAcknowledged ? "bg-green-500 border-green-500" : showDeliveryError ? "border-red-400" : "border-amber-400"}`}>
+                {deliveryAcknowledged && (
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
+              <span className={`text-sm leading-relaxed font-medium ${showDeliveryError ? "text-red-700" : "text-amber-900"}`}>
+                ⚠️ Je comprends que pour garantir la livraison avant mon événement, ma commande doit être passée <strong>au moins 21 jours à l'avance</strong>. En deçà de ce délai, Fleurs en fête ne peut pas garantir la livraison à temps.
+              </span>
+            </label>
+            {showDeliveryError && (
+              <p className="mt-2 text-xs text-red-600 font-semibold ml-8">Vous devez cocher cette case pour continuer.</p>
+            )}
+          </div>
+
+          <div className="flex gap-3">
+            <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
+              <ChevronLeft className="w-4 h-4 mr-2" /> Retour
+            </Button>
+            <Button
+              onClick={() => {
+                if (!deliveryAcknowledged) { setShowDeliveryError(true); return; }
+                setPaymentStarted(true);
+              }}
+              className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold"
+            >
+              Procéder au paiement →
+            </Button>
+          </div>
         </div>
       ) : (
         <StripePaymentForm
