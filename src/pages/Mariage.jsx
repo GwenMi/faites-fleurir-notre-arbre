@@ -111,10 +111,12 @@ export default function Mariage() {
           <p className="font-sans-m text-black text-lg max-w-xl mx-auto mb-4 leading-relaxed font-light">
             Kits fleurs & crackers personnalisés pour vos invités · Chemins de table & nœuds de chaise en tissu naturel · Site de mariage offert.
           </p>
-          <p className="font-sans-m text-black text-sm mb-10">
+          <p className="font-sans-m text-black text-sm mb-5">
             Cadeaux invités à partir de <strong className="text-black">3,90 €</strong> · Déco table à partir de <strong className="text-black">8 €</strong>
-
           </p>
+          <div className="inline-flex items-center gap-2 bg-white/80 border border-emerald-300 text-emerald-700 text-xs font-semibold px-4 py-2 rounded-full font-sans-m mb-8">
+            🚚 Livraison offerte — offre de lancement
+          </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
             <a
               href="#kits"
@@ -141,7 +143,7 @@ export default function Mariage() {
         <div className="space-y-6 max-w-2xl mx-auto">
           <div>
             <p className="font-sans-m text-sm font-semibold text-black mb-1">🌻 Le pot de fleurs</p>
-            <p className="font-sans-m text-sm text-black leading-relaxed">Vos invités repartent avec un pot de graines gravé à vos prénoms et à la date. Chez eux, ils plantent, regardent pousser… et partagent leurs photos sur votre galerie privée. Des semaines après le jour J, vous recevez encore des nouvelles de vos proches — un album vivant qui continue de fleurir.</p>
+            <p className="font-sans-m text-sm text-black leading-relaxed">Vos invités repartent avec un pot de graines de tournesol gravé à vos prénoms et à la date. Chez eux, ils plantent, regardent pousser… et partagent leurs photos sur votre galerie privée. Des semaines après le jour J, vous recevez encore des nouvelles de vos proches — un album vivant qui continue de fleurir.</p>
           </div>
           <div className="h-px bg-rose-100" />
           <div>

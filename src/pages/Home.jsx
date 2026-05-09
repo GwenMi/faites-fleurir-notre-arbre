@@ -112,9 +112,12 @@ export default function Home() {
         <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-4 leading-relaxed font-light">
           Un petit pot de graines de tournesol personnalisé à poser sur chaque table — prénoms gravés, QR code pour partager les photos quand la fleur pousse.
         </p>
-        <p className="font-sans-clean text-gray-400 text-sm max-w-sm mx-auto mb-10">
+        <p className="font-sans-clean text-gray-400 text-sm max-w-sm mx-auto mb-4">
           🌱 Mariage, baptême, anniversaire, communion, maison d'hôte — <strong className="text-gray-600">à partir de 3,90 € / invité.</strong>
         </p>
+        <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-4 py-2 rounded-full font-sans-clean mb-6">
+          🚚 Livraison offerte — offre de lancement
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto mb-8">
           <a href={createPageUrl("Shop")}
@@ -333,15 +336,44 @@ export default function Home() {
           <div className="border border-gray-200 rounded-3xl p-8 bg-white shadow-sm">
             <p className="font-sans-clean text-xs tracking-[0.25em] uppercase text-gray-400 mb-3">Essentiel</p>
             <p className="font-serif-elegant text-5xl font-bold text-gray-800 mb-1">Gratuit</p>
-            <p className="font-sans-clean text-sm text-gray-400 mb-1">Défi fleur simple</p>
-            <p className="font-sans-clean text-xs text-rose-300 italic mb-7">🌱 Parfait pour partager les photos de fleurs sans fonctionnalités avancées</p>
-            <ul className="space-y-3 mb-8">
+            <p className="font-sans-clean text-sm text-gray-400 mb-1">Site événement inclus</p>
+            <p className="font-sans-clean text-xs text-rose-300 italic mb-5">🌱 Partagez les photos de fleurs + votre page événement</p>
+            <ul className="space-y-3 mb-5">
               {FEATURES_BASIC.map(f => (
                 <li key={f} className="flex items-center gap-3 font-sans-clean text-sm text-gray-600">
                   <Check className="w-4 h-4 text-green-400 flex-shrink-0" /> {f}
                 </li>
               ))}
             </ul>
+            {/* Templates gratuits disponibles */}
+            <div className="mb-6">
+              <p className="font-sans-clean text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">5 templates gratuits inclus</p>
+              <div className="grid grid-cols-5 gap-2">
+                {[
+                  { key: "classique", emoji: "🤍", name: "Classique", primary: "#c084fc", secondary: "#86efac" },
+                  { key: "champetre", emoji: "🌿", name: "Champêtre", primary: "#84cc16", secondary: "#fde68a" },
+                  { key: "boheme", emoji: "🌸", name: "Bohème", primary: "#f43f5e", secondary: "#fcd34d" },
+                  { key: "floral", emoji: "💐", name: "Floral", primary: "#ec4899", secondary: "#bbf7d0" },
+                  { key: "minimal", emoji: "⬜", name: "Minimal", primary: "#64748b", secondary: "#f1f5f9" },
+                ].map(tpl => (
+                  <a
+                    key={tpl.key}
+                    href={createPageUrl("CreateMyEvent") + "?plan=basic"}
+                    className="flex flex-col items-center gap-1 p-2 rounded-xl border border-gray-100 hover:border-rose-200 hover:bg-rose-50 transition group"
+                    title={tpl.name}
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg" style={{ background: `linear-gradient(135deg, ${tpl.primary}33, ${tpl.secondary}66)` }}>
+                      {tpl.emoji}
+                    </div>
+                    <div className="flex gap-0.5">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tpl.primary }}></div>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tpl.secondary }}></div>
+                    </div>
+                    <p className="font-sans-clean text-[9px] text-gray-400 text-center leading-tight">{tpl.name}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
             <a href={createPageUrl("CreateMyEvent") + "?plan=basic"}
               className="block text-center py-3.5 rounded-full font-sans-clean font-semibold text-sm border-2 border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-500 transition">
               Commencer gratuitement
