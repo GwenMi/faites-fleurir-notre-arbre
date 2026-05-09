@@ -136,6 +136,16 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
       return;
     }
     onChange(info => ({ ...info, name: fullName }));
+    // Sauvegarder les infos de livraison sur le profil pour ne plus avoir à les ressaisir
+    if (user) {
+      base44.auth.updateMe({
+        phone: customerInfo.phone || "",
+        street: customerInfo.street || "",
+        zip_code: customerInfo.zipCode || "",
+        city: customerInfo.city || "",
+        country: customerInfo.country || "France",
+      }).catch(() => {});
+    }
     onNext();
   };
 
