@@ -17,10 +17,10 @@ function getShippingMethods(weightKg) {
   const chronoPrice = w <= 0.5 ? 12.74 : w <= 1 ? 14.99 : w <= 2 ? 17.49 : w <= 5 ? 22.99 : w <= 10 ? 29.99 : 39.99;
   const mondialRelayPrice = w <= 0.5 ? 4.49 : w <= 1 ? 5.49 : w <= 2 ? 6.49 : w <= 5 ? 8.99 : 11.99;
   return [
-    { id: "colissimo_home", name: "Colissimo domicile", carrier: "colissimo", description: "48h ouvrées, suivi inclus", price: colissimoPrice, servicePointRequired: false },
-    { id: "colissimo_relais", name: "Colissimo point retrait", carrier: "colissimo", description: "48h, bureau de poste / Pickup", price: colissimoRelaisPrice, servicePointRequired: true },
-    { id: "chronopost_18", name: "Chronopost Express J+1", carrier: "chronopost", description: "Livraison le lendemain avant 18h", price: chronoPrice, servicePointRequired: false },
-    { id: "mondial_relay", name: "Mondial Relay point relais", carrier: "mondial_relay", description: "3-5 jours, retrait en point relais", price: mondialRelayPrice, servicePointRequired: true },
+    { id: "colissimo_home", name: "Colissimo domicile", carrier: "colissimo", description: "Dès que prêt + 48h ouvrées, suivi inclus", price: colissimoPrice, servicePointRequired: false },
+    { id: "colissimo_relais", name: "Colissimo point retrait", carrier: "colissimo", description: "Dès que prêt + 48h, bureau de poste / Pickup", price: colissimoRelaisPrice, servicePointRequired: true },
+    { id: "chronopost_18", name: "Chronopost Express", carrier: "chronopost", description: "Dès que prêt + J+1 avant 18h", price: chronoPrice, servicePointRequired: false },
+    { id: "mondial_relay", name: "Mondial Relay point relais", carrier: "mondial_relay", description: "Dès que prêt + 3-5 jours, retrait en point relais", price: mondialRelayPrice, servicePointRequired: true },
   ];
 }
 
