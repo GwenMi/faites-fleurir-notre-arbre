@@ -1,6 +1,5 @@
 import RgpdBanner from "@/components/RgpdBanner";
 import FloatingChat from "@/components/FloatingChat";
-import MobileBottomTabs from "@/components/MobileBottomTabs";
 import MobileHeader from "@/components/MobileHeader";
 
 export default function Layout({ children, currentPageName }) {
@@ -15,13 +14,12 @@ export default function Layout({ children, currentPageName }) {
         button, a, [role="button"] { -webkit-tap-highlight-color: transparent; user-select: none; }
         svg { user-select: none; }
       `}</style>
-      <div className="pb-16 md:pb-0">
+      <div>
         <MobileHeader />
         {children}
       </div>
       <RgpdBanner />
       <FloatingChat />
-      <MobileBottomTabs />
     </div>
   );
 }

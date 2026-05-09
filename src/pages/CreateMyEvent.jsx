@@ -329,7 +329,7 @@ export default function CreateMyEvent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white" style={{ colorScheme: "light", color: "#111827", backgroundColor: "#fff5f5" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap');
         .font-serif-elegant { font-family: 'Cormorant Garamond', Georgia, serif; }
@@ -375,7 +375,7 @@ export default function CreateMyEvent() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm" style={{ colorScheme: "light", color: "#111827" }}>
           <EventForm
             event={prefill}
             onSave={handleEventSaved}
