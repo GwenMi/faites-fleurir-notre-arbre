@@ -113,6 +113,7 @@ export default function Mariage() {
           </p>
           <p className="font-sans-m text-black text-sm mb-10">
             Cadeaux invités à partir de <strong className="text-black">3,90 €</strong> · Déco table à partir de <strong className="text-black">8 €</strong>
+
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
             <a

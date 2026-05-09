@@ -228,49 +228,94 @@ export default function EventForm({ event, onSave, onCancel, lockedPlan }) {
         {availableTemplates.length === 0 ? (
           <p className="text-sm text-gray-400">Aucun template disponible pour ce type d'événement.</p>
         ) : (
-          <div className="space-y-4">
-            {/* Bouton de prévisualisation interactive */}
-            {TEMPLATES[form.template] && (
-              <div className="mb-4">
-                <button
-                  type="button"
-                  onClick={() => setPreviewOpen(true)}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-rose-500 text-white font-semibold rounded-xl hover:shadow-lg transition"
-                >
-                  🎨 Voir l'aperçu complet du template
-                </button>
-              </div>
-            )}
-
-            {/* Grid de sélection */}
-            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-gray-100">
-              {freeTemplates.map(([key, tpl]) => (
-                <button key={key} type="button"
-                  onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
-                  className={`p-4 rounded-xl border-2 text-center transition ${form.template === key ? "border-purple-400 bg-purple-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
-                  <div className="text-2xl mb-2">{tpl.emoji}</div>
-                  <p className="text-xs font-semibold text-gray-800 mb-1">{tpl.name}</p>
-                  <div className="flex gap-1 justify-center mb-2">
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.primaryColor }}></div>
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.secondaryColor }}></div>
+          <div className="space-y-3">
+            {/* Gratuits */}
+            <p className="text-xs font-semibold text-green-600 uppercase tracking-widest">✓ Gratuits</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {freeTemplates.map(([key, tpl]) => {
+                const isSelected = form.template === key;
+                return (
+                  <div key={key} className={`rounded-xl border-2 overflow-hidden transition ${isSelected ? "border-purple-400 shadow-md" : "border-gray-200 hover:border-gray-300"}`}>
+                    {/* Mini aperçu visuel */}
+                    <div className="h-20 relative" style={{ backgroundColor: tpl.secondaryColor }}>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-2">
+                        <div className="w-16 h-2 rounded-full opacity-80" style={{ backgroundColor: tpl.primaryColor }} />
+                        <div className="w-10 h-1.5 rounded-full opacity-50" style={{ backgroundColor: tpl.primaryColor }} />
+                        <div className="w-8 h-1 rounded-full opacity-40 mt-0.5" style={{ backgroundColor: tpl.primaryColor }} />
+                      </div>
+                      <div className="absolute top-2 left-2 text-lg">{tpl.emoji}</div>
+                    </div>
+                    <div className="p-2.5 bg-white">
+                      <p className="text-xs font-bold text-gray-800 mb-0.5">{tpl.name}</p>
+                      <p className="text-xs text-gray-400 leading-tight mb-2" style={{ fontSize: "10px" }}>{tpl.description}</p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
+                          className={`flex-1 text-xs py-1 rounded-lg font-semibold transition ${isSelected ? "bg-purple-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                        >
+                          {isSelected ? "✓ Choisi" : "Choisir"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { set("template", key); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); setPreviewOpen(true); }}
+                          className="text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition font-semibold"
+                          title="Aperçu"
+                        >
+                          👁
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-xs text-green-500 font-semibold">Gratuit</span>
-                </button>
-              ))}
-              {premiumTemplates.map(([key, tpl]) => (
-                <button key={key} type="button"
-                  onClick={() => { set("template", key); set("plan", "premium"); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
-                  className={`p-4 rounded-xl border-2 text-center transition ${form.template === key ? "border-amber-400 bg-amber-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
-                  <div className="text-2xl mb-2">{tpl.emoji}</div>
-                  <p className="text-xs font-semibold text-gray-800 mb-1">{tpl.name}</p>
-                  <div className="flex gap-1 justify-center mb-2">
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.primaryColor }}></div>
-                    <div className="w-3 h-3 rounded" style={{ backgroundColor: tpl.secondaryColor }}></div>
-                  </div>
-                  <span className="text-xs text-amber-500 font-semibold">⭐ Premium</span>
-                </button>
-              ))}
+                );
+              })}
             </div>
+
+            {/* Premium */}
+            {premiumTemplates.length > 0 && (
+              <>
+                <p className="text-xs font-semibold text-amber-600 uppercase tracking-widest pt-1">⭐ Premium</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {premiumTemplates.map(([key, tpl]) => {
+                    const isSelected = form.template === key;
+                    return (
+                      <div key={key} className={`rounded-xl border-2 overflow-hidden transition ${isSelected ? "border-amber-400 shadow-md" : "border-gray-200 hover:border-amber-200"}`}>
+                        <div className="h-20 relative" style={{ backgroundColor: tpl.secondaryColor }}>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-2">
+                            <div className="w-16 h-2 rounded-full opacity-80" style={{ backgroundColor: tpl.primaryColor }} />
+                            <div className="w-10 h-1.5 rounded-full opacity-50" style={{ backgroundColor: tpl.primaryColor }} />
+                            <div className="w-8 h-1 rounded-full opacity-40 mt-0.5" style={{ backgroundColor: tpl.primaryColor }} />
+                          </div>
+                          <div className="absolute top-2 left-2 text-lg">{tpl.emoji}</div>
+                          <div className="absolute top-2 right-2 text-xs font-bold bg-amber-400 text-white px-1.5 py-0.5 rounded-full" style={{ fontSize: "9px" }}>⭐</div>
+                        </div>
+                        <div className="p-2.5 bg-white">
+                          <p className="text-xs font-bold text-gray-800 mb-0.5">{tpl.name}</p>
+                          <p className="text-gray-400 leading-tight mb-2" style={{ fontSize: "10px" }}>{tpl.description}</p>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => { set("template", key); set("plan", "premium"); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); }}
+                              className={`flex-1 text-xs py-1 rounded-lg font-semibold transition ${isSelected ? "bg-amber-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-amber-100"}`}
+                            >
+                              {isSelected ? "✓ Choisi" : "Choisir"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { set("template", key); set("plan", "premium"); set("primary_color", tpl.primaryColor); set("secondary_color", tpl.secondaryColor); setPreviewOpen(true); }}
+                              className="text-xs px-2 py-1 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition font-semibold"
+                              title="Aperçu"
+                            >
+                              👁
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

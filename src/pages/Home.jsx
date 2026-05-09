@@ -7,6 +7,7 @@ import { createPageUrl } from "@/utils";
 import { ChevronRight, Sparkles, Check, ShoppingCart, X } from "lucide-react";
 import ReviewsSlider from "@/components/home/ReviewsSlider";
 import SiteNav from "@/components/SiteNav";
+import ShopBanner from "@/components/shop/ShopBanner";
 
 const SHOP_URL = () => createPageUrl("Shop");
 
@@ -96,6 +97,7 @@ export default function Home() {
       `}</style>
 
       <SiteNav />
+      <ShopBanner />
 
       {/* Hero */}
       <div className="hero-bg px-6 md:px-12 py-20 md:py-28 text-center">
@@ -108,7 +110,7 @@ export default function Home() {
         </h1>
         <div className="gold-line max-w-xs mx-auto mb-6" />
         <p className="font-sans-clean text-gray-500 text-lg max-w-lg mx-auto mb-4 leading-relaxed font-light">
-          Un petit pot de graines personnalisé à poser sur chaque table — prénoms gravés, graine de votre choix, QR code pour partager les photos quand la fleur pousse.
+          Un petit pot de graines de tournesol personnalisé à poser sur chaque table — prénoms gravés, QR code pour partager les photos quand la fleur pousse.
         </p>
         <p className="font-sans-clean text-gray-400 text-sm max-w-sm mx-auto mb-10">
           🌱 Mariage, baptême, anniversaire, communion, maison d'hôte — <strong className="text-gray-600">à partir de 3,90 € / invité.</strong>
@@ -128,7 +130,7 @@ export default function Home() {
         {/* 3 arguments courts */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-2xl mx-auto mb-10">
           {[
-            { icon: "✍️", text: "Personnalisé avec vos prénoms, la date et la graine de votre choix" },
+            { icon: "✍️", text: "Personnalisé avec vos prénoms, la date et des graines de tournesol" },
             { icon: "📱", text: "Un QR code sur chaque pot pour partager les photos des fleurs" },
             { icon: "🌱", text: "Un cadeau vivant qui continue à pousser bien après la fête" },
           ].map(a => (
@@ -161,7 +163,7 @@ export default function Home() {
       <div className="px-6 md:px-12 py-16 max-w-5xl mx-auto">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Adapté à votre fête</p>
         <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-3 text-center">Pour chaque occasion</h2>
-        <p className="font-sans-clean text-gray-400 text-sm text-center max-w-md mx-auto mb-12">Chaque kit est personnalisé selon votre événement — prénoms, date, message et type de graine. Un souvenir unique pour chaque moment de vie.</p>
+        <p className="font-sans-clean text-gray-400 text-sm text-center max-w-md mx-auto mb-12">Chaque kit est personnalisé selon votre événement — prénoms, date, message et graines de tournesol. Un souvenir unique pour chaque moment de vie.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
           {[
@@ -289,6 +291,36 @@ export default function Home() {
         <div className="gold-line flex-1" />
         <span className="text-xl">💐</span>
         <div className="gold-line flex-1" />
+      </div>
+
+      {/* Bannière sites de mariage */}
+      <div className="px-6 md:px-12 py-8">
+        <a
+          href={createPageUrl("Mariage")}
+          className="block max-w-3xl mx-auto rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all group"
+        >
+          <div className="relative">
+            <img
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80"
+              alt="Site de mariage"
+              className="w-full h-48 object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-rose-900/70 to-pink-800/40 flex flex-col justify-center px-8">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-white text-rose-500 text-xs font-bold px-3 py-1 rounded-full font-sans-clean">💍 Mariage</span>
+                <span className="text-white/80 text-xs font-sans-clean">Site offert avec votre commande</span>
+              </div>
+              <h3 className="font-serif-elegant text-3xl font-bold text-white mb-1">Votre site de mariage</h3>
+              <p className="font-sans-clean text-white/90 text-sm mb-3">RSVP · Galerie · Programme · Plan de table · Livre d'or · et plus encore</p>
+              <div className="flex items-center gap-3">
+                <span className="bg-white text-rose-500 font-bold text-sm px-5 py-2 rounded-full font-sans-clean group-hover:bg-rose-50 transition">
+                  Voir les kits mariage →
+                </span>
+                <span className="text-white/70 text-xs font-sans-clean">à partir de 3,90€ / invité</span>
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
 
       {/* Plans */}
