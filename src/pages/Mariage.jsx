@@ -131,6 +131,43 @@ export default function Mariage() {
         </div>
       </div>
 
+      {/* Concept section */}
+      <div className="px-6 md:px-12 py-14 max-w-4xl mx-auto">
+        <p className="font-sans-m text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Le concept</p>
+        <h2 className="font-serif-m text-3xl font-bold text-gray-800 mb-3 text-center">Un cadeau qui vit bien après le mariage</h2>
+        <p className="font-sans-m text-gray-400 text-sm text-center max-w-lg mx-auto mb-10">Chaque kit peut aussi servir de <strong className="text-gray-600">marque-place</strong> — le prénom de chaque invité est imprimé sur l'étiquette.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              emoji: "🌻",
+              title: "Pot de fleurs",
+              desc: "Vos invités repartent avec un pot de graines personnalisé à vos prénoms et à la date du mariage. Chez eux, ils plantent, regardent pousser… et partagent leurs photos sur votre galerie privée. Des semaines après le jour J, vous recevez encore des nouvelles de vos proches — un album vivant de votre mariage.",
+              highlight: "Souvenir + album floraison collaboratif",
+            },
+            {
+              emoji: "🫙",
+              title: "Kit Crackers Italiens",
+              desc: "Chaque invité repart avec un mix prêt à cuisiner. Ils testent la recette chez eux et partagent leurs photos. Mieux encore : organisez un apéro post-mariage où vos invités apportent leurs crackers maison — un moment convivial pour prolonger la fête et revivre le mariage ensemble.",
+              highlight: "Souvenir + prétexte à se retrouver après",
+            },
+            {
+              emoji: "🌿",
+              title: "Terrarium",
+              desc: "Posé sur la table, le pot sert de marque-place. Pendant le repas — entre deux plats, lors des discours — les invités assemblent leur terrarium avec les éléments disposés sur la table. C'est ludique, ça brise la glace, ça occupe les pauses et chacun repart avec une création unique, souvenir du jour J.",
+              highlight: "Marque-place + animation de table + souvenir",
+            },
+          ].map(item => (
+            <div key={item.title} className="bg-white rounded-3xl border border-rose-100 p-7 flex flex-col gap-3 shadow-sm">
+              <span className="text-4xl">{item.emoji}</span>
+              <h3 className="font-serif-m text-xl font-bold text-gray-800">{item.title}</h3>
+              <p className="font-sans-m text-sm text-gray-500 leading-relaxed flex-1">{item.desc}</p>
+              <span className="inline-block bg-rose-50 text-rose-500 text-xs font-semibold font-sans-m px-3 py-1.5 rounded-full w-fit">{item.highlight}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Kits */}
       <div id="kits" className="px-6 md:px-12 py-16 max-w-5xl mx-auto">
         <p className="font-sans-m text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 text-center">Vos cadeaux invités</p>

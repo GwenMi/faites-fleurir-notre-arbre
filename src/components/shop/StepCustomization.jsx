@@ -163,6 +163,26 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
             <p className="text-xs text-gray-500 mt-1">Format: JJ/MM/AAAA sur l'étiquette</p>
           </div>
           <LogoUpload field="personalLogo" label="Logo ou visuel de personnalisation (facultatif)" />
+
+          {/* Option marque-place */}
+          <div
+            className={`rounded-2xl border-2 p-4 cursor-pointer transition ${selection.customization?.marquePlace ? "border-rose-300 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"}`}
+            onClick={() => updateCustomization({ marquePlace: !selection.customization?.marquePlace })}
+          >
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition ${selection.customization?.marquePlace ? "bg-rose-400 border-rose-400" : "border-gray-300"}`}>
+                {selection.customization?.marquePlace && (
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Je souhaite que les kits servent de marque-place</p>
+                <p className="text-xs text-gray-500 mt-0.5">Le prénom de chaque invité sera imprimé sur l'étiquette — sans surcoût. Précisez vos souhaits en note après la commande ou contactez-nous.</p>
+              </div>
+            </label>
+          </div>
         </div>
       )}
 

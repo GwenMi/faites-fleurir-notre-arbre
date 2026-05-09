@@ -64,6 +64,7 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           sacCadeau: selection.sacCadeau,
           packs: packs,
           customization: selection.customization || {},
+          marquePlace: selection.customization?.marquePlace || false,
           pricePerPot: pricing.pricePerPot,
           event_date: customerInfo.eventDate,
           phone: customerInfo.phone,
@@ -157,6 +158,12 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
           <h3 className="font-bold text-gray-800">Votre commande</h3>
         </div>
         <div className="p-6 space-y-3 text-sm">
+          {selection.customization?.marquePlace && (
+            <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2 mb-1">
+              <span className="text-base">🪧</span>
+              <p className="text-xs font-semibold text-rose-700">Option marque-place activée — prénoms des invités sur les étiquettes</p>
+            </div>
+          )}
           <div className="flex justify-between text-sm text-gray-700">
             <span>{kitLabel}</span>
             <span>{basePrice.toFixed(2)}€/invité</span>
