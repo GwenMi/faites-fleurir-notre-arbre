@@ -44,7 +44,7 @@ export const TEMPLATES = {
   boheme: {
     name: "Bohème",
     emoji: "🌸",
-    plan: "premium",
+    plan: "basic",
     primaryColor: "#f43f5e",
     secondaryColor: "#fcd34d",
     eventTypes: ["mariage", "fiançailles"],
@@ -53,7 +53,7 @@ export const TEMPLATES = {
   floral: {
     name: "Floral",
     emoji: "💐",
-    plan: "premium",
+    plan: "basic",
     primaryColor: "#ec4899",
     secondaryColor: "#bbf7d0",
     eventTypes: ["mariage", "fiançailles"],
