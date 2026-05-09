@@ -270,8 +270,8 @@ export default function Home() {
         <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-12">Comment ça marche ?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { icon: "✏️", step: "01", title: "Personnalisez", desc: "Prénoms, date, message et graine de votre choix — mariage, baptême, anniversaire ou maison d'hôte." },
-            { icon: "🌸", step: "02", title: "On fabrique & livre", desc: "Vos kits arrivent prêts à poser sur les tables en 5 à 10 jours ouvrés." },
+            { icon: "✏️", step: "01", title: "Personnalisez", desc: "Prénoms, date, message — mariage, baptême, anniversaire ou maison d'hôte." },
+            { icon: "🌸", step: "02", title: "On fabrique & livre", desc: "Vos kits arrivent prêts à poser sur les tables." },
             { icon: "📸", step: "03", title: "La fleur pousse & ils partagent", desc: "Quand la fleur éclot, vos invités scannent le QR code et partagent leur photo." },
           ].map(item => (
             <div key={item.step} className="flex flex-col items-center">
