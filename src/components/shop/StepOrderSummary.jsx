@@ -1,19 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Truck, MapPin, Gift } from "lucide-react";
 import BudgetSavings from "./BudgetSavings";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import StripePaymentForm from "./StripePaymentForm";
 
-export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, referral, onBack, onOrderComplete }) {
+const MAX_FREE_SHIPPING = 20;
+const WEIGHT_PER_POT_G = 200;
+
+function getShippingMethods(weightKg) {
+  const w = weightKg;
+  const colissimoPrice = w <= 0.25 ? 5.49 : w <= 0.5 ? 7.59 : w <= 0.75 ? 9.29 : w <= 1 ? 9.59 : w <= 2 ? 11.19 : w <= 5 ? 17.39 : w <= 10 ? 25.29 : 31.99;
+  const colissimoRelaisPrice = w <= 0.25 ? 4.79 : w <= 0.5 ? 6.89 : w <= 0.75 ? 8.59 : w <= 1 ? 8.89 : w <= 2 ? 10.49 : 16.69;
+  const chronoPrice = w <= 0.5 ? 12.74 : w <= 1 ? 14.99 : w <= 2 ? 17.49 : w <= 5 ? 22.99 : w <= 10 ? 29.99 : 39.99;
+  const mondialRelayPrice = w <= 0.5 ? 4.49 : w <= 1 ? 5.49 : w <= 2 ? 6.49 : w <= 5 ? 8.99 : 11.99;
+  return [
+    { id: "colissimo_home", name: "Colissimo domicile", carrier: "colissimo", description: "48h ouvrées, suivi inclus", price: colissimoPrice, servicePointRequired: false },
+    { id: "colissimo_relais", name: "Colissimo point retrait", carrier: "colissimo", description: "48h, bureau de poste / Pickup", price: colissimoRelaisPrice, servicePointRequired: true },
+    { id: "chronopost_18", name: "Chronopost Express J+1", carrier: "chronopost", description: "Livraison le lendemain avant 18h", price: chronoPrice, servicePointRequired: false },
+    { id: "mondial_relay", name: "Mondial Relay point relais", carrier: "mondial_relay", description: "3-5 jours, retrait en point relais", price: mondialRelayPrice, servicePointRequired: true },
+  ];
+}
+
+export default function StepOrderSummary({ selection, customerInfo, pricing, PRICING, shippingMethod, onShippingChange, referral, onBack, onOrderComplete }) {
   const [paymentStarted, setPaymentStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState(null);
   const [deliveryAcknowledged, setDeliveryAcknowledged] = useState(false);
   const [showDeliveryError, setShowDeliveryError] = useState(false);
+  const [isFreeShipping, setIsFreeShipping] = useState(false);
+
+  const weightKg = Math.max((pricing.totalPots || 1) * WEIGHT_PER_POT_G, 100) / 1000;
+  const allShippingMethods = getShippingMethods(weightKg);
+
+  useEffect(() => {
+    base44.entities.Order.list().then(orders => {
+      const free = (orders || []).length < MAX_FREE_SHIPPING;
+      setIsFreeShipping(free);
+      // Pré-sélectionner Colissimo domicile si aucune méthode choisie
+      if (!shippingMethod) {
+        const colissimo = allShippingMethods[0];
+        onShippingChange(free ? { ...colissimo, price: 0, originalPrice: colissimo.price } : colissimo);
+      }
+    });
+  }, []);
 
   const KIT_LABELS = {
     pret: "Kit Fleurs prêt à offrir",
@@ -236,6 +269,39 @@ export default function StepOrderSummary({ selection, customerInfo, pricing, PRI
             <span>Total</span>
             <span>{(pricing.total + (wantPremium === true ? 39.99 : 0)).toFixed(2)}€</span>
           </div>
+        </div>
+      </div>
+
+      {/* Livraison — intégré dans le récap */}
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center gap-2">
+          <Truck className="w-4 h-4 text-rose-400" />
+          <h3 className="font-bold text-gray-800 text-sm">Mode de livraison</h3>
+          {isFreeShipping && <span className="ml-auto text-xs font-bold text-green-600 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">🎁 Offerte !</span>}
+        </div>
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {allShippingMethods.map(method => {
+            const selected = shippingMethod?.id === method.id;
+            const price = isFreeShipping ? 0 : method.price;
+            return (
+              <button
+                key={method.id}
+                onClick={() => onShippingChange(isFreeShipping ? { ...method, price: 0, originalPrice: method.price } : method)}
+                className={`text-left flex items-start gap-3 p-3 rounded-xl border-2 transition ${selected ? "border-rose-400 bg-rose-50" : "border-gray-200 bg-white hover:border-rose-200"}`}
+              >
+                <div className={`mt-0.5 w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${selected ? "border-rose-400 bg-rose-400" : "border-gray-300"}`}>
+                  {selected && <div className="w-2 h-2 rounded-full bg-white" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-gray-800">{method.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{method.description}</p>
+                </div>
+                <p className={`text-xs font-bold flex-shrink-0 ${price === 0 ? "text-green-600" : "text-gray-700"}`}>
+                  {price === 0 ? "OFFERT" : `${price.toFixed(2)}€`}
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
 

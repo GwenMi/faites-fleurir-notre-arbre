@@ -9,7 +9,6 @@ import StepPackSelector from "@/components/shop/StepPackSelector";
 import StepCustomization from "@/components/shop/StepCustomization";
 import StepEventSlug from "@/components/shop/StepEventSlug";
 import StepCustomerForm from "@/components/shop/StepCustomerForm";
-import StepShipping from "@/components/shop/StepShipping";
 import StepOrderSummary from "@/components/shop/StepOrderSummary";
 import { createPageUrl } from "@/utils";
 
@@ -265,17 +264,15 @@ export default function Shop() {
             />
           )}
           {step === 7 && (
-            <StepShipping totalPots={pricing.totalPots} shippingMethod={shippingMethod} onSelect={setShippingMethod} onNext={() => goNext(7)} onBack={() => goBack(7)} />
-          )}
-          {step === 8 && (
             <StepOrderSummary
               selection={selection}
               customerInfo={customerInfo}
               pricing={pricing}
               PRICING={PRICING}
               shippingMethod={shippingMethod}
+              onShippingChange={setShippingMethod}
               referral={referral}
-              onBack={() => setStep(7)}
+              onBack={() => goBack(7)}
               onOrderComplete={handleOrderComplete}
             />
           )}
