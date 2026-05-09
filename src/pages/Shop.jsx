@@ -26,9 +26,7 @@ export const PRICING = {
   terrarium: 10,
 };
 
-const SEEDS = [
-  { id: "tournesol_nain", label: "🌻 Tournesol nain", description: "Compact et joyeux" },
-];
+
 
 export default function Shop() {
   const { user } = useAuth();
@@ -246,7 +244,6 @@ export default function Shop() {
               onUpdate={updateSelection}
               onNext={() => goNext(4)}
               onBack={() => goBack(4)}
-              seeds={SEEDS}
             />
           )}
           {step === 5 && (

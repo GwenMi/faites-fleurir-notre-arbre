@@ -1,38 +1,4 @@
-import { useState } from "react";
 import { Check } from "lucide-react";
-
-const KIT_VARIANTS = {
-  compose: [
-    {
-      id: "tournesol",
-      emoji: "🌻",
-      label: "Graines de tournesol",
-      desc: "La version originale : chaque invité plante sa graine et partage sa fleur sur votre galerie photo.",
-    },
-    {
-      id: "crackers",
-      emoji: "🫙",
-      label: "Kit Apéro Crackers Italiens",
-      badge: "🆕 Nouveauté",
-      desc: "Marque-place le jour J, kit apéro à faire soi-même le lendemain. Farine, épices italiennes, sel — il ne manque que l'huile d'olive et l'eau. En 20 minutes, des crackers maison dignes d'une trattoria. 🌾 Intolérance au gluten ? Remplacez par de la farine de sarrasin.",
-    },
-  ],
-  pret: [
-    {
-      id: "tournesol",
-      emoji: "🌻",
-      label: "Graines de tournesol",
-      desc: "La version originale : chaque invité plante sa graine et partage sa fleur sur votre galerie photo.",
-    },
-    {
-      id: "crackers",
-      emoji: "🫙",
-      label: "Kit Apéro Crackers Italiens",
-      badge: "🆕 Nouveauté",
-      desc: "Marque-place le jour J, kit apéro à faire soi-même le lendemain. Farine, épices italiennes, sel — il ne manque que l'huile d'olive et l'eau. En 20 minutes, des crackers maison dignes d'une trattoria. 🌾 Intolérance au gluten ? Remplacez par de la farine de sarrasin.",
-    },
-  ],
-};
 
 const MARIAGE_KITS = ["compose", "pret"];
 
@@ -124,22 +90,13 @@ const KITS = [
 ];
 
 export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
-  const [variantModal, setVariantModal] = useState(null); // kit.id en cours de sélection de variante
-
   const handleSelectKit = (kit) => {
     if (MARIAGE_KITS.includes(kit.id)) {
-      // Ouvrir le sélecteur de variante fleurs uniquement
-      setVariantModal(kit.id);
+      // Kits fleurs : tournesol uniquement, sélection directe sans modal
+      onUpdate({ kitType: kit.id, kitVariant: "tournesol", seedType: "tournesol_nain" });
     } else {
-      // crackers et autres kits : sélection directe
       onUpdate({ kitType: kit.id, kitVariant: kit.id === "crackers" ? "crackers" : null });
-      onNext();
     }
-  };
-
-  const handleSelectVariant = (variantId) => {
-    onUpdate({ kitType: variantModal, kitVariant: variantId });
-    setVariantModal(null);
     onNext();
   };
 
@@ -192,7 +149,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
               ))}
             </ul>
             <div className="w-full py-2.5 rounded-xl bg-rose-400 group-hover:bg-rose-500 text-white font-sans-shop font-semibold text-sm text-center transition">
-              {MARIAGE_KITS.includes(kit.id) ? "Choisir la variante →" : "Choisir ce kit →"}
+              Choisir ce kit →
             </div>
           </button>
         ))}
@@ -204,43 +161,7 @@ export default function StepKitChoice({ selection, onUpdate, onNext, onBack }) {
         </button>
       </div>
 
-      {/* Modal sélecteur de variante */}
-      {variantModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl">
-            <h3 className="font-serif-shop text-2xl font-bold text-gray-800 mb-1">Quelle variante ?</h3>
-            <p className="font-sans-shop text-sm text-gray-400 mb-6">Choisissez la version de votre kit cadeau invités</p>
-            <div className="space-y-3">
-              {KIT_VARIANTS[variantModal].map(v => (
-                <button
-                  key={v.id}
-                  onClick={() => handleSelectVariant(v.id)}
-                  className="w-full text-left p-4 rounded-2xl border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all flex items-start gap-4"
-                >
-                  <span className="text-3xl flex-shrink-0">{v.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="font-sans-shop font-bold text-gray-800 text-sm">{v.label}</span>
-                      {v.badge && (
-                        <span className="inline-block bg-rose-400 text-white text-xs font-bold px-2 py-0.5 rounded-full font-sans-shop">
-                          {v.badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="font-sans-shop text-xs text-gray-500 leading-relaxed">{v.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setVariantModal(null)}
-              className="mt-5 w-full text-center font-sans-shop text-sm text-gray-400 hover:text-rose-400 transition"
-            >
-              ← Retour au choix du kit
-            </button>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

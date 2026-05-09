@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight, Upload } from "lucide-react";
 import { toast } from "sonner";
 
-export default function StepCustomization({ selection, onUpdate, onNext, onBack, seeds }) {
+export default function StepCustomization({ selection, onUpdate, onNext, onBack }) {
   const [showLogoConfirm, setShowLogoConfirm] = useState(false);
 
   const handleNext = () => {
@@ -107,35 +107,13 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack,
           </div>
         </div>
       ) : (
-        seeds && seeds.length > 1 ? (
+        <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3">
+          <span className="text-xl">🌻</span>
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-3">Type de graine</label>
-            <div className="grid grid-cols-2 gap-3">
-              {seeds.map(seed => (
-                <button
-                  key={seed.id}
-                  onClick={() => updateCustomization({ seedType: seed.id })}
-                  className={`p-4 rounded-lg border-2 transition text-center ${
-                    selection.customization?.seedType === seed.id || (selection.seedType === seed.id)
-                      ? 'border-rose-400 bg-rose-50'
-                      : 'border-gray-200 bg-white hover:border-rose-200'
-                  }`}
-                >
-                  <p className="text-sm font-semibold text-gray-800">{seed.label}</p>
-                  <p className="text-xs text-gray-500 mt-1">{seed.description}</p>
-                </button>
-              ))}
-            </div>
+            <p className="text-sm font-semibold text-gray-800">Graines de tournesol</p>
+            <p className="text-xs text-gray-500">Compact et joyeux — faciles à faire pousser</p>
           </div>
-        ) : seeds && seeds.length === 1 ? (
-          <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-4 py-3">
-            <span className="text-xl">{seeds[0].label.split(' ')[0]}</span>
-            <div>
-              <p className="text-sm font-semibold text-gray-800">{seeds[0].label}</p>
-              <p className="text-xs text-gray-500">{seeds[0].description}</p>
-            </div>
-          </div>
-        ) : null
+        </div>
       )}
 
       {/* Événements personnels */}
