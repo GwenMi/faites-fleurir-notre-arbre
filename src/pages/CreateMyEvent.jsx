@@ -48,7 +48,9 @@ export default function CreateMyEvent() {
           : base44.entities.Event.filter({ created_by: me.email }, "-created_date", 1),
       ]);
       if (existingEvents?.length > 0) {
-        setExistingEvent(existingEvents[0]);
+        // Redirection automatique vers la gestion du site existant
+        window.location.href = `${createPageUrl("CoupleDashboard")}?event_id=${existingEvents[0].id}`;
+        return;
       }
       setUnlinkableOrders((allOrders || []).filter(o => !o.event_id && o.payment_status === "paid"));
     } catch {
