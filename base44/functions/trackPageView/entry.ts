@@ -3,7 +3,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { page = "home" } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const page = body.page || "home";
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -20,6 +21,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ ok: true });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    // Ne pas propager l'erreur — le tracking est non-critique
+    return Response.json({ ok: false, error: error.message });
   }
 });
