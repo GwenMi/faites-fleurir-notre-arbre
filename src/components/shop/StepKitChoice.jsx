@@ -13,7 +13,7 @@ const KITS = [
     badge: null,
     color: "border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100",
     desc: "Un marque-place qui fleurit. Chaque invité trouve son prénom sur la table, repart avec son pot, arrose — et des semaines plus tard, un tournesol éclot dans son salon. Vous assemblez les pots avant le jour J : même magie, prix allégé.",
-    features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation", "Assemblage simple & accessible"],
+    features: ["🌻 Graines de tournesol nain", "🌱 Pastille de terre compressée (ajouter de l'eau = prêt à pousser)", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation", "Assemblage simple & accessible"],
   },
   {
     id: "pret",
@@ -25,7 +25,7 @@ const KITS = [
     popular: "💍 N°1 des mariages & anniversaires",
     color: "border-rose-300 bg-gradient-to-br from-rose-100 to-rose-200",
     desc: "Leur prénom marque leur place à table. Ils repartent avec leur pot, arrosent, et des semaines après votre fête, un tournesol éclot dans leur salon. Ils scannent le QR code, ajoutent leur photo — et votre album continue de grandir.",
-    features: ["Graines de tournesol faciles à faire pousser", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation simple", "Assemblé & prêt à offrir ✓"],
+    features: ["🌻 Graines de tournesol nain", "🌱 Pastille de terre compressée (ajouter de l'eau = prêt à pousser)", "Étiquette personnalisée (marque-place + souvenir)", "QR code galerie floraison", "Notice de plantation simple", "Assemblé & prêt à offrir ✓"],
   },
   {
     id: "entreprise_standard",
