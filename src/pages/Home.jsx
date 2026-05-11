@@ -144,22 +144,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-3 max-w-xs mx-auto">
-          <p className="font-sans-clean text-xs text-gray-400 tracking-widest uppercase">Vous avez un lien d'événement ?</p>
-          <div className="flex gap-2 w-full">
-            <Input
-              placeholder="nom-du-couple"
-              value={slugInput}
-              onChange={e => setSlugInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleGoToEvent()}
-              className="rounded-full h-11 text-sm border-gray-200 text-center font-sans-clean"
-            />
-            <Button onClick={handleGoToEvent}
-              className="rounded-full h-11 px-4 bg-rose-400 hover:bg-rose-500 text-white shadow-sm">
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+
       </div>
 
       {/* Section Pour chaque occasion */}
