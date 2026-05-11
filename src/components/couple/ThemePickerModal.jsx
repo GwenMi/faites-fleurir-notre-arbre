@@ -43,11 +43,11 @@ const TEMPLATES = [
         <div className="flex-1 relative" style={{ background: "#1a1a1a" }}>
           <div className="absolute inset-0 flex flex-col justify-end p-2">
             <div className="text-[9px] font-light text-white">Sophie & Thomas</div>
-            <div className="text-[6px] text-white/50 uppercase tracking-widest">24 JUIN 2025</div>
+            <div className="text-[6px] text-white/70 uppercase tracking-widest">24 JUIN 2025</div>
           </div>
         </div>
         <div className="flex-none px-2 py-1 flex gap-1">
-          <div className="text-[5px] text-gray-300 uppercase tracking-widest">Défiler ↓</div>
+          <div className="text-[5px] text-gray-500 uppercase tracking-widest">Défiler ↓</div>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@ const TEMPLATES = [
         <div className="w-8 h-px mb-1.5" style={{ background: "#C9A96E66" }} />
         <div className="text-[7px] uppercase tracking-widest mb-1" style={{ color: "#C9A96E", opacity: 0.7 }}>Mariage</div>
         <div className="text-[9px] italic font-bold text-center" style={{ color: "#C9A96E", fontFamily: "Georgia" }}>Sophie & Thomas</div>
-        <div className="text-[5px] mt-1 uppercase tracking-widest" style={{ color: "rgba(255,255,255,.3)" }}>24 JUIN 2025</div>
+        <div className="text-[5px] mt-1 uppercase tracking-widest" style={{ color: "rgba(255,255,255,.6)" }}>24 JUIN 2025</div>
         <div className="w-8 h-px mt-1.5" style={{ background: "#C9A96E66" }} />
       </div>
     </div>

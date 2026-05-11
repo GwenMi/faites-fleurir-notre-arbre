@@ -66,12 +66,12 @@ const TEMPLATES = [
           <div className="flex-1 relative" style={{ background: "#1a1a1a" }}>
             <div className="absolute inset-0 flex flex-col justify-end p-2">
               <div className="text-[11px] font-light text-white leading-none mb-0.5" style={{ letterSpacing: "-0.02em", fontFamily: "Georgia" }}>Sophie & Thomas</div>
-              <div className="text-[6px] text-white/50 uppercase tracking-widest">24 JUIN 2025</div>
+              <div className="text-[6px] text-white/70 uppercase tracking-widest">24 JUIN 2025</div>
             </div>
           </div>
           <div className="flex-none px-2 py-1.5 flex gap-1">
             <div style={{ width: 1, background: "#eee" }} className="self-stretch" />
-            <div className="text-[6px] text-gray-300 uppercase tracking-widest ml-1">Défiler</div>
+            <div className="text-[6px] text-gray-500 uppercase tracking-widest ml-1">Défiler</div>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ const TEMPLATES = [
           <div className="w-8 h-px mb-2" style={{ background: "#C9A96E66" }} />
           <div className="text-[7px] uppercase tracking-widest mb-2" style={{ color: "#C9A96E", opacity: 0.7 }}>Mariage</div>
           <div className="text-[10px] italic font-bold text-center" style={{ color: "#C9A96E", fontFamily: "Georgia" }}>Sophie & Thomas</div>
-          <div className="text-[6px] mt-1.5 uppercase tracking-widest" style={{ color: "rgba(255,255,255,.3)" }}>24 JUIN 2025</div>
+          <div className="text-[6px] mt-1.5 uppercase tracking-widest" style={{ color: "rgba(255,255,255,.6)" }}>24 JUIN 2025</div>
           <div className="w-8 h-px mt-2" style={{ background: "#C9A96E66" }} />
         </div>
         <div className="absolute bottom-2 inset-x-0 flex flex-col items-center gap-0.5">
