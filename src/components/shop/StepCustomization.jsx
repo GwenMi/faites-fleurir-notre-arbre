@@ -83,6 +83,14 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack 
     </div>
   );
 
+  // Calcul dynamique de la validité pour désactiver le bouton
+  const isValid = (() => {
+    if (isCompanyEvent) return !!selection.customization?.companyName;
+    if (isAccommodationEvent) return !!selection.customization?.accommodationName;
+    if (isPersonalEvent) return !!(selection.customization?.names && selection.customization?.date);
+    return true; // "autre" → pas de champ requis
+  })();
+
   return (
     <div className="space-y-8">
       <div>
@@ -211,7 +219,7 @@ export default function StepCustomization({ selection, onUpdate, onNext, onBack 
         <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
           <ChevronLeft className="w-4 h-4 mr-2" /> Retour
         </Button>
-        <Button onClick={handleNext} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
+        <Button onClick={handleNext} disabled={!isValid} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>

@@ -101,6 +101,17 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
     return Math.floor((new Date(customerInfo.eventDate) - new Date()) / (1000 * 60 * 60 * 24));
   };
 
+  const isFormValid = !!(
+    customerInfo.firstName &&
+    customerInfo.lastName &&
+    customerInfo.email &&
+    customerInfo.street &&
+    customerInfo.zipCode &&
+    customerInfo.city &&
+    customerInfo.country &&
+    (!customerInfo.isCompany || (customerInfo.companyName && customerInfo.vatNumber))
+  );
+
   const handleNext = () => {
     setValidationError("");
     const missing = [];
@@ -268,15 +279,15 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
           <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Téléphone</Label>
           <Input type="tel" value={customerInfo.phone} onChange={e => set("phone", e.target.value)} placeholder="06 12 34 56 78" className="h-11 rounded-xl" />
         </div>
-        {/* Date d'événement : pré-remplie depuis la personnalisation, affichée en lecture seule si disponible */}
-        {customerInfo.eventDate ? (
+        {/* Date d'événement — masquée si déjà renseignée à l'étape personnalisation */}
+        {selection?.customization?.date ? (
           <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 flex items-center gap-2">
-            📅 <span>Date de l'événement : <strong>{new Date(customerInfo.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</strong></span>
+            📅 <span>Date de l'événement : <strong>{new Date(selection.customization.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</strong></span>
           </div>
         ) : (
           <div>
             <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">
-              Date de votre événement * <span className="font-normal text-gray-400">(pour la planification)</span>
+              Date de votre événement <span className="font-normal text-gray-400">(optionnel, pour la planification)</span>
             </Label>
             <Input type="date" value={customerInfo.eventDate} onChange={e => set("eventDate", e.target.value)} className="h-11 rounded-xl w-full sm:w-64" />
             {days !== null && days >= 0 && days < 15 && (
@@ -424,7 +435,7 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
         <Button onClick={onBack} variant="outline" className="flex-1 h-12 rounded-xl">
           <ChevronLeft className="w-4 h-4 mr-2" /> Retour
         </Button>
-        <Button onClick={handleNext} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold">
+        <Button onClick={handleNext} disabled={!isFormValid} className="flex-1 h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
           Continuer <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
