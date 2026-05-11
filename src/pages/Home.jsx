@@ -50,7 +50,7 @@ export default function Home() {
 
   const handleGoToEvent = () => {
     if (slugInput.trim()) {
-      window.location.href = createPageUrl(`EventPublic`) + `?slug=${slugInput.trim()}`;
+      window.location.href = `/EventPublic?slug=${slugInput.trim()}`;
     }
   };
 
