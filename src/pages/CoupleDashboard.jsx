@@ -31,6 +31,7 @@ import ThankYouCardGenerator from "@/components/couple/ThankYouCardGenerator";
 import GuestAccessManager from "@/components/couple/GuestAccessManager";
 import PremiumFeaturePreview from "@/components/couple/PremiumFeaturePreview";
 import TemplatePreviewModal from "@/components/admin/TemplatePreviewModal";
+import ThemePickerModal from "@/components/couple/ThemePickerModal";
 
 const TABS = [
   { key: "stats",          label: "Statistiques",    icon: BarChart2,        premium: false },
@@ -74,6 +75,7 @@ export default function CoupleDashboard() {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("guests");
   const [showTemplatePreview, setShowTemplatePreview] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
 
   // Auto-login si connecté et event_id en URL
   useEffect(() => {
@@ -207,10 +209,10 @@ export default function CoupleDashboard() {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setShowTemplatePreview(true)}
+              onClick={() => setShowThemePicker(true)}
               className="font-sans-clean text-xs text-purple-600 hover:text-purple-700 border border-purple-200 bg-purple-50 px-3 py-1.5 rounded-full transition hidden sm:flex items-center gap-1"
             >
-              <Smartphone className="w-3.5 h-3.5" /> Prévisualiser
+              <Paintbrush className="w-3.5 h-3.5" /> Modifier mon thème
             </button>
             {event.public_url && (
               <a href={event.public_url} target="_blank" rel="noreferrer"
@@ -253,13 +255,13 @@ export default function CoupleDashboard() {
         </div>
       </div>
 
-      {/* Template Preview Modal */}
-      {showTemplatePreview && (
-        <TemplatePreviewModal
-          isOpen={showTemplatePreview}
-          templateKey={event.template || "classique"}
+      {/* Theme Picker Modal */}
+      {showThemePicker && (
+        <ThemePickerModal
+          isOpen={showThemePicker}
           event={event}
-          onOpenChange={(open) => setShowTemplatePreview(open)}
+          onClose={() => setShowThemePicker(false)}
+          onSaved={(templateKey) => setEvent(e => ({ ...e, template: templateKey }))}
         />
       )}
 
