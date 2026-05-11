@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
+Disallow: /AdminDashboard
+Disallow: /AdminOrders
+Disallow: /AdminShipping
+Disallow: /AdminSuperPanel
+Disallow: /AdminAccessPanel
+Disallow: /AdminAccessLogin
+Disallow: /CRM
+Disallow: /Stats
+Disallow: /Forecast
+Disallow: /Picking
+Disallow: /CalendarView
+Disallow: /Quotes
+Disallow: /SupplierOrders
+Disallow: /AdminReviews
 
-Sitemap: https://fleursdefete.fr/sitemap.xml
+Sitemap: https://www.fleursdefete.fr/sitemap.xml
