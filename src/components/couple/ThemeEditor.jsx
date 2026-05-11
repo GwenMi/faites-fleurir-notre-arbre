@@ -176,34 +176,40 @@ export default function ThemeEditor({ event }) {
         <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
           <Layout className="w-4 h-4 text-rose-400" /> Mise en page du site
         </h3>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {TEMPLATES.map(tpl => {
             const isActive = selectedTemplate === tpl.key;
             const Thumb = tpl.thumbnail;
             return (
               <div key={tpl.key} className="flex flex-col gap-1.5">
-                <button
-                  onClick={() => { setSelectedTemplate(tpl.key); setSaved(false); }}
-                  className={`relative rounded-xl border-2 overflow-hidden transition hover:scale-105 ${
-                    isActive ? "border-rose-400 shadow-md" : "border-transparent hover:border-gray-200"
-                  }`}
-                  style={{ aspectRatio: "3/4" }}
-                  title={tpl.label}
-                >
-                  {isActive && (
-                    <div className="absolute top-1.5 right-1.5 z-10 w-4 h-4 bg-rose-400 rounded-full flex items-center justify-center">
-                      <Check className="w-2.5 h-2.5 text-white" />
-                    </div>
-                  )}
-                  <Thumb primary={theme.primary_color} secondary={theme.secondary_color} />
-                </button>
+                <div className="relative group">
+                  <button
+                    onClick={() => { setSelectedTemplate(tpl.key); setSaved(false); }}
+                    className={`w-full relative rounded-xl border-2 overflow-hidden transition hover:scale-105 ${
+                      isActive ? "border-rose-400 shadow-md" : "border-transparent hover:border-gray-200"
+                    }`}
+                    style={{ aspectRatio: "3/4" }}
+                    title={tpl.label}
+                  >
+                    {isActive && (
+                      <div className="absolute top-1.5 right-1.5 z-10 w-4 h-4 bg-rose-400 rounded-full flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 text-white" />
+                      </div>
+                    )}
+                    <Thumb primary={theme.primary_color} secondary={theme.secondary_color} />
+                  </button>
+                  {/* Overlay aperçu au hover */}
+                  <button
+                    onClick={() => setPreviewTemplateKey(tpl.key)}
+                    className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100"
+                  >
+                    <span className="bg-white text-gray-800 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                      <Eye className="w-3 h-3" /> Prévisualiser
+                    </span>
+                  </button>
+                </div>
                 <p className="text-[10px] font-semibold text-gray-700 text-center leading-tight">{tpl.label}</p>
-                <button
-                  onClick={() => setPreviewTemplateKey(tpl.key)}
-                  className="flex items-center justify-center gap-1 text-[10px] text-gray-400 hover:text-rose-500 transition py-0.5"
-                >
-                  <Eye className="w-3 h-3" /> Aperçu
-                </button>
+                <p className="text-[9px] text-gray-400 text-center">{tpl.desc}</p>
               </div>
             );
           })}

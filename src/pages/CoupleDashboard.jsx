@@ -30,6 +30,7 @@ import CoupleCalendar from "@/components/couple/CoupleCalendar";
 import ThankYouCardGenerator from "@/components/couple/ThankYouCardGenerator";
 import GuestAccessManager from "@/components/couple/GuestAccessManager";
 import PremiumFeaturePreview from "@/components/couple/PremiumFeaturePreview";
+import TemplatePreviewModal from "@/components/admin/TemplatePreviewModal";
 
 const TABS = [
   { key: "stats",          label: "Statistiques",    icon: BarChart2,        premium: false },
@@ -72,6 +73,7 @@ export default function CoupleDashboard() {
   const [event, setEvent] = useState(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("guests");
+  const [showTemplatePreview, setShowTemplatePreview] = useState(false);
 
   // Auto-login si connecté et event_id en URL
   useEffect(() => {
@@ -204,6 +206,12 @@ export default function CoupleDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowTemplatePreview(true)}
+              className="font-sans-clean text-xs text-purple-600 hover:text-purple-700 border border-purple-200 bg-purple-50 px-3 py-1.5 rounded-full transition hidden sm:flex items-center gap-1"
+            >
+              <Smartphone className="w-3.5 h-3.5" /> Prévisualiser
+            </button>
             {event.public_url && (
               <a href={event.public_url} target="_blank" rel="noreferrer"
                 className="font-sans-clean text-xs text-rose-500 hover:text-rose-600 border border-rose-200 px-3 py-1.5 rounded-full transition hidden sm:block">
@@ -244,6 +252,16 @@ export default function CoupleDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Template Preview Modal */}
+      {showTemplatePreview && (
+        <TemplatePreviewModal
+          isOpen={showTemplatePreview}
+          templateKey={event.template || "classique"}
+          event={event}
+          onOpenChange={(open) => setShowTemplatePreview(open)}
+        />
+      )}
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
