@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronLeft, ChevronRight, AlertCircle, Building2, LogIn, Mail, Tag, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import ZipCodeCityInput from "@/components/shop/ZipCodeCityInput";
 
 export default function StepCustomerForm({ customerInfo, onChange, selection, referral, onReferralChange, onNext, onBack }) {
   const [showLateWarning, setShowLateWarning] = useState(false);
@@ -305,16 +306,13 @@ export default function StepCustomerForm({ customerInfo, onChange, selection, re
             <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Rue / Adresse *</Label>
             <Input value={customerInfo.street || ""} onChange={e => set("street", e.target.value)} placeholder="12 rue des Roses" className="h-11 rounded-xl" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Code postal *</Label>
-              <Input value={customerInfo.zipCode || ""} onChange={e => set("zipCode", e.target.value)} placeholder="75001" className="h-11 rounded-xl" />
-            </div>
-            <div>
-              <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Ville *</Label>
-              <Input value={customerInfo.city || ""} onChange={e => set("city", e.target.value)} placeholder="Paris" className="h-11 rounded-xl" />
-            </div>
-          </div>
+          <ZipCodeCityInput
+            zipCode={customerInfo.zipCode}
+            city={customerInfo.city}
+            country={customerInfo.country}
+            onZipChange={v => set("zipCode", v)}
+            onCityChange={v => set("city", v)}
+          />
           <div>
             <Label className="text-sm font-semibold text-gray-700 mb-1.5 block">Pays *</Label>
             <Input value={customerInfo.country || "France"} onChange={e => set("country", e.target.value)} placeholder="France" className="h-11 rounded-xl" />
