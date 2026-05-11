@@ -329,7 +329,7 @@ export default function Home() {
       {/* Plans */}
       <div className="px-6 md:px-12 py-16 max-w-3xl mx-auto text-center">
         <p className="font-sans-clean text-xs tracking-[0.3em] uppercase text-rose-400 mb-2">Tarifs</p>
-        <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-12">Nos formules</h2>
+        <h2 className="font-serif-elegant text-4xl font-bold text-gray-800 mb-12">Votre site événement</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
 
           {/* Essentiel */}
