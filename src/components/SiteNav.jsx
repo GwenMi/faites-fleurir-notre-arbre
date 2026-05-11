@@ -20,7 +20,7 @@ export default function SiteNav() {
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693710239f4846bc4d68444e/746b310d8_image.png"
             alt="Fleurs de fête"
-            className="h-10 md:h-12"
+            className="h-12 md:h-16"
           />
         </a>
 
@@ -30,7 +30,7 @@ export default function SiteNav() {
             <a
               key={link.href}
               href={createPageUrl(link.href)}
-              className={`text-sm font-semibold transition ${link.color}`}
+              className={`text-sm font-semibold transition px-3 py-2 rounded-xl hover:bg-gray-50 ${link.color}`}
               style={{ fontFamily: "'Lato', system-ui, sans-serif" }}
             >
               {link.label}
