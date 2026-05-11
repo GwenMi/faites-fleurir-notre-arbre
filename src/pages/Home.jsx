@@ -21,7 +21,7 @@ const FEATURES_BASIC = [
 const FEATURES_PREMIUM = [
   "Tout ce qui est inclus dans Gratuit +",
   "Site événement personnalisé complet",
-  "RSVP avec choix de menus (mariages, baptêmes, communions)",
+  "Vos invités confirment leur présence en ligne — vous voyez en temps réel qui vient, avec le choix du menu (végétarien, allergie...) et un menu enfant si besoin",
   "Programme de la journée & timeline",
   "Album photo & galerie collaborative",
   "Livre d'or avec photos",
