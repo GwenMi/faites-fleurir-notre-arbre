@@ -22,7 +22,7 @@ export default function RusticTemplate({ event, primaryColor, secondaryColor, fo
   const label = EVENT_LABELS[event?.event_type] || "Événement";
 
   return (
-    <div style={{ background: warm, fontFamily: fontBody, minHeight: "100vh" }}>
+    <div style={{ background: warm, fontFamily: fontBody, minHeight: "100vh", backgroundImage: `radial-gradient(circle at 25% 75%, ${c}05 0%, transparent 35%), radial-gradient(circle at 75% 25%, ${secondaryColor || c}04 0%, transparent 35%)` }}>
       <style>{`
         @import url('${fontImportUrl}');
         .rs-head { font-family: '${fontHeading}', Georgia, serif; }

@@ -13,7 +13,7 @@ export default function ElegantTemplate({ event, primaryColor, secondaryColor, f
   const dark = "#1A1A2E";
 
   return (
-    <div style={{ background: "#FAFAF8", fontFamily: fontBody, minHeight: "100vh" }}>
+    <div style={{ background: "#FAFAF8", fontFamily: fontBody, minHeight: "100vh", backgroundImage: `radial-gradient(circle at 30% 70%, ${GOLD}08 0%, transparent 40%), radial-gradient(circle at 70% 30%, ${GOLD}06 0%, transparent 40%)` }}>
       <style>{`
         @import url('${fontImportUrl}');
         .el-head { font-family: '${fontHeading}', Georgia, serif; }

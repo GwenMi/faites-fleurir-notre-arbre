@@ -11,7 +11,7 @@ export default function ClassicTemplate({ event, primaryColor, secondaryColor, f
   const label = EVENT_LABELS[event?.event_type] || "Événement";
 
   return (
-    <div style={{ background: "#FEFCF5", fontFamily: fontBody }}>
+    <div style={{ background: "#FEFCF5", fontFamily: fontBody, backgroundImage: `radial-gradient(circle at 20% 80%, ${c}06 0%, transparent 50%), radial-gradient(circle at 80% 20%, ${c}05 0%, transparent 50%)` }}>
       <style>{`
         @import url('${fontImportUrl}');
         .cl-head { font-family: '${fontHeading}', Georgia, serif; }

@@ -22,7 +22,7 @@ export default function FestiveTemplate({ event, primaryColor, secondaryColor, f
   const label = EVENT_LABELS[event?.event_type] || "Événement";
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: fontBody }}>
+    <div style={{ minHeight: "100vh", fontFamily: fontBody, backgroundImage: `radial-gradient(circle at 15% 85%, ${c}04 0%, transparent 30%), radial-gradient(circle at 85% 15%, ${s}04 0%, transparent 30%)` }}>
       <style>{`
         @import url('${fontImportUrl}');
         .ft-head { font-family: '${fontHeading}', Georgia, serif; }

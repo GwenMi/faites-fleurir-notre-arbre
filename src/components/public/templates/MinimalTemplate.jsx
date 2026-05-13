@@ -11,7 +11,7 @@ export default function MinimalTemplate({ event, primaryColor, secondaryColor, f
   const label = EVENT_LABELS[event?.event_type] || "Événement";
 
   return (
-    <div style={{ background: "#FFFFFF", fontFamily: fontBody, minHeight: "100vh" }}>
+    <div style={{ background: "#FFFFFF", fontFamily: fontBody, minHeight: "100vh", backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 2px, ${c}02 2px, ${c}02 4px)` }}>
       <style>{`
         @import url('${fontImportUrl}');
         .mn-head { font-family: '${fontHeading}', Georgia, serif; }
